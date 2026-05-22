@@ -6,7 +6,7 @@ import { personal } from "@/data/personal";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-16 lg:px-24 pt-24 pb-12 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
       {/* Subtle background grid */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.04]">
         <div
@@ -19,7 +19,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative max-w-5xl">
+      <div className="relative mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 pt-24 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

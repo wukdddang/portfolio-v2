@@ -30,9 +30,9 @@ export function ProjectsGrid() {
   return (
     <section
       id="projects"
-      className="relative px-6 md:px-16 lg:px-24 py-24 border-t border-[var(--border)]"
+      className="relative border-t border-[var(--border)]"
     >
-      <div className="max-w-6xl">
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 py-24">
         {/* Header */}
         <div className="mb-10 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">

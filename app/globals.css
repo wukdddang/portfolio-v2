@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
 :root {
   --background: #fafaf9;
@@ -22,8 +23,16 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /*
+   * 한영 자동 변환:
+   * 영어 글리프는 Geist Sans가 먼저 매치 → 영어는 Geist 유지
+   * 한글은 Geist에 글리프 없으므로 Pretendard로 자동 fallback
+   */
+  --font-sans: var(--font-geist-sans), "Pretendard Variable", Pretendard,
+    -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue",
+    "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -40,6 +49,22 @@
   }
 }
 
+/* Smooth anchor scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Section landing offset (Nav height = 4rem) */
+section[id] {
+  scroll-margin-top: 4rem;
+}
+
 * {
   border-color: var(--border);
 }
@@ -47,8 +72,14 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+}
+
+/* 한글에 대해 약간 더 조밀한 letter-spacing (Pretendard 권장) */
+:lang(ko),
+[lang="ko"] {
+  letter-spacing: -0.01em;
 }
 
 ::selection {

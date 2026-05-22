@@ -31,8 +31,8 @@ export default async function ProjectDetailPage({
   if (!project) notFound();
 
   return (
-    <article className="min-h-screen px-6 md:px-16 lg:px-24 pt-24 pb-32">
-      <div className="max-w-4xl">
+    <article className="min-h-screen">
+      <div className="mx-auto w-full max-w-4xl px-6 md:px-16 lg:px-24 pt-24 pb-32">
         {/* Back link */}
         <Link
           href="/#projects"

@@ -9,9 +9,9 @@ export function Coordinates() {
   return (
     <section
       id="coordinates"
-      className="relative px-6 md:px-16 lg:px-24 py-24 border-t border-[var(--border)]"
+      className="relative border-t border-[var(--border)]"
     >
-      <div className="max-w-6xl">
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 py-24">
         {/* Header */}
         <div className="mb-16 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
