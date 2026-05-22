@@ -6,6 +6,22 @@
  * @import url(...)을 여기에 두면 CSS 규약 위반 (rules before @import)이 된다.
  */
 
+/*
+ * unicode-range로 한글 글리프를 명시적으로 Pretendard에 강제 매핑.
+ * Pretendard CDN이 정의한 'Pretendard Variable' font-family를 wrap.
+ * Geist Sans가 일부 한글 글리프를 가지고 있더라도 unicode-range로 Pretendard가
+ * 한글에 한해 priority를 가짐.
+ */
+@font-face {
+  font-family: "PretendardKoreanOverride";
+  src: local("Pretendard Variable"), local("Pretendard");
+  /* Hangul Jamo + Compatibility Jamo + Jamo Extended-A + Syllables + Jamo Extended-B */
+  unicode-range: U+1100-11FF, U+3130-318F, U+A960-A97F, U+AC00-D7AF, U+D7B0-D7FF;
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #fafaf9;
   --foreground: #0c0a09;
@@ -29,13 +45,16 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   /*
-   * 한영 자동 변환:
-   * 영어 글리프는 Geist Sans가 먼저 매치 → 영어는 Geist 유지
-   * 한글은 Geist에 글리프 없으므로 Pretendard로 자동 fallback
+   * 한영 자동 매칭 (폰트 단위):
+   * - PretendardKoreanOverride: unicode-range U+AC00-D7AF 등 한글 영역에만 매치
+   * - var(--font-geist-sans): 라틴 영역 매치 → 영어는 Geist
+   * - Pretendard Variable / Pretendard: PretendardKoreanOverride 매치 안 될 때 fallback
+   * 즉 한글 = Pretendard 100% 보장, 영어 = Geist 유지
    */
-  --font-sans: var(--font-geist-sans), "Pretendard Variable", Pretendard,
-    -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue",
-    "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-sans: "PretendardKoreanOverride", var(--font-geist-sans),
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }

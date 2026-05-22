@@ -20,7 +20,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
       className={cn(
-        "group relative flex flex-col p-6 rounded-2xl border bg-[var(--card)] hover:border-[var(--accent)]/40 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
+        "group relative flex flex-col h-full p-6 rounded-2xl border bg-[var(--card)] hover:border-[var(--accent)]/40 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)]",
         isRoboticsOnly
           ? "border-dashed border-[var(--border)]"
           : "border-[var(--border)]"

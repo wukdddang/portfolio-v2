@@ -30,9 +30,13 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        {/*
+         * Pretendard full variable CDN — 모든 한글 글리프 보장 (dynamic-subset은 일부 누락 가능).
+         * Pretendard Standard (latin + hangul) ~150KB woff2, 캐시 후 빠름.
+         */}
         <link
           rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
       </head>
       <body className="min-h-full flex flex-col">
