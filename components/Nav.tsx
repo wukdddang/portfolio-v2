@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/#coordinates", id: "coordinates", label: "좌표" },
+  { href: "/#coordinates", id: "coordinates", label: "위치" },
   { href: "/#projects", id: "projects", label: "프로젝트" },
   { href: "/#stack", id: "stack", label: "스택" },
   { href: "/#about", id: "about", label: "About" },

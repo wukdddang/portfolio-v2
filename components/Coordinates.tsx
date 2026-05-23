@@ -15,7 +15,7 @@ export function Coordinates() {
         {/* Header */}
         <div className="mb-16 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
-            나의 좌표
+            내 위치
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
             단계 진단은 직군이 기준선입니다

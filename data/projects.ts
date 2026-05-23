@@ -34,8 +34,8 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: "lumir-linux-snap",
-    title: "lumir-linux-snap",
-    subtitle: "Sentinel-1 InSAR 5종 도구 다중 스택 + AI native 진행",
+    title: "Sentinel-1 InSAR 처리 파이프라인",
+    subtitle: "5종 도구 다중 스택 + AI native 진행 · 정부 공동 지표변위 모니터링",
     badge: "3 → 4 + 5 신호",
     problem:
       "정부 공공기관 공동 지표변위 모니터링 사업 — SNAP 단독 파이프라인 처리 속도 한계로 실시간 서비스화 불가. ASC 단독 SBAS의 LOS 1D 한계. 단일 건물 hot-spot 식별 최소 2 yr stack 필수.",
@@ -68,8 +68,8 @@ export const projects: Project[] = [
   },
   {
     slug: "sar-data-retrieval",
-    title: "sar-data-retrieval",
-    subtitle: "Sentinel SAR 검색·분석·서비스화 NestJS 백엔드",
+    title: "Sentinel SAR 검색·분석 백엔드",
+    subtitle: "NestJS 모노레포 + CDSE + NAS PoC + DDD 5-layer + snap 통합 (AI native)",
     badge: "3+4(+5) 혼합",
     problem:
       "기존에 존재하지 않는 날씨·계절 무관 지표 변위 데이터 제공 플랫폼 + Sentinel SAR 검색·다운로드·메타데이터 통합 백엔드 부재 + snap 처리 결과를 사용자 위치 검색 가능한 형태로 제공할 서비스 레이어 부재.",
@@ -91,8 +91,8 @@ export const projects: Project[] = [
   },
   {
     slug: "sdpe",
-    title: "sdpe (SAR Data Process Element)",
-    subtitle: "루미르 LumirX SAR 처리 파이프라인 오케스트레이션",
+    title: "SDPE — SAR 처리 파이프라인 오케스트레이션",
+    subtitle: "루미르 LumirX 위성 데이터 다단계 파이프라인 · NestJS 5 서브시스템 + DAG",
     badge: "3+4 혼합",
     problem:
       "LumirX 위성 원시 SAR 데이터(L0~L3) 다단계 파이프라인을 운영자가 구성·실행·추적·복구할 시스템 부재 + 새 위성·새 알고리즘 추가 시 코드 변경 최소화 필요 + 본인 입장에서 파이프라인 도메인은 백지 상태 투입.",

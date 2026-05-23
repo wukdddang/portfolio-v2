@@ -51,7 +51,7 @@ export const resumeExperience: ResumeRole[] = [
       "Sentinel-1 SAR 위성 데이터 처리 파이프라인과 사내 백오피스를 동시에 다루는 풀스택 포지션입니다. 본인 직군은 웹 개발이고, SAR 도메인은 입사 후 직군 확장으로 흡수했습니다.",
     projects: [
       {
-        name: "SDPE — SAR Data Process Element",
+        name: "SDPE — SAR 처리 파이프라인 오케스트레이션",
         slug: "sdpe",
         badge: "3+4 혼합 · 직군 확장 표본",
         context:
@@ -72,7 +72,7 @@ export const resumeExperience: ResumeRole[] = [
           "pgmq·apps 구조·natives/csc·ICD/SAD는 사수 인계 설계. 본인은 DAG UI·CI/CD·csc-8 세부와 ICD/SAD 학습 메커니즘 적용을 담당했습니다.",
       },
       {
-        name: "sar-data-retrieval (lumir-sar_analytics-and-retrieval)",
+        name: "Sentinel SAR 검색·분석 백엔드 (sar-data-retrieval)",
         slug: "sar-data-retrieval",
         badge: "3+4(+5) 혼합",
         context:
@@ -103,7 +103,7 @@ export const resumeExperience: ResumeRole[] = [
         ],
       },
       {
-        name: "lumir-linux-snap — Sentinel-1 InSAR 5종 도구 다중 스택",
+        name: "Sentinel-1 InSAR 처리 파이프라인 (lumir-linux-snap)",
         slug: "lumir-linux-snap",
         badge: "3 → 4 + 5 신호",
         context:
