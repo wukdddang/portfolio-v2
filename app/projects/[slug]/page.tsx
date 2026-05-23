@@ -246,7 +246,157 @@ export default async function ProjectDetailPage({
             </ul>
           </div>
         )}
+
+        {/* Sub Projects — 통합 박스가 묶은 레이어별 깊이 */}
+        {project.subProjects && project.subProjects.length > 0 && (
+          <div className="mt-20">
+            <div className="mb-8 pb-4 border-b border-[var(--border)]">
+              <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
+                레이어별 깊이
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
+                3 레이어 각각 자세히
+              </h2>
+              <p className="text-sm text-[var(--muted)] leading-relaxed max-w-3xl">
+                통합 박스가 묶은 각 레이어를 깊이 풀어 봅니다. 외부 검색·공유 시 깊은 링크가 도착하는 위치이기도 합니다.
+              </p>
+            </div>
+
+            <nav className="mb-10 flex flex-wrap gap-2">
+              {project.subProjects.map((sub) => (
+                <a
+                  key={sub.slug}
+                  href={`#${sub.slug}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] bg-[var(--card)] hover:border-[var(--accent)]/40 transition-colors text-sm"
+                >
+                  <span className="text-base leading-none">{sub.layerIcon}</span>
+                  <span className="font-medium">{sub.layerLabel}</span>
+                  <span className="text-[var(--muted)]">— {sub.title}</span>
+                </a>
+              ))}
+            </nav>
+
+            <div className="space-y-16">
+              {project.subProjects.map((sub) => (
+                <SubProjectSection key={sub.slug} sub={sub} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </article>
+  );
+}
+
+function SubProjectSection({ sub }: { sub: import("@/data/projects").Project }) {
+  return (
+    <section
+      id={sub.slug}
+      className="scroll-mt-20 pt-8 border-t border-dashed border-[var(--border)]"
+    >
+      {/* Layer header */}
+      <div className="mb-6">
+        <div className="flex flex-wrap items-baseline gap-3 mb-3">
+          <span className="text-2xl leading-none">{sub.layerIcon}</span>
+          <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
+            {sub.layerLabel} 레이어
+          </div>
+          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30">
+            {sub.badge}
+          </span>
+          <span className="text-xs font-mono text-[var(--muted)]">/ {sub.slug}</span>
+        </div>
+        <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-2">
+          {sub.title}
+        </h3>
+        <p className="text-sm text-[var(--muted)] leading-relaxed">{sub.subtitle}</p>
+      </div>
+
+      {/* Metrics */}
+      {sub.metrics && sub.metrics.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          {sub.metrics.map((m) => (
+            <div
+              key={m.label}
+              className="p-3 rounded-xl border border-[var(--border)] bg-[var(--card)]"
+            >
+              <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-1">
+                {m.label}
+              </div>
+              <div className="text-base font-bold tracking-tight">{m.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Problem · System · Impact */}
+      <div className="space-y-6 mb-8">
+        {[
+          { label: "문제", body: sub.problem, accent: false },
+          { label: "시스템", body: sub.system, accent: false },
+          { label: "임팩트", body: sub.impact, accent: true },
+        ].map((section) => (
+          <div key={section.label}>
+            <div
+              className={`text-xs font-mono uppercase tracking-widest mb-2 ${
+                section.accent ? "text-[var(--accent)]" : "text-[var(--muted)]"
+              }`}
+            >
+              {section.label}
+            </div>
+            <p className="text-sm md:text-base leading-relaxed text-[var(--card-foreground)]">
+              {section.body}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Sub images */}
+      {sub.images && sub.images.length > 0 && (
+        <div
+          className={`grid gap-4 mb-8 ${
+            sub.images.length === 1
+              ? "grid-cols-1"
+              : sub.images.length === 2
+                ? "grid-cols-1 md:grid-cols-2"
+                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          }`}
+        >
+          {sub.images.map((img) => (
+            <figure
+              key={img.src}
+              className="rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)]"
+            >
+              <div className="relative w-full aspect-[16/10] bg-[var(--subtle)]">
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  className="object-contain"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                />
+              </div>
+              {img.caption && (
+                <figcaption className="px-3 py-2 text-[11px] leading-relaxed text-[var(--muted)] border-t border-[var(--border)]">
+                  {img.caption}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {/* Honesty */}
+      {sub.honestyNote && (
+        <div className="p-4 rounded-xl border border-dashed border-[var(--border)] bg-[var(--subtle)]">
+          <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-1.5">
+            솔직성 메모
+          </div>
+          <p className="text-xs leading-relaxed text-[var(--muted)] italic">
+            {sub.honestyNote}
+          </p>
+        </div>
+      )}
+    </section>
   );
 }

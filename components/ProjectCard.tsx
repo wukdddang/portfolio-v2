@@ -81,6 +81,26 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         </div>
       </div>
 
+      {/* Sub-layers — 통합 박스에만 표시 */}
+      {project.subProjects && project.subProjects.length > 0 && (
+        <div className="mb-5 p-3 rounded-lg border border-dashed border-[var(--border)] bg-[var(--subtle)]/40">
+          <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
+            구성 레이어
+          </div>
+          <div className="space-y-1.5">
+            {project.subProjects.map((sub) => (
+              <div key={sub.slug} className="flex items-center gap-2 text-xs">
+                <span className="shrink-0 text-base leading-none">{sub.layerIcon}</span>
+                <span className="font-medium text-[var(--card-foreground)]">
+                  {sub.layerLabel}
+                </span>
+                <span className="text-[var(--muted)] truncate">— {sub.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Keywords */}
       <div className="flex flex-wrap gap-1.5 mb-5">
         {project.keywords.slice(0, 5).map((kw) => (

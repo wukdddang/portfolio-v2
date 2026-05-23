@@ -51,6 +51,38 @@ export const resumeExperience: ResumeRole[] = [
       "Sentinel-1 SAR 위성 데이터 처리 파이프라인과 사내 백오피스를 동시에 다루는 풀스택 포지션입니다. 본인 직군은 웹 개발이고, SAR 도메인은 입사 후 직군 확장으로 흡수했습니다.",
     projects: [
       {
+        name: "루미르 SAR 데이터 플랫폼 (3 레이어 통합)",
+        slug: "lumir-sar-platform",
+        badge: "3+4 통합 (3 레이어 풀스택)",
+        context:
+          "Sentinel과 LumirX 위성 데이터를 사내에서 검색·저장·분석·요청까지 한 사이클로 처리할 통합 서비스가 부재했습니다. 데이터 저장(NAS+CDSE), InSAR 분석(SNAP·ISCE2·MintPy), 사용자 진입 프론트엔드 3 레이어를 본인이 단독으로 묶고 있습니다.",
+        what: [
+          "🗄 **저장 레이어** (sar-data-retrieval) — NestJS 모노레포 단독 + CDSE 외부 API 통합 + NAS PoC (SMB2 vs 직접 FS) + SLC 도메인 모델링 + DDD 5-layer 테스트 분리",
+          "⚙ **분석 레이어** (lumir-linux-snap) — 5종 도구 다중 스택 (SNAP 12 + SNAPHU + MintPy + StaMPS PSI + ISCE2) + 다중 Claude Code agent 워크트리 (agent 1~4 병렬) + 1.12 yr → 2.30 yr stack 확장 + 사업 보고서 v1~v4 AI native 자동화",
+          "🖥 **프론트 레이어** (sar-search-and-analyzer) — Next.js + Plan/Current 환경 분리 + 지도 기반 AOI 폴리곤 + 카탈로그 검색 + InSAR 분석 요청 UI + CLAUDE.md 4-Layer 백엔드 설계 본인 작성 (집비치기 패턴 역전이)",
+          "오버엔지니어링 방지 원칙 + 모든 도구 평가·선정에 AI 사고 파트너 활용 + AI native 100%",
+        ],
+        impact: [
+          "ISCE2 도입으로 처리 속도를 확보해 *날씨·계절 무관 지표 변위 데이터 서비스화* 단계에 진입했습니다",
+          "광교산 시루봉 -17.30 mm/yr 절대 침하 GNSS(SUWN) 검증 + PSI 5,143,119 PS 검출 + 5m DEM TC 적용",
+          "사용자가 지도에서 위치를 요청하면 저장된 분석 데이터를 즉시 제공하거나 신규 처리 후 제공하는 흐름을 한 사람이 풀스택으로 묶고 있다는 점이 핵심 자산입니다",
+          "집비치기에서 검증한 4-Layer + CQRS + 한글 메서드명 패턴이 sar-search-and-analyzer 백엔드 설계에 역전이 — 셩PM 5단계 사이드 권한 우회의 두 번째 사례",
+        ],
+        stack: [
+          "NestJS",
+          "Next.js",
+          "TypeORM",
+          "PostgreSQL",
+          "CDSE",
+          "NAS (SMB2)",
+          "ESA SNAP 12 · SNAPHU · MintPy · StaMPS · ISCE2",
+          "Python · QGIS",
+          "Playwright",
+        ],
+        honestyNote:
+          "각 레이어의 일부 패턴은 외부 인계입니다 — Plan/Current 환경 분리(파트장)·일부 SAR 도메인 지식(AI 사고 파트너 도움). sar-search-and-analyzer 백엔드(apps/api·worker·crawler)는 CLAUDE.md 설계 문서 단계이며 실제 구현은 다음 Phase입니다.",
+      },
+      {
         name: "SDPE — SAR 처리 파이프라인 오케스트레이션",
         slug: "sdpe",
         badge: "3+4 혼합 · 직군 확장 표본",
@@ -70,59 +102,6 @@ export const resumeExperience: ResumeRole[] = [
         stack: ["NestJS", "Next.js", "pgmq", "GitLab CI/CD", "Playwright", "TypeScript strict"],
         honestyNote:
           "pgmq·apps 구조·natives/csc·ICD/SAD는 사수 인계 설계. 본인은 DAG UI·CI/CD·csc-8 세부와 ICD/SAD 학습 메커니즘 적용을 담당했습니다.",
-      },
-      {
-        name: "Sentinel SAR 검색·분석 백엔드 (sar-data-retrieval)",
-        slug: "sar-data-retrieval",
-        badge: "3+4(+5) 혼합",
-        context:
-          "기존에 존재하지 않는 *날씨·계절 무관 지표 변위 데이터 제공* 플랫폼의 기초가 되는 Sentinel SAR 검색·분석·서비스화 백엔드가 필요했습니다.",
-        what: [
-          "NestJS 모노레포 (sentinel-retrieval 메인 + ai-processing 보조) 설계·구현 — 본인 단독",
-          "CDSE (Copernicus Data Space) 외부 API 통합 + 호출 예시 80KB 분량 축적",
-          "NAS 통합 PoC — SMB2 vs 직접 FS 마운트 두 모드 검증·의사결정 박제",
-          "SLC 도메인 모델링 — ERD + 시나리오 + 유즈케이스 3종",
-          "DDD 5-layer 테스트 분리 전략 적용",
-          "자매 레포 snap(Snappy/MintPy 지반 침하 분석) 통합 — AI native 진행으로 처리 결과를 본 프로젝트 DB·API에 연결",
-        ],
-        impact: [
-          "사용자 위치 요청에 기존 분석 즉시 제공 또는 신규 처리 후 제공이 가능한 플랫폼 기초 백엔드를 완성했습니다",
-          "snap의 ISCE2 처리 속도 확보 + 본 프로젝트 서비스 레이어 = '한 서비스의 두 레이어' 통합 비전을 확립했습니다",
-          "예측되는 보일러플레이트 시점만 도메인 구조 일부 수정하는 AI native 진행 패턴을 정립했습니다",
-        ],
-        stack: [
-          "NestJS",
-          "TypeScript",
-          "CQRS",
-          "TypeORM",
-          "PostgreSQL",
-          "CDSE API",
-          "NAS (SMB2)",
-          "DDD 5-layer",
-          "Testcontainers",
-        ],
-      },
-      {
-        name: "Sentinel-1 InSAR 처리 파이프라인 (lumir-linux-snap)",
-        slug: "lumir-linux-snap",
-        badge: "3 → 4 + 5 신호",
-        context:
-          "정부 공공기관 공동 지표변위 모니터링 사업에 참조 DSM·시계열 분석 파이프라인이 없었고, SNAP 단독으로는 처리 속도가 한계라 실시간 서비스화가 불가능했습니다.",
-        what: [
-          "ESA SNAP 12 + SNAPHU + MintPy + StaMPS PSI + ISCE2 — 5종 도구 다중 스택 설계·운영",
-          "오버엔지니어링 방지 원칙 — 필요한 시점에만 도구 추가, 모든 도구 평가·선정에 AI를 사고 파트너로 활용",
-          "다중 Claude Code agent 워크트리 — agent 1~4 병렬 + gpt_isolated.sh user dir race wrapper + agents-pause.sh + AGENT_BRIEF.md 표준 + docs/handoff/ 인수인계 시스템",
-          "1.12 yr → 2.30 yr stack 확장 + PyAPS + ERA5 대기 보정 + 5m DEM TC",
-          "사업 보고서 v1~v4 + policy briefing PDF — AI native로 작성 시간이 0에 가까웠습니다",
-        ],
-        impact: [
-          "ISCE2 도입으로 처리 속도를 확보해 sar-data-retrieval과 통합되는 서비스화 단계 진입이 가능해졌습니다",
-          "광교산 시루봉 -17.30 mm/yr 절대 침하를 GNSS(SUWN)로 검증 + PSI 5,143,119 PS 검출",
-          "단일 건물 hot-spot 식별 최소 2 yr stack 필수라는 결론을 정량 데이터로 확립",
-        ],
-        stack: ["ESA SNAP 12", "SNAPHU", "MintPy", "StaMPS (Octave)", "ISCE2", "Python", "QGIS"],
-        honestyNote:
-          "SAR 도메인은 본인 직군(웹 개발) 외 영역입니다. AI를 사고 파트너로 두지 않았다면 진입이 불가능했을 영역으로 평가합니다 (3단계 직군 확장의 표본 사례).",
       },
       {
         name: "Lumir-ERP — 사내 백오피스 4 도메인 통합",
