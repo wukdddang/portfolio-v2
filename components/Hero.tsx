@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowDown, FileText, Briefcase } from "lucide-react";
 import { personal } from "@/data/personal";
@@ -45,14 +46,29 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-6 text-lg md:text-xl text-[var(--muted)] max-w-2xl leading-relaxed"
         >
-          {personal.subTagline}. <br className="hidden md:block" />
-          {personal.identity}.
+          {personal.subTagline}.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="mt-4 text-base md:text-lg text-[var(--card-foreground)] max-w-2xl leading-relaxed"
+        >
+          {personal.pitch}
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-3 text-sm md:text-base text-[var(--muted)] max-w-2xl leading-relaxed"
+        >
+          {personal.identity}
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-10 flex flex-wrap gap-3"
         >
           <a
@@ -63,14 +79,14 @@ export function Hero() {
             프로젝트 보러가기
             <ArrowDown className="size-4 group-hover:translate-y-0.5 transition-transform" />
           </a>
-          <a
-            href="#resume"
+          <Link
+            href="/resume"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-[var(--border)] text-sm font-medium hover:bg-[var(--subtle)] transition-colors"
           >
             <FileText className="size-4" />
-            이력서 PDF
-            <span className="text-xs text-[var(--muted)] font-mono ml-1">(준비 중)</span>
-          </a>
+            이력서 보기
+            <span className="text-xs text-[var(--muted)] font-mono ml-1">/resume</span>
+          </Link>
         </motion.div>
 
         {/* meta strip */}

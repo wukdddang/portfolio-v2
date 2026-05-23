@@ -39,11 +39,11 @@ export function ProjectsGrid() {
             프로젝트
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            재료는 같다 · 코스가 다르다
+            재료는 같습니다. 코스만 다릅니다
           </h2>
           <p className="text-[var(--muted)] leading-relaxed">
-            조립형 이력서의 원칙 — 같은 5개 프로젝트라도 읽는 사람에 따라 풀이 깊이가 달라진다.
-            아래 트랙 토글로 회사·도메인 맥락에 맞춘 코스를 볼 수 있다.
+            조립형 이력서의 원칙입니다. 같은 6개 프로젝트라도 읽는 사람에 따라 풀이 깊이가 달라집니다.
+            아래 트랙 토글로 회사·도메인 맥락에 맞춘 코스를 보실 수 있습니다.
           </p>
         </div>
 

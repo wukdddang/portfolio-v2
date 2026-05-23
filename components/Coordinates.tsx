@@ -18,12 +18,12 @@ export function Coordinates() {
             나의 좌표
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            단계 진단은 직군이 기준선이다
+            단계 진단은 직군이 기준선입니다
           </h2>
           <p className="text-[var(--muted)] leading-relaxed">
-            같은 SAR 작업이라도 공간정보공학 전공자가 메인 직군으로 하는 것과 웹
-            개발자가 직군 확장으로 하는 것은 다르다. 아래 매트릭스 + 5단계 모델이 본인의
-            현재 좌표.
+            같은 SAR 작업이라도 공간정보공학 전공자가 메인 직군으로 하는 것과, 웹
+            개발자가 직군 확장으로 하는 것은 다릅니다. 아래 매트릭스와 5단계 모델이 본인의
+            현재 좌표입니다.
           </p>
         </div>
 

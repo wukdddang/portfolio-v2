@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Sparkles } from "lucide-react";
+import { Mail, Sparkles, CheckCircle2 } from "lucide-react";
 import { personal } from "@/data/personal";
 
 function GithubIcon({ className }: { className?: string }) {
@@ -29,12 +29,33 @@ export function About() {
             About
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            {personal.name}
+            {personal.name}입니다
           </h2>
           <p className="text-lg text-[var(--muted)] leading-relaxed">
-            {personal.tagline}. {personal.identity}.
+            {personal.tagline}. {personal.identity}
           </p>
         </div>
+
+        {/* Invitations — 회사 입장에서 어필 */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5 }}
+          className="mb-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl"
+        >
+          {personal.invitations.map((q) => (
+            <div
+              key={q}
+              className="flex items-start gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--card)]"
+            >
+              <CheckCircle2 className="size-5 shrink-0 text-[var(--accent)] mt-0.5" />
+              <p className="text-sm leading-relaxed text-[var(--card-foreground)]">
+                {q}
+              </p>
+            </div>
+          ))}
+        </motion.div>
 
         {/* Brain Trinity highlight */}
         <motion.div
@@ -51,20 +72,20 @@ export function About() {
                 Brain Trinity · 시연 가능
               </div>
               <p className="text-base md:text-lg leading-relaxed mb-3">
-                본 포트폴리오·자가 진단·5개 프로젝트 자료 박스는 모두{" "}
-                <span className="font-semibold">Brain Trinity</span>라는 메타 시스템에서 컴파일됐다 —
-                Karpathy LLM Wiki 패턴 + Claude Code 협업 + skill 시스템 + 위키 페이지 56+ 누적.
+                이 포트폴리오와 자가 진단, 6개 프로젝트 자료 박스는 모두{" "}
+                <span className="font-semibold">Brain Trinity</span>라는 메타 시스템에서 컴파일됐습니다.
+                Karpathy LLM Wiki 패턴 + Claude Code 협업 + skill 시스템으로 위키 페이지 56+ 가 누적되어 있습니다.
               </p>
               <p className="text-sm opacity-70 leading-relaxed">
-                새로운 도메인이 나타나도 정보 구조화 + AI native 기반이면 해결 못할 일이 없다.
-                Brain Trinity가 그 방법론·자산이며, 면접 시 직접 시연 가능.
+                새로운 도메인이 나타나도 정보 구조화와 AI native 기반이면 해결하지 못할 일이 없다고 봅니다.
+                Brain Trinity가 그 방법론이자 자산이며, 면접에서 직접 시연이 가능합니다.
               </p>
             </div>
           </div>
         </motion.div>
 
         {/* Future vision */}
-        <div className="mb-10">
+        <div className="mb-10 max-w-3xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
             다음 방향
           </div>
