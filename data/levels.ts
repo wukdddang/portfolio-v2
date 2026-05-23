@@ -1,5 +1,5 @@
 /**
- * 셩PM AI 활용 5단계 모델 + 본인식 단계 정의
+ * AI 활용 5단계 모델 (참조 정의) + 본인식 단계 정의
  * Brain Trinity wiki/ai/ai-usage-levels-seong-pm.md 추출
  */
 

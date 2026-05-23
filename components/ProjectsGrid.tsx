@@ -42,7 +42,7 @@ export function ProjectsGrid() {
             재료는 같다 · 코스가 다르다
           </h2>
           <p className="text-[var(--muted)] leading-relaxed">
-            셩PM 조립형 이력서의 원칙 — 같은 5개 프로젝트라도 *읽는 사람*에 따라 풀이 깊이가 달라진다.
+            조립형 이력서의 원칙 — 같은 5개 프로젝트라도 읽는 사람에 따라 풀이 깊이가 달라진다.
             아래 트랙 토글로 회사·도메인 맥락에 맞춘 코스를 볼 수 있다.
           </p>
         </div>

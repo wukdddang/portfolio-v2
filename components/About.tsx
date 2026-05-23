@@ -56,7 +56,7 @@ export function About() {
                 Karpathy LLM Wiki 패턴 + Claude Code 협업 + skill 시스템 + 위키 페이지 56+ 누적.
               </p>
               <p className="text-sm opacity-70 leading-relaxed">
-                새로운 도메인이 나타나도 *정보 구조화 + AI native 기반*이면 해결 못할 일이 없다.
+                새로운 도메인이 나타나도 정보 구조화 + AI native 기반이면 해결 못할 일이 없다.
                 Brain Trinity가 그 방법론·자산이며, 면접 시 직접 시연 가능.
               </p>
             </div>

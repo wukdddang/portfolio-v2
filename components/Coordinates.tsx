@@ -21,8 +21,8 @@ export function Coordinates() {
             단계 진단은 직군이 기준선이다
           </h2>
           <p className="text-[var(--muted)] leading-relaxed">
-            같은 SAR 작업이라도 *공간정보공학 전공자가 메인 직군으로* 하는 것과 *웹
-            개발자가 직군 확장으로* 하는 것은 다르다. 아래 매트릭스 + 5단계 모델이 본인의
+            같은 SAR 작업이라도 공간정보공학 전공자가 메인 직군으로 하는 것과 웹
+            개발자가 직군 확장으로 하는 것은 다르다. 아래 매트릭스 + 5단계 모델이 본인의
             현재 좌표.
           </p>
         </div>
@@ -64,7 +64,7 @@ export function Coordinates() {
         {/* 5단계 모델 + 본인 위치 */}
         <div className="mb-8">
           <div className="flex items-baseline justify-between mb-6">
-            <h3 className="text-2xl font-bold">셩PM 5단계 — 본인식 정의</h3>
+            <h3 className="text-2xl font-bold">AI 활용 5단계 — 본인식 정의</h3>
             <div className="text-xs font-mono text-[var(--muted)]">
               현재 좌표 · {personal.currentStage.range}
             </div>

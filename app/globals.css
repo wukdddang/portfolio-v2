@@ -55,8 +55,10 @@
     "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* font-mono도 한글은 Pretendard로 강제 (unicode-range 매핑) */
+  --font-mono: "PretendardKoreanOverride", var(--font-geist-mono), ui-monospace,
+    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
 }
 
 @media (prefers-color-scheme: dark) {

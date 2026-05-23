@@ -20,8 +20,7 @@ export function TechStack() {
             메인 직군 · 학습 도메인 · 미래
           </h2>
           <p className="text-[var(--muted)] leading-relaxed">
-            본인 직군(웹 개발)과 회사에서 배운 학습 도메인(SAR·위성영상)을 분리해서 본다. 셩PM의
-            *직군 안 깊이* vs *직군 확장*을 명확히 구분.
+            본인 직군(웹 개발)과 회사에서 배운 학습 도메인(SAR·위성영상)을 분리해서 본다. 직군 안의 깊이와 직군 확장을 명확히 구분.
           </p>
         </div>
 

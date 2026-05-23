@@ -12,9 +12,13 @@ const links = [
   { href: "#about", id: "about", label: "About" },
 ];
 
+type Locale = "ko" | "en";
+
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [locale, setLocale] = useState<Locale>("ko");
+  const [showLocaleToast, setShowLocaleToast] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -35,7 +39,6 @@ export function Nav() {
           });
         },
         {
-          // Section is "active" when it crosses ~35% from the top viewport line
           rootMargin: "-35% 0px -55% 0px",
           threshold: 0,
         }
@@ -46,53 +49,114 @@ export function Nav() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
+  const handleLocaleClick = (target: Locale) => {
+    if (target === locale) return;
+    if (target === "en") {
+      setShowLocaleToast(true);
+      window.setTimeout(() => setShowLocaleToast(false), 2400);
+      return;
+    }
+    setLocale(target);
+  };
+
   return (
-    <header
-      className={cn(
-        "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-        scrolled
-          ? "backdrop-blur-md bg-[var(--background)]/80 border-b border-[var(--border)]"
-          : "border-b border-transparent"
-      )}
-    >
-      <nav className="mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 h-16 flex items-center justify-between">
-        <Link
-          href="/"
-          className="font-mono text-sm font-semibold tracking-tight"
+    <>
+      <header
+        className={cn(
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+          scrolled
+            ? "backdrop-blur-md bg-[var(--background)]/80 border-b border-[var(--border)]"
+            : "border-b border-transparent"
+        )}
+      >
+        <nav className="mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 h-16 flex items-center justify-between gap-3">
+          <Link
+            href="/"
+            className="font-mono text-sm font-semibold tracking-tight whitespace-nowrap"
+          >
+            wukdddang
+          </Link>
+          <div className="flex items-center gap-1 md:gap-3">
+            <div className="relative flex items-center gap-1 md:gap-2">
+              {links.map((l) => {
+                const isActive = activeId === l.id;
+                return (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    className={cn(
+                      "relative px-3 py-1.5 text-sm transition-colors rounded-full whitespace-nowrap",
+                      isActive
+                        ? "text-[var(--foreground)]"
+                        : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-active-pill"
+                        className="absolute inset-0 bg-[var(--subtle)] rounded-full -z-10"
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    {l.label}
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Locale toggle */}
+            <div
+              className="ml-1 md:ml-2 pl-2 md:pl-3 border-l border-[var(--border)] flex items-center gap-0.5 text-[11px] font-mono"
+              role="group"
+              aria-label="언어 선택"
+            >
+              {(["ko", "en"] as Locale[]).map((l) => {
+                const isActive = locale === l;
+                const isDisabled = l === "en"; // 영문판 준비 중
+                return (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => handleLocaleClick(l)}
+                    aria-pressed={isActive}
+                    aria-label={
+                      l === "ko" ? "한국어" : "English (preparing)"
+                    }
+                    title={isDisabled ? "English version coming soon" : undefined}
+                    className={cn(
+                      "px-2 py-1 rounded transition-colors uppercase",
+                      isActive
+                        ? "text-[var(--foreground)] font-semibold"
+                        : isDisabled
+                          ? "text-[var(--muted)]/40 hover:text-[var(--muted)]/70 cursor-help"
+                          : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                    )}
+                  >
+                    {l}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      {/* Toast — 영문판 준비 중 안내 */}
+      {showLocaleToast && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.2 }}
+          className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] px-4 py-2.5 rounded-full bg-[var(--foreground)] text-[var(--background)] text-xs font-mono shadow-lg"
         >
-          wukdddang
-        </Link>
-        <div className="relative flex items-center gap-1 md:gap-2">
-          {links.map((l) => {
-            const isActive = activeId === l.id;
-            return (
-              <a
-                key={l.href}
-                href={l.href}
-                className={cn(
-                  "relative px-3 py-1.5 text-sm transition-colors rounded-full",
-                  isActive
-                    ? "text-[var(--foreground)]"
-                    : "text-[var(--muted)] hover:text-[var(--foreground)]"
-                )}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active-pill"
-                    className="absolute inset-0 bg-[var(--subtle)] rounded-full -z-10"
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 30,
-                    }}
-                  />
-                )}
-                {l.label}
-              </a>
-            );
-          })}
-        </div>
-      </nav>
-    </header>
+          English version coming soon · 영문판 준비 중
+        </motion.div>
+      )}
+    </>
   );
 }
