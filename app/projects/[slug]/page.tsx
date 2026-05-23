@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
@@ -80,6 +81,46 @@ export default async function ProjectDetailPage({
                 <div className="text-lg font-bold tracking-tight">{m.value}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Images Gallery */}
+        {project.images && project.images.length > 0 && (
+          <div className="mb-12 space-y-4">
+            <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
+              화면 · 산출물
+            </div>
+            <div
+              className={`grid gap-4 ${
+                project.images.length === 1
+                  ? "grid-cols-1"
+                  : project.images.length === 2
+                    ? "grid-cols-1 md:grid-cols-2"
+                    : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
+              {project.images.map((img) => (
+                <figure
+                  key={img.src}
+                  className="rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)]"
+                >
+                  <div className="relative w-full aspect-[16/10] bg-[var(--subtle)]">
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      className="object-contain"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    />
+                  </div>
+                  {img.caption && (
+                    <figcaption className="px-4 py-3 text-xs leading-relaxed text-[var(--muted)] border-t border-[var(--border)]">
+                      {img.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
           </div>
         )}
 

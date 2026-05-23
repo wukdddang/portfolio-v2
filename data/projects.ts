@@ -9,9 +9,16 @@ export type StageRange =
   | "3+4 혼합"
   | "4 + 5 (회사 역전이)"
   | "4 + 5 신호"
-  | "4 (직군 안 · 4 도메인 적응)";
+  | "4 (직군 안 · 4 도메인 적응)"
+  | "4 진행 중 (직군 안 · UI 기획·백엔드 동시)";
 
 export type TrackTag = "satellite" | "robotics" | "both";
+
+export interface ProjectImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
 
 export interface Project {
   slug: string;
@@ -29,6 +36,7 @@ export interface Project {
   metrics?: { label: string; value: string }[];
   measurementPending?: string[];
   qa?: { q: string; a: string }[];
+  images?: ProjectImage[];
 }
 
 export const projects: Project[] = [
@@ -42,7 +50,7 @@ export const projects: Project[] = [
     system:
       "5종 도구 다중 스택 (SNAP 12 + SNAPHU 2.0.3 + MintPy 1.6.2 + StaMPS PSI + ISCE2 2.6.3) — 오버엔지니어링 방지 원칙 + AI 사고 파트너로 도구 평가 + 다중 Claude Code agent 워크트리 (agent 1~4 병렬 + gpt_isolated wrapper + handoff 시스템).",
     impact:
-      "ISCE2 도입으로 처리 속도 확보 → InSAR 데이터 DB화·API 백엔드 연결·서비스화 단계 진입 가능. 광교산 시루봉 -17.30 mm/yr (GNSS 검증) + PSI 5,143,119 PS + 5m DEM TC. 사업 보고서 v1~v4 AI native로 작성 시간 0에 가까움.",
+      "ISCE2 도입으로 처리 속도를 확보해 3 레이어 통합 서비스의 분석 처리 레이어 역할이 가능해졌습니다. sar-data-retrieval(저장) + 본 프로젝트(분석) + sar-search-and-analyzer(프론트) 3 프로젝트가 한 서비스로 묶이는 비전입니다. 광교산 시루봉 -17.30 mm/yr (GNSS 검증) + PSI 5,143,119 PS + 5m DEM TC + 사업 보고서 v1~v4를 AI native로 작성 시간이 0에 가까웠습니다.",
     keywords: [
       "Sentinel-1 SAR",
       "5종 도구 스택",
@@ -65,6 +73,23 @@ export const projects: Project[] = [
       "SNAP vs ISCE2 처리 속도 비율",
       "다중 agent 시간 절감 비율",
     ],
+    images: [
+      {
+        src: "/projects/lumir-linux-snap/timeseries-65epoch.png",
+        alt: "control points 시계열 (65 epoch / 2.30 yr stack)",
+        caption: "Control points 시계열 — 65 epoch / 2.30 yr stack",
+      },
+      {
+        src: "/projects/lumir-linux-snap/dem-5m-hillshade.png",
+        alt: "5m DEM hillshade",
+        caption: "5m DEM hillshade — 국토지리정보원 DEM TC 적용",
+      },
+      {
+        src: "/projects/lumir-linux-snap/dem-compare-unwrap.png",
+        alt: "DEM 비교 — unwrap 결과",
+        caption: "DEM 비교 — Phase unwrap 결과",
+      },
+    ],
   },
   {
     slug: "sar-data-retrieval",
@@ -76,7 +101,7 @@ export const projects: Project[] = [
     system:
       "NestJS 모노레포 (sentinel-retrieval + ai-processing) + CDSE API + NAS(SMB2 vs 직접 FS) PoC + SLC 도메인 모델링 + DDD 5-layer + snap 자매 레포 통합 레이어. AI native 진행 — 예측 보일러플레이트 시점만 도메인 구조 일부 수정.",
     impact:
-      "사용자 위치 요청에 기존 분석 즉시 제공 또는 신규 처리 후 제공 가능한 플랫폼 기초 백엔드. snap의 ISCE2 속도 확보 + sar-data-retrieval의 서비스 레이어 = 한 서비스의 두 레이어라는 통합 비전 확립.",
+      "3 레이어 통합 서비스의 데이터 저장 레이어를 담당합니다. sar-data-retrieval(저장) + lumir-linux-snap(분석) + sar-search-and-analyzer(프론트) 3 프로젝트가 한 서비스로 묶여 사용자 위치 요청에 분석 데이터를 즉시 제공하거나 신규 처리 후 제공할 수 있는 구조입니다.",
     keywords: [
       "NestJS 모노레포",
       "CDSE",
@@ -84,7 +109,7 @@ export const projects: Project[] = [
       "DDD 5-layer",
       "SLC 도메인",
       "AI native",
-      "snap 통합",
+      "3 레이어 통합 서비스의 저장 레이어",
     ],
     trackVisibility: "both",
     metrics: [{ label: "DDD 계층", value: "5-layer" }, { label: "통합 외부 시스템", value: "CDSE + NAS" }],
@@ -157,6 +182,77 @@ export const projects: Project[] = [
     ],
     honestyNote:
       "UI 기획 검토 + 코드 연결 검토 + e2e 테스트만 사람. 나머지 코드 작성은 모두 AI. 회사 아키텍처를 가져온 점도 인정 — 단, 그 위에서 AI native + 빈번 검토 사이클로 인간 단독 대비 더 안정적·고도화된다는 가설을 검증한 무대.",
+    images: [
+      {
+        src: "/projects/him/home.png",
+        alt: "집비치기 모바일 앱 홈 — 위치별 재고 + D-day",
+        caption: "모바일 앱 홈 — 위치별 재고(침대·주방·싱크대) + 임박일(D-30·D-29) + 카테고리 태그",
+      },
+    ],
+  },
+  {
+    slug: "sar-search-and-analyzer",
+    title: "Sentinel SAR 검색·요청 프론트엔드 (풀스택 준비)",
+    subtitle: "지도 기반 SAR 데이터 검색·다운로드·InSAR 분석 요청 · 3 레이어 통합 서비스의 프론트 레이어",
+    badge: "4 진행 중 (직군 안 · UI 기획·백엔드 동시)",
+    problem:
+      "사내에서 위성 데이터를 지도에서 검색·요청하고 InSAR 분석까지 요청하는 통합 프론트 서버가 필요합니다. sar-data-retrieval(저장)과 lumir-linux-snap(snap/isce2 분석)을 묶어주는 사용자 진입점입니다.",
+    system:
+      "Next.js (App Router) + Plan/Current 환경 분리 패턴 + (sar) 도메인 (user·admin 페이지) + Next.js Route Handler BFF. 현재는 apps/web 단독 운영이며, 모노레포(pnpm + libs/*)는 향후 백엔드(apps/api·worker·crawler) 추가 대비 사전 셋업입니다. CLAUDE.md에 4-Layer Clean Architecture + CQRS + 한글 메서드명 백엔드 설계 문서를 본인이 직접 작성했고, 집비치기에서 검증한 패턴을 가져왔습니다.",
+    impact:
+      "지도 기반 AOI 폴리곤 설정 + 카탈로그 검색 + InSAR 분석 요청까지 가능한 사용자 UI 기획·구현이 진행 중입니다. 백엔드 개발과 기획이 동시 진행되어 혼선을 막는 인터페이스 설계가 핵심 작업입니다.",
+    keywords: [
+      "Next.js App Router",
+      "Plan/Current 환경 분리",
+      "지도 + AOI",
+      "InSAR 분석 요청",
+      "pnpm 모노레포",
+      "Route Handler BFF",
+      "3 레이어 통합 서비스의 프론트",
+    ],
+    trackVisibility: "both",
+    ownContribution:
+      "apps/web 전부 본인 단독 (UI 기획·구현·Route Handler BFF). CLAUDE.md의 백엔드 설계 문서(4-Layer + CQRS + 한글 메서드명)도 본인 직접 작성 — 집비치기 검증 패턴을 본 프로젝트에 적용 예정.",
+    honestyNote:
+      "현재 코드는 apps/web 단독 (apps/api·worker·crawler 미구현). 모노레포는 향후 백엔드 추가 대비 사전 셋업입니다. 백엔드 4-Layer는 CLAUDE.md 설계 문서 단계이며 실제 구현은 다음 Phase입니다. UI 기획·백엔드 설계가 동시 진행 중이라 혼선을 막는 인터페이스 정합이 중요한 시점입니다.",
+    metrics: [
+      { label: "현재 단계", value: "UI 기획·구현" },
+      { label: "팀 구성", value: "본인 단독" },
+      { label: "AI 작성", value: "AI native" },
+      { label: "통합 비전", value: "3 레이어 (저장·분석·프론트)" },
+    ],
+    measurementPending: [
+      "시작 시점·누적 시간",
+      "구현 완료 화면 수",
+      "백엔드 Phase 진척 (0~9)",
+      "사내 사용자 수 (향후)",
+    ],
+    qa: [
+      {
+        q: "sar-data-retrieval과는 어떤 관계인가요?",
+        a: "병행하는 다른 프로젝트입니다. sar-data-retrieval은 데이터 저장 레이어, lumir-linux-snap(snap/isce2)은 분석 처리 레이어, 본 프로젝트는 프론트엔드·요청 레이어로 — 3 프로젝트가 한 서비스의 3 레이어로 통합될 예정입니다.",
+      },
+      {
+        q: "모노레포로 셋업한 이유는?",
+        a: "현재는 apps/web 단독이지만, 향후 백엔드(apps/api 4-Layer CQRS)·워커·크롤러를 추가할 계획이라 pnpm + libs/* workspace를 사전 셋업했습니다.",
+      },
+      {
+        q: "4-Layer 백엔드 설계는 어디서?",
+        a: "집비치기(home-inventory-manager)에서 검증한 패턴을 가져왔습니다. CLAUDE.md에 4-Layer + CQRS + 한글 메서드명 규칙을 본인이 작성해서 백엔드 구현 시 따를 예정입니다.",
+      },
+    ],
+    images: [
+      {
+        src: "/projects/sar-search-and-analyzer/search.png",
+        alt: "SAR 데이터 검색 UI — 지도 + AOI + 카탈로그",
+        caption: "검색 화면 — 한국 지도 + AOI 폴리곤 + 페이로드(SAR·EO·IR·UV)·위성 필터 + 카탈로그(Hwaseong·Pohang·Ulsan·Seoul)",
+      },
+      {
+        src: "/projects/sar-search-and-analyzer/aoi.png",
+        alt: "AOI 영역 설정 UI",
+        caption: "AOI 설정 화면 — 두 polygon overlap + 영역 설정 패널",
+      },
+    ],
   },
   {
     slug: "lumir-erp",
