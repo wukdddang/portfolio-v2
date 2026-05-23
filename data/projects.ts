@@ -21,6 +21,12 @@ export interface ProjectImage {
   caption?: string;
 }
 
+export interface ProjectArea {
+  icon: string;
+  label: string;
+  description: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -48,6 +54,12 @@ export interface Project {
    */
   layerLabel?: string;
   layerIcon?: string;
+  /**
+   * 통합 박스가 아니지만 *구성 영역*을 카드 안에 미니로 표시하고 싶을 때.
+   * (예: sdpe = 기획·CI/CD·CSC·메타. him = 백·프론트·인프라·위키 환류.)
+   * subProjects와 달리 단순 라벨이며 별도 페이지로 갈 수는 없다.
+   */
+  areas?: ProjectArea[];
 }
 
 // ===========================================================================
@@ -282,6 +294,28 @@ export const projects: Project[] = [
       "Next.js 자동 재배포",
     ],
     trackVisibility: "both",
+    areas: [
+      {
+        icon: "🎨",
+        label: "기획·UI",
+        description: "DAG 파이프라인 UI (Figma 없이 UI 코드 + Playwright e2e가 곧 기획)",
+      },
+      {
+        icon: "⚙",
+        label: "CI/CD",
+        description: "GitLab CI/CD 0에서 구축 (서버 설치 + 커스텀 메일 + runner)",
+      },
+      {
+        icon: "🔌",
+        label: "인터페이스",
+        description: "interfaces/csc-8 세부 설계 (csc-7/9 후속 예정)",
+      },
+      {
+        icon: "📋",
+        label: "메타·일관성",
+        description: "ICD/SAD docx 학습 + md 체크리스트 위배 검토 반복",
+      },
+    ],
     ownContribution:
       "DAG 파이프라인 기획 UI 설계·구현 + GitLab CI/CD 0에서 구축 + interfaces/csc-8 세부 설계 (csc-7/9 후속 예정)",
     inheritedScope:
@@ -325,6 +359,28 @@ export const projects: Project[] = [
       "자체 인프라 (DB 격리)",
     ],
     trackVisibility: "both",
+    areas: [
+      {
+        icon: "🔧",
+        label: "백엔드",
+        description: "NestJS + CQRS + TypeORM + PostgreSQL (회사 패턴 차용)",
+      },
+      {
+        icon: "🖥",
+        label: "프론트·e2e",
+        description: "UI + current e2e 테스트 (회사 프론트엔드 강화에 역전이 중)",
+      },
+      {
+        icon: "☁",
+        label: "인프라",
+        description: "Docker Compose + S3 + Terraform IaC + Grafana 백업 메트릭",
+      },
+      {
+        icon: "📚",
+        label: "위키 환류",
+        description: "13+ 페이지 환류 + 정합성 31건 간극 정비",
+      },
+    ],
     metrics: [
       { label: "AI 작성 코드", value: "100%" },
       { label: "누적 시간", value: "227h 13m" },
@@ -363,6 +419,28 @@ export const projects: Project[] = [
       "shadcn/ui",
     ],
     trackVisibility: "both",
+    areas: [
+      {
+        icon: "🗓",
+        label: "자원예약·일정",
+        description: "calendar·schedule-status 프론트 모든 기능 (사내 전 사원 대상)",
+      },
+      {
+        icon: "📝",
+        label: "CMS",
+        description: "풀스택 단독 — 기획·BE·테스트 (프론트 테스트 개선 중)",
+      },
+      {
+        icon: "👥",
+        label: "LRIM 채용",
+        description: "채용 담당자·면접관·평가자 대상 프론트 모든 기능",
+      },
+      {
+        icon: "📋",
+        label: "LRIM 면접관리",
+        description: "지원자가 면접 일정 선택해서 제출 (외부 입사지원자 노출)",
+      },
+    ],
     ownContribution:
       "4 워크스트림 모든 기능 구현 (자원예약·CMS·LRIM·면접관리). CMS는 풀스택 단독 (기획·BE·테스트). 4 워크스트림에 일관된 Plan/Current 패턴 적용.",
     inheritedScope:
@@ -420,6 +498,28 @@ export const projects: Project[] = [
       "도메인 적응 메커니즘",
     ],
     trackVisibility: "robotics",
+    areas: [
+      {
+        icon: "📥",
+        label: "raw/ 레이어",
+        description: "사용자가 떨어뜨린 불변 원본 (대화·논문·영상·메모)",
+      },
+      {
+        icon: "🧠",
+        label: "wiki/ 컴파일",
+        description: "AI가 raw를 위키 페이지로 컴파일 (cross-link + index/log 자동)",
+      },
+      {
+        icon: "⚡",
+        label: "skill 시스템",
+        description: "ingest / lint / query — 워크플로우 명시 자동화",
+      },
+      {
+        icon: "🔄",
+        label: "MEMORY 동기화",
+        description: "Claude Code MEMORY로 세션 간 컨텍스트 보존",
+      },
+    ],
     honestyNote:
       "회사 프로젝트에 Brain Trinity 직접 적용 사례는 아직 없습니다 (sdpe + lumir-sar-platform 묶음 통합 계획 단계). 다만 본 이력서·자기 점검 시스템·entities 페이지 자체가 Brain Trinity의 4단계 자동 작동 살아있는 증거입니다.",
     metrics: [

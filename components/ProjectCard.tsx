@@ -81,7 +81,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* Sub-layers — 통합 박스에만 표시 */}
+      {/* Sub-layers — 통합 박스 (lumir-sar-platform 등 별도 Project 묶음) */}
       {project.subProjects && project.subProjects.length > 0 && (
         <div className="mb-5 p-3 rounded-lg border border-dashed border-[var(--border)] bg-[var(--subtle)]/40">
           <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
@@ -95,6 +95,30 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                   {sub.layerLabel}
                 </span>
                 <span className="text-[var(--muted)] truncate">— {sub.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Areas — 카드 안 미니 구성 영역 (subProjects 없을 때) */}
+      {!project.subProjects && project.areas && project.areas.length > 0 && (
+        <div className="mb-5 p-3 rounded-lg border border-dashed border-[var(--border)] bg-[var(--subtle)]/40">
+          <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
+            구성 영역
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5">
+            {project.areas.map((area) => (
+              <div key={area.label} className="flex items-start gap-2 text-xs">
+                <span className="shrink-0 text-base leading-none mt-0.5">{area.icon}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium text-[var(--card-foreground)] truncate">
+                    {area.label}
+                  </div>
+                  <div className="text-[var(--muted)] line-clamp-1 text-[11px] leading-tight">
+                    {area.description}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

@@ -32,7 +32,7 @@ export function ProjectsGrid() {
       id="projects"
       className="relative border-t border-[var(--border)]"
     >
-      <div className="mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 py-24">
+      <div className="mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-12 py-24">
         {/* Header */}
         <div className="mb-10 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
@@ -91,10 +91,10 @@ export function ProjectsGrid() {
           )}
         </AnimatePresence>
 
-        {/* Grid */}
+        {/* Grid — 큰 화면에서 2 col 유지, 2xl 이상에서만 3 col */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 auto-rows-fr"
+          className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-5 md:gap-6 auto-rows-fr"
         >
           <AnimatePresence mode="popLayout">
             {visibleProjects.map((project, idx) => (
