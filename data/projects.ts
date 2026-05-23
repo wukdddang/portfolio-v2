@@ -8,7 +8,8 @@ export type StageRange =
   | "3+4(+5) 혼합"
   | "3+4 혼합"
   | "4 + 5 (회사 역전이)"
-  | "4 + 5 신호";
+  | "4 + 5 신호"
+  | "4 (직군 안 · 4 도메인 적응)";
 
 export type TrackTag = "satellite" | "robotics" | "both";
 
@@ -156,6 +157,65 @@ export const projects: Project[] = [
     ],
     honestyNote:
       "UI 기획 검토 + 코드 연결 검토 + e2e 테스트만 사람. 나머지 코드 작성은 모두 AI. 회사 아키텍처를 가져온 점도 인정 — 단, 그 위에서 AI native + 빈번 검토 사이클로 인간 단독 대비 더 안정적·고도화된다는 가설을 검증한 무대.",
+  },
+  {
+    slug: "lumir-erp",
+    title: "Lumir-ERP (사내 백오피스)",
+    subtitle: "4 도메인 워크스트림 통합 — CMS 풀스택 + 자원예약·LRIM·면접관리 프론트엔드",
+    badge: "4 (직군 안 · 4 도메인 적응)",
+    problem:
+      "루미르 사내 백오피스 4개 도메인(자원예약·CMS·LRIM 채용·LRIM 면접관리) 풀스택 구축. 사내 전 사원 + 채용 담당자·면접관·평가자 + 외부 입사지원자까지 사용 — 사용자 풀이 가장 넓은 회사 프로젝트.",
+    system:
+      "Next.js 14/15 (App Router) + TypeScript + Tailwind + shadcn/ui + SWR + Playwright. Plan(mock)/Current(실제 API) 환경 분리 패턴 (파트장 인계) + 도메인별 Context 패턴 + (cms)/(sms)/(ams)/(uam) 도메인 분리 + UAM은 MongoDB 직접. LRIM 두 앱은 pnpm + Turborepo 모노레포(@repo/ui·common·modules). AI native 100% — 코드 작성은 AI, 본인은 UI 기획 검토 + 코드 연결 검토 + e2e 테스트.",
+    impact:
+      "사내 전 사원 + 외부 입사지원자까지 운영 중인 4 도메인 백오피스. CMS는 풀스택 단독(기획·BE·테스트, 프론트 테스트 개선 중), 나머지 3개는 프론트 모든 기능. 핵심 자산은 프로젝트 4개가 아니라 *4 도메인 동시 적응력* + *CMS 풀-사이클 단독* 경험.",
+    keywords: [
+      "Next.js App Router",
+      "Plan/Current 환경 분리",
+      "CMS 풀스택 단독",
+      "LRIM 채용·면접관리",
+      "외부 입사지원자 노출",
+      "AI native 100%",
+      "Playwright E2E",
+      "shadcn/ui",
+    ],
+    trackVisibility: "both",
+    ownContribution:
+      "4 워크스트림 모든 기능 구현 (자원예약·CMS·LRIM·면접관리). CMS는 풀스택 단독 (기획·BE·테스트). 4 워크스트림에 일관된 Plan/Current 패턴 적용.",
+    inheritedScope:
+      "Plan/Current 환경 분리 패턴 + WikiContext 등 도메인 컨텍스트 패턴 (파트장 설계). 본인은 4 워크스트림에 따라 적용하는 역할.",
+    honestyNote:
+      "Plan/Current 패턴과 도메인 컨텍스트 패턴은 파트장 설계 — 본인이 새로 만든 패턴이 아님. CMS 프론트 테스트는 현재 개선 작업 중 (100% 완성도 아님). 자원예약·LRIM은 프론트만 (백엔드 X).",
+    metrics: [
+      { label: "워크스트림", value: "4 도메인" },
+      { label: "CMS", value: "풀스택 단독" },
+      { label: "외부 노출", value: "입사지원자" },
+      { label: "AI 작성", value: "100%" },
+    ],
+    measurementPending: [
+      "각 워크스트림 시작 시점",
+      "누적 시간 (4 워크스트림 합산)",
+      "사내 사용자 수",
+      "외부 입사지원자 누적 수",
+    ],
+    qa: [
+      {
+        q: "Plan/Current 환경 분리 패턴을 설명해줄 수 있나요?",
+        a: "파트장이 구축한 프론트 아키텍처. planning은 mock 데이터로 UI·기획 마무리, current는 실제 백엔드 API 연결. _services/에 v1·v2 버전 관리. 본인이 4 워크스트림에 일관 적용했음.",
+      },
+      {
+        q: "4 워크스트림 동시 진행이 어떻게 가능했나요?",
+        a: "AI native + 일관된 팀 패턴(Plan/Current·도메인 Context)·도메인 분리(api 경로 규칙) 덕분. 개별 도메인 학습은 AI 사고 파트너로 흡수.",
+      },
+      {
+        q: "본인이 설계한 부분과 인계받은 부분?",
+        a: "인계: Plan/Current 환경 분리 + 도메인 Context 패턴 + 모노레포 구조. 본인: 4 워크스트림 모든 기능 구현 + CMS 백엔드·테스트.",
+      },
+      {
+        q: "가장 자랑하는 부분?",
+        a: "CMS 풀스택 단독 (기획부터 BE 테스트까지) — 4 워크스트림 중 유일한 풀-사이클. 또는 4 도메인을 동시에 운영한 적응력 자체.",
+      },
+    ],
   },
   {
     slug: "brain-trinity",
