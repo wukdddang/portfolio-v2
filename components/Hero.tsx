@@ -1,11 +1,17 @@
 "use client";
 
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowDown, FileText, Briefcase } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
+import { pick } from "@/data/i18n";
+import type { Locale } from "@/i18n/routing";
 
 export function Hero() {
+  const t = useTranslations("hero");
+  const locale = useLocale() as Locale;
+
   return (
     <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
       {/* Subtle background grid */}
@@ -28,7 +34,7 @@ export function Hero() {
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border)] text-xs font-mono text-[var(--muted)] mb-8"
         >
           <span className="size-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-          AI 활용 5단계 · {personal.currentStage.range}
+          {t("stageLabel")} · {pick(personal.currentStage.range, locale)}
         </motion.div>
 
         <motion.h1
@@ -37,7 +43,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] break-keep"
         >
-          {personal.tagline}
+          {pick(personal.tagline, locale)}
         </motion.h1>
 
         <motion.p
@@ -46,7 +52,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-6 text-lg md:text-xl text-[var(--muted)] max-w-2xl leading-relaxed"
         >
-          {personal.subTagline}.
+          {pick(personal.subTagline, locale)}.
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -54,7 +60,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.25 }}
           className="mt-4 text-base md:text-lg text-[var(--card-foreground)] max-w-2xl leading-relaxed"
         >
-          {personal.pitch}
+          {pick(personal.pitch, locale)}
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -62,7 +68,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-3 text-sm md:text-base text-[var(--muted)] max-w-2xl leading-relaxed"
         >
-          {personal.identity}
+          {pick(personal.identity, locale)}
         </motion.p>
 
         <motion.div
@@ -76,7 +82,7 @@ export function Hero() {
             className="group inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[var(--foreground)] text-[var(--background)] text-sm font-medium hover:opacity-90 transition-opacity"
           >
             <Briefcase className="size-4" />
-            프로젝트 보러가기
+            {t("ctaProjects")}
             <ArrowDown className="size-4 group-hover:translate-y-0.5 transition-transform" />
           </a>
           <Link
@@ -84,7 +90,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-[var(--border)] text-sm font-medium hover:bg-[var(--subtle)] transition-colors"
           >
             <FileText className="size-4" />
-            이력서 보기
+            {t("ctaResume")}
             <span className="text-xs text-[var(--muted)] font-mono ml-1">/resume</span>
           </Link>
         </motion.div>
@@ -98,27 +104,27 @@ export function Hero() {
         >
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">
-              메인 직군
+              {t("meta.mainDomain")}
             </div>
-            <div className="text-[var(--foreground)]">웹 개발 · 풀스택</div>
+            <div className="text-[var(--foreground)]">{t("meta.mainDomainValue")}</div>
           </div>
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">
-              학습 도메인
+              {t("meta.learnedDomain")}
             </div>
-            <div className="text-[var(--foreground)]">SAR · 위성영상</div>
+            <div className="text-[var(--foreground)]">{t("meta.learnedDomainValue")}</div>
           </div>
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">
-              AI 활용 단계
+              {t("meta.aiStage")}
             </div>
-            <div className="text-[var(--foreground)]">{personal.currentStage.range}</div>
+            <div className="text-[var(--foreground)]">{pick(personal.currentStage.range, locale)}</div>
           </div>
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">
-              연차
+              {t("meta.yearsLabel")}
             </div>
-            <div className="text-[var(--foreground)]">{personal.yearsExperience}</div>
+            <div className="text-[var(--foreground)]">{pick(personal.yearsExperience, locale)}</div>
           </div>
         </motion.div>
       </div>

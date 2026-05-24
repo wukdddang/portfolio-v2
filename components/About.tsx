@@ -1,8 +1,11 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Mail, Sparkles, CheckCircle2 } from "lucide-react";
 import { personal } from "@/data/personal";
+import { pick } from "@/data/i18n";
+import type { Locale } from "@/i18n/routing";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -18,6 +21,9 @@ function GithubIcon({ className }: { className?: string }) {
 }
 
 export function About() {
+  const t = useTranslations("about");
+  const locale = useLocale() as Locale;
+
   return (
     <section
       id="about"
@@ -26,17 +32,18 @@ export function About() {
       <div className="mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 py-24">
         <div className="mb-12 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
-            About
+            {t("eyebrow")}
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            {personal.name}입니다
+            {pick(personal.name, locale)}
+            {t("nameSuffix")}
           </h2>
           <p className="text-lg text-[var(--muted)] leading-relaxed">
-            {personal.tagline}. {personal.identity}
+            {pick(personal.tagline, locale)}. {pick(personal.identity, locale)}
           </p>
         </div>
 
-        {/* Invitations — 회사 입장에서 어필 */}
+        {/* Invitations */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,14 +51,14 @@ export function About() {
           transition={{ duration: 0.5 }}
           className="mb-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl"
         >
-          {personal.invitations.map((q) => (
+          {personal.invitations.map((q, i) => (
             <div
-              key={q}
+              key={i}
               className="flex items-start gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--card)]"
             >
               <CheckCircle2 className="size-5 shrink-0 text-[var(--accent)] mt-0.5" />
               <p className="text-sm leading-relaxed text-[var(--card-foreground)]">
-                {q}
+                {pick(q, locale)}
               </p>
             </div>
           ))}
@@ -69,16 +76,15 @@ export function About() {
             <Sparkles className="size-5 mt-0.5 shrink-0 opacity-80" />
             <div>
               <div className="text-xs font-mono uppercase tracking-widest opacity-60 mb-2">
-                Brain Trinity · 시연 가능
+                {t("brainTrinityEyebrow")}
               </div>
               <p className="text-base md:text-lg leading-relaxed mb-3">
-                이 포트폴리오와 자가 진단, 6개 프로젝트 자료 박스는 모두{" "}
-                <span className="font-semibold">Brain Trinity</span>라는 메타 시스템에서 컴파일됐습니다.
-                Karpathy LLM Wiki 패턴 + Claude Code 협업 + skill 시스템으로 위키 페이지 56+ 가 누적되어 있습니다.
+                {t("brainTrinityBody1Pre")}
+                <span className="font-semibold">{t("brainTrinityBody1Bold")}</span>
+                {t("brainTrinityBody1Post")}
               </p>
               <p className="text-sm opacity-70 leading-relaxed">
-                새로운 도메인이 나타나도 정보 구조화와 AI native 기반이면 해결하지 못할 일이 없다고 봅니다.
-                Brain Trinity가 그 방법론이자 자산이며, 면접에서 직접 시연이 가능합니다.
+                {t("brainTrinityBody2")}
               </p>
             </div>
           </div>
@@ -87,16 +93,16 @@ export function About() {
         {/* Future vision */}
         <div className="mb-10 max-w-3xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
-            다음 방향
+            {t("futureHeading")}
           </div>
           <ul className="space-y-2">
-            {personal.futureVision.map((v) => (
+            {personal.futureVision.map((v, i) => (
               <li
-                key={v}
+                key={i}
                 className="flex items-start gap-2 text-base text-[var(--card-foreground)]"
               >
                 <span className="text-[var(--accent)] font-mono">→</span>
-                <span>{v}</span>
+                <span>{pick(v, locale)}</span>
               </li>
             ))}
           </ul>

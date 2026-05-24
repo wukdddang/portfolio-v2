@@ -1,10 +1,16 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { mainStack, learnedDomain, future } from "@/data/stack";
+import { pick, type L } from "@/data/i18n";
+import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 export function TechStack() {
+  const t = useTranslations("techStack");
+  const locale = useLocale() as Locale;
+
   return (
     <section
       id="stack"
@@ -14,28 +20,31 @@ export function TechStack() {
         {/* Header */}
         <div className="mb-12 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
-            기술 스택
+            {t("eyebrow")}
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            메인 직군 · 학습 도메인 · 미래
+            {t("title")}
           </h2>
-          <p className="text-[var(--muted)] leading-relaxed">
-            본인 직군(웹 개발)과 회사에서 배운 학습 도메인(SAR·위성영상)을 분리해서 봅니다. 직군 안의 깊이와 직군 확장을 명확히 구분합니다.
-          </p>
+          <p className="text-[var(--muted)] leading-relaxed">{t("lede")}</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-10 md:gap-12">
           {/* 메인 직군 */}
           <div>
             <div className="flex items-baseline justify-between mb-6 pb-3 border-b border-[var(--border)]">
-              <h3 className="text-xl font-bold">메인 직군 · 웹 개발</h3>
+              <h3 className="text-xl font-bold">{t("mainColumn")}</h3>
               <div className="text-xs font-mono text-[var(--muted)]">
-                4단계 시스템화
+                {t("mainStage")}
               </div>
             </div>
             <div className="space-y-6">
               {mainStack.map((cat, idx) => (
-                <StackBlock key={cat.label} category={cat} delay={idx * 0.08} />
+                <StackBlock
+                  key={pick(cat.label, locale)}
+                  category={cat}
+                  locale={locale}
+                  delay={idx * 0.08}
+                />
               ))}
             </div>
           </div>
@@ -43,16 +52,17 @@ export function TechStack() {
           {/* 학습 도메인 */}
           <div>
             <div className="flex items-baseline justify-between mb-6 pb-3 border-b border-[var(--accent)]/40">
-              <h3 className="text-xl font-bold">학습 도메인 · SAR · 위성영상</h3>
+              <h3 className="text-xl font-bold">{t("learnedColumn")}</h3>
               <div className="text-xs font-mono text-[var(--accent)]">
-                3단계 직군 확장
+                {t("learnedStage")}
               </div>
             </div>
             <div className="space-y-6">
               {learnedDomain.map((cat, idx) => (
                 <StackBlock
-                  key={cat.label}
+                  key={pick(cat.label, locale)}
                   category={cat}
+                  locale={locale}
                   delay={idx * 0.08}
                   accent
                 />
@@ -62,15 +72,15 @@ export function TechStack() {
             {/* Future */}
             <div className="mt-10 pt-6 border-t border-dashed border-[var(--border)]">
               <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
-                다음 직군 확장 — 예측
+                {t("futureHeading")}
               </div>
               <div className="flex flex-wrap gap-2">
-                {future.map((f) => (
+                {future.map((f, i) => (
                   <span
-                    key={f}
+                    key={i}
                     className="text-xs font-mono px-3 py-1.5 rounded-md border border-dashed border-[var(--border)] text-[var(--muted)]"
                   >
-                    {f}
+                    {pick(f, locale)}
                   </span>
                 ))}
               </div>
@@ -84,10 +94,12 @@ export function TechStack() {
 
 function StackBlock({
   category,
+  locale,
   delay,
   accent = false,
 }: {
-  category: { label: string; items: { name: string; note?: string }[] };
+  category: { label: L; items: { name: string; note?: L }[] };
+  locale: Locale;
   delay: number;
   accent?: boolean;
 }) {
@@ -104,7 +116,7 @@ function StackBlock({
           accent ? "text-[var(--accent)]" : "text-[var(--muted)]"
         )}
       >
-        {category.label}
+        {pick(category.label, locale)}
       </div>
       <ul className="space-y-2">
         {category.items.map((item) => (
@@ -115,7 +127,7 @@ function StackBlock({
             <span className="font-medium">{item.name}</span>
             {item.note && (
               <span className="text-xs font-mono text-[var(--muted)]">
-                · {item.note}
+                · {pick(item.note, locale)}
               </span>
             )}
           </li>

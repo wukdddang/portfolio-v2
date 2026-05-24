@@ -1,9 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import type { Project } from "@/data/projects";
+import { pick } from "@/data/i18n";
+import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 interface ProjectCardProps {
@@ -12,6 +15,8 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
+  const t = useTranslations("projectCard");
+  const locale = useLocale() as Locale;
   const isRoboticsOnly = project.trackVisibility === "robotics";
 
   return (
@@ -39,84 +44,84 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               : "bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30"
           )}
         >
-          {project.badge}
+          {pick(project.badge, locale)}
         </div>
       </div>
 
       {/* Title + subtitle */}
       <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-2 leading-tight">
-        {project.title}
+        {pick(project.title, locale)}
       </h3>
       <p className="text-sm text-[var(--muted)] leading-relaxed mb-5 line-clamp-2">
-        {project.subtitle}
+        {pick(project.subtitle, locale)}
       </p>
 
       {/* Track badge */}
       {isRoboticsOnly && (
         <div className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] mb-4 self-start">
           <Sparkles className="size-3" />
-          로보틱스 트랙 전용
+          {t("roboticsOnly")}
         </div>
       )}
 
       {/* 문제 → 시스템 → 임팩트 압축 */}
       <div className="space-y-2.5 mb-5 text-xs leading-relaxed flex-1">
         <div className="flex gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] shrink-0 w-12 pt-0.5">
-            문제
+          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] shrink-0 w-16 pt-0.5">
+            {t("problem")}
           </span>
-          <p className="text-[var(--card-foreground)] line-clamp-2">{project.problem}</p>
+          <p className="text-[var(--card-foreground)] line-clamp-2">{pick(project.problem, locale)}</p>
         </div>
         <div className="flex gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] shrink-0 w-12 pt-0.5">
-            시스템
+          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] shrink-0 w-16 pt-0.5">
+            {t("system")}
           </span>
-          <p className="text-[var(--card-foreground)] line-clamp-2">{project.system}</p>
+          <p className="text-[var(--card-foreground)] line-clamp-2">{pick(project.system, locale)}</p>
         </div>
         <div className="flex gap-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] shrink-0 w-12 pt-0.5">
-            임팩트
+          <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] shrink-0 w-16 pt-0.5">
+            {t("impact")}
           </span>
-          <p className="text-[var(--card-foreground)] line-clamp-2">{project.impact}</p>
+          <p className="text-[var(--card-foreground)] line-clamp-2">{pick(project.impact, locale)}</p>
         </div>
       </div>
 
-      {/* Sub-layers — 통합 박스 (lumir-sar-platform 등 별도 Project 묶음) */}
+      {/* Sub-layers */}
       {project.subProjects && project.subProjects.length > 0 && (
         <div className="mb-5 p-3 rounded-lg border border-dashed border-[var(--border)] bg-[var(--subtle)]/40">
           <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
-            구성 레이어
+            {t("subLayers")}
           </div>
           <div className="space-y-1.5">
             {project.subProjects.map((sub) => (
               <div key={sub.slug} className="flex items-center gap-2 text-xs">
                 <span className="shrink-0 text-base leading-none">{sub.layerIcon}</span>
                 <span className="font-medium text-[var(--card-foreground)]">
-                  {sub.layerLabel}
+                  {sub.layerLabel ? pick(sub.layerLabel, locale) : sub.slug}
                 </span>
-                <span className="text-[var(--muted)] truncate">— {sub.title}</span>
+                <span className="text-[var(--muted)] truncate">— {pick(sub.title, locale)}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Areas — 카드 안 미니 구성 영역 (subProjects 없을 때) */}
+      {/* Areas */}
       {!project.subProjects && project.areas && project.areas.length > 0 && (
         <div className="mb-5 p-3 rounded-lg border border-dashed border-[var(--border)] bg-[var(--subtle)]/40">
           <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
-            구성 영역
+            {t("areas")}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5">
-            {project.areas.map((area) => (
-              <div key={area.label} className="flex items-start gap-2 text-xs">
+            {project.areas.map((area, i) => (
+              <div key={`${area.icon}-${i}`} className="flex items-start gap-2 text-xs">
                 <span className="shrink-0 text-base leading-none mt-0.5">{area.icon}</span>
                 <div className="min-w-0 flex-1">
                   <div className="font-medium text-[var(--card-foreground)] truncate">
-                    {area.label}
+                    {pick(area.label, locale)}
                   </div>
                   <div className="text-[var(--muted)] line-clamp-1 text-[11px] leading-tight">
-                    {area.description}
+                    {pick(area.description, locale)}
                   </div>
                 </div>
               </div>
@@ -127,12 +132,12 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
 
       {/* Keywords */}
       <div className="flex flex-wrap gap-1.5 mb-5">
-        {project.keywords.slice(0, 5).map((kw) => (
+        {project.keywords.slice(0, 5).map((kw, i) => (
           <span
-            key={kw}
+            key={i}
             className="text-[10px] font-mono px-2 py-1 rounded-md bg-[var(--subtle)] text-[var(--muted)]"
           >
-            {kw}
+            {pick(kw, locale)}
           </span>
         ))}
         {project.keywords.length > 5 && (
@@ -147,7 +152,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         href={`/projects/${project.slug}`}
         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors mt-auto"
       >
-        자세히 보기
+        {t("viewDetail")}
         <ArrowUpRight className="size-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
       </Link>
     </motion.div>

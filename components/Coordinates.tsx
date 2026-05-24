@@ -1,11 +1,19 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { stages, singleLever } from "@/data/levels";
 import { personal } from "@/data/personal";
+import { pick } from "@/data/i18n";
+import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 export function Coordinates() {
+  const t = useTranslations("coordinates");
+  const locale = useLocale() as Locale;
+
+  const axes = [personal.mainDomain, personal.academicBackground, personal.learnedDomain];
+
   return (
     <section
       id="coordinates"
@@ -15,58 +23,54 @@ export function Coordinates() {
         {/* Header */}
         <div className="mb-16 max-w-2xl">
           <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
-            내 위치
+            {t("eyebrow")}
           </div>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            단계 진단은 직군이 기준선입니다
+            {t("title")}
           </h2>
           <p className="text-[var(--muted)] leading-relaxed">
-            같은 SAR 작업이라도 공간정보공학 전공자가 메인 직군으로 하는 것과, 웹
-            개발자가 직군 확장으로 하는 것은 다릅니다. 아래 매트릭스와 5단계 모델이 본인의
-            현재 좌표입니다.
+            {t("lede")}
           </p>
         </div>
 
         {/* 직군 매트릭스 — 3축 */}
         <div className="grid md:grid-cols-3 gap-4 mb-16">
-          {[personal.mainDomain, personal.academicBackground, personal.learnedDomain].map(
-            (axis, idx) => (
-              <motion.div
-                key={axis.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className={cn(
-                  "p-6 rounded-2xl border bg-[var(--card)]",
-                  idx === 0
-                    ? "border-[var(--accent)]/40 ring-1 ring-[var(--accent)]/20"
-                    : "border-[var(--border)]"
-                )}
-              >
-                <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
-                  {axis.label}
+          {axes.map((axis, idx) => (
+            <motion.div
+              key={pick(axis.label, locale)}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className={cn(
+                "p-6 rounded-2xl border bg-[var(--card)]",
+                idx === 0
+                  ? "border-[var(--accent)]/40 ring-1 ring-[var(--accent)]/20"
+                  : "border-[var(--border)]"
+              )}
+            >
+              <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
+                {pick(axis.label, locale)}
+              </div>
+              <div className="text-xl font-semibold mb-2">{pick(axis.value, locale)}</div>
+              <div className="text-sm text-[var(--muted)] leading-relaxed">
+                {pick(axis.detail, locale)}
+              </div>
+              {idx === 0 && (
+                <div className="mt-3 pt-3 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
+                  {pick(personal.mainDomain.note, locale)}
                 </div>
-                <div className="text-xl font-semibold mb-2">{axis.value}</div>
-                <div className="text-sm text-[var(--muted)] leading-relaxed">
-                  {axis.detail}
-                </div>
-                {"note" in axis && axis.note && (
-                  <div className="mt-3 pt-3 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
-                    {axis.note}
-                  </div>
-                )}
-              </motion.div>
-            )
-          )}
+              )}
+            </motion.div>
+          ))}
         </div>
 
         {/* 5단계 모델 + 본인 위치 */}
         <div className="mb-8">
           <div className="flex items-baseline justify-between mb-6">
-            <h3 className="text-2xl font-bold">AI 활용 5단계 — 본인식 정의</h3>
+            <h3 className="text-2xl font-bold">{t("stagesTitle")}</h3>
             <div className="text-xs font-mono text-[var(--muted)]">
-              현재 좌표 · {personal.currentStage.range}
+              {t("currentLabel")} · {pick(personal.currentStage.range, locale)}
             </div>
           </div>
 
@@ -104,31 +108,31 @@ export function Coordinates() {
                   </div>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-                      <div className="font-semibold text-base">{stage.name}</div>
+                      <div className="font-semibold text-base">{pick(stage.name, locale)}</div>
                       <div className="text-xs font-mono text-[var(--muted)]">
-                        {stage.short} · 결과물 = {stage.resultOwner}
+                        {pick(stage.short, locale)} · {t("resultLabel")} {pick(stage.resultOwner, locale)}
                       </div>
                       {isActive && (
                         <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--accent-foreground)]">
-                          현재
+                          {t("currentBadge")}
                         </span>
                       )}
                       {isSignal && (
                         <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-[var(--accent)]/60 text-[var(--accent)]">
-                          진입 신호
+                          {t("signalBadge")}
                         </span>
                       )}
                     </div>
                     {stage.ownDefinition ? (
                       <div className="text-sm text-[var(--card-foreground)] leading-relaxed">
                         <span className="text-[var(--muted)] font-mono text-xs mr-1">
-                          본인 체감:
+                          {t("ownFeel")}
                         </span>
-                        {stage.ownDefinition}
+                        {pick(stage.ownDefinition, locale)}
                       </div>
                     ) : (
                       <div className="text-sm text-[var(--muted)] leading-relaxed">
-                        {stage.seongPMDefinition}
+                        {pick(stage.seongPMDefinition, locale)}
                       </div>
                     )}
                   </div>
@@ -150,12 +154,14 @@ export function Coordinates() {
             <div className="text-3xl">🔑</div>
             <div>
               <div className="text-xs font-mono uppercase tracking-widest opacity-60 mb-2">
-                단일 레버
+                {t("singleLeverEyebrow")}
               </div>
               <div className="text-xl md:text-2xl font-bold mb-3">
-                {singleLever.title.replace("단일 레버 — ", "")}
+                {pick(singleLever.title, locale)
+                  .replace("단일 레버 — ", "")
+                  .replace("Single lever — ", "")}
               </div>
-              <p className="opacity-80 leading-relaxed">{singleLever.description}</p>
+              <p className="opacity-80 leading-relaxed">{pick(singleLever.description, locale)}</p>
             </div>
           </div>
         </motion.div>

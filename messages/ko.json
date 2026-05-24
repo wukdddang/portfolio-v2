@@ -1,0 +1,152 @@
+{
+  "metadata": {
+    "homeTitle": "우창욱 · 웹 개발자, SAR 도메인 확장 중",
+    "homeDescription": "AI 활용 5단계 모델로 자가 진단한 본인 좌표 + 5개 프로젝트(snap·sdpe·sar-data-retrieval·집비치기·Brain Trinity) — 3+4단계 진행 중.",
+    "resumeTitle": "우창욱 이력서 · 웹 개발자, SAR 도메인 확장 중",
+    "resumeDescription": "AI native 풀스택 + 직군 확장 · base 이력서 (회사 미정 시점, 인쇄·PDF export 가능)",
+    "projectSuffix": "· 우창욱 포트폴리오"
+  },
+  "nav": {
+    "location": "위치",
+    "projects": "프로젝트",
+    "stack": "스택",
+    "about": "About",
+    "resume": "이력서",
+    "ariaLocale": "언어 선택",
+    "ariaKo": "한국어",
+    "ariaEn": "English"
+  },
+  "hero": {
+    "stageLabel": "AI 활용 5단계",
+    "ctaProjects": "프로젝트 보러가기",
+    "ctaResume": "이력서 보기",
+    "meta": {
+      "mainDomain": "메인 직군",
+      "mainDomainValue": "웹 개발 · 풀스택",
+      "learnedDomain": "학습 도메인",
+      "learnedDomainValue": "SAR · 위성영상",
+      "aiStage": "AI 활용 단계",
+      "yearsLabel": "연차"
+    }
+  },
+  "coordinates": {
+    "eyebrow": "내 위치",
+    "title": "단계 진단은 직군이 기준선입니다",
+    "lede": "같은 SAR 작업이라도 공간정보공학 전공자가 메인 직군으로 하는 것과, 웹 개발자가 직군 확장으로 하는 것은 다릅니다. 아래 매트릭스와 5단계 모델이 본인의 현재 좌표입니다.",
+    "stagesTitle": "AI 활용 5단계 — 본인식 정의",
+    "currentLabel": "현재 좌표",
+    "currentBadge": "현재",
+    "signalBadge": "진입 신호",
+    "ownFeel": "본인 체감:",
+    "resultLabel": "결과물 =",
+    "singleLeverEyebrow": "단일 레버"
+  },
+  "projects": {
+    "eyebrow": "프로젝트",
+    "title": "재료는 같습니다. 코스만 다릅니다",
+    "lede": "조립형 이력서의 원칙입니다. 같은 6개 프로젝트라도 읽는 사람에 따라 풀이 깊이가 달라집니다. 아래 트랙 토글로 회사·도메인 맥락에 맞춘 코스를 보실 수 있습니다.",
+    "trackAll": "전체",
+    "trackSatellite": "위성 트랙",
+    "trackRobotics": "로보틱스 트랙",
+    "sellingPoint": "세일즈 포인트",
+    "showingNow": "현재 표시",
+    "total": "전체",
+    "projectsUnit": "개 프로젝트",
+    "totalSuffix": "개 (Brain Trinity는 로보틱스 트랙 전용)"
+  },
+  "projectCard": {
+    "roboticsOnly": "로보틱스 트랙 전용",
+    "problem": "문제",
+    "system": "시스템",
+    "impact": "임팩트",
+    "subLayers": "구성 레이어",
+    "areas": "구성 영역",
+    "viewDetail": "자세히 보기"
+  },
+  "projectDetail": {
+    "backToList": "프로젝트 목록으로",
+    "roboticsOnly": "로보틱스 트랙 전용",
+    "imagesGallery": "화면 · 산출물",
+    "problem": "문제",
+    "system": "시스템",
+    "impact": "임팩트",
+    "ownContribution": "본인 기여",
+    "inheritedScope": "인계받은 영역",
+    "honestyNote": "솔직성 메모 (면접용)",
+    "qaTitle": "면접 Q&A 준비",
+    "keywords": "키워드",
+    "measurementPending": "📊 정량 측정 권장 (현재 미측정)",
+    "subProjectsEyebrow": "레이어별 깊이",
+    "subProjectsTitle": "3 레이어 각각 자세히",
+    "subProjectsLede": "통합 박스가 묶은 각 레이어를 깊이 풀어 봅니다. 외부 검색·공유 시 깊은 링크가 도착하는 위치이기도 합니다.",
+    "layerSuffix": "레이어",
+    "honestyShort": "솔직성 메모"
+  },
+  "techStack": {
+    "eyebrow": "기술 스택",
+    "title": "메인 직군 · 학습 도메인 · 미래",
+    "lede": "본인 직군(웹 개발)과 회사에서 배운 학습 도메인(SAR·위성영상)을 분리해서 봅니다. 직군 안의 깊이와 직군 확장을 명확히 구분합니다.",
+    "mainColumn": "메인 직군 · 웹 개발",
+    "mainStage": "4단계 시스템화",
+    "learnedColumn": "학습 도메인 · SAR · 위성영상",
+    "learnedStage": "3단계 직군 확장",
+    "futureHeading": "다음 직군 확장 — 예측"
+  },
+  "about": {
+    "eyebrow": "About",
+    "nameSuffix": "입니다",
+    "brainTrinityEyebrow": "Brain Trinity · 시연 가능",
+    "brainTrinityBody1Pre": "이 포트폴리오와 자가 진단, 6개 프로젝트 자료 박스는 모두 ",
+    "brainTrinityBody1Bold": "Brain Trinity",
+    "brainTrinityBody1Post": "라는 메타 시스템에서 컴파일됐습니다. Karpathy LLM Wiki 패턴 + Claude Code 협업 + skill 시스템으로 위키 페이지 56+ 가 누적되어 있습니다.",
+    "brainTrinityBody2": "새로운 도메인이 나타나도 정보 구조화와 AI native 기반이면 해결하지 못할 일이 없다고 봅니다. Brain Trinity가 그 방법론이자 자산이며, 면접에서 직접 시연이 가능합니다.",
+    "futureHeading": "다음 방향"
+  },
+  "resume": {
+    "toolbarBack": "포트폴리오로",
+    "print": "인쇄 · PDF 저장",
+    "header": "Resume · 2026-05 · Base 버전",
+    "meta": {
+      "mainDomain": "메인 직군",
+      "mainDomainValue": "웹 개발 · 풀스택",
+      "learnedDomain": "학습 도메인",
+      "learnedDomainValue": "SAR · 위성영상",
+      "aiStage": "AI 활용 단계",
+      "yearsLabel": "연차"
+    },
+    "linkPortfolio": "포트폴리오",
+    "sections": {
+      "summary": "Summary",
+      "summaryEyebrow": "요약",
+      "invitations": "찾으시는 분이라면",
+      "invitationsEyebrow": "invitations",
+      "experience": "Experience",
+      "experienceEyebrow": "회사 경력",
+      "side": "Side Projects",
+      "sideEyebrow": "사이드 프로젝트",
+      "stack": "Tech Stack",
+      "stackEyebrow": "기술 스택",
+      "about": "About",
+      "aboutEyebrow": "소개 · 다음 방향",
+      "contact": "Contact",
+      "contactEyebrow": "연락처"
+    },
+    "stack": {
+      "mainColumn": "메인 직군 · 웹 개발",
+      "learnedColumn": "학습 도메인 · SAR · 위성영상",
+      "nextDirection": "다음 방향: 임베디드 → 하드웨어 → 로보틱스"
+    },
+    "about": {
+      "brainTrinityEyebrow": "Brain Trinity · 시연 가능",
+      "futureHeading": "다음 방향"
+    },
+    "contact": {
+      "portfolioLink": "포트폴리오 사이트",
+      "baseNote": "이 이력서는 base 버전입니다. 회사 JD가 정해지면 *읽는 사람*에 맞춰 풀이 깊이와 강조 코스를 조립해 다시 다듬을 예정입니다."
+    },
+    "block": {
+      "whatLabel": "한 일",
+      "impactLabel": "임팩트"
+    }
+  }
+}

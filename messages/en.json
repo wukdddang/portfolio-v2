@@ -1,0 +1,152 @@
+{
+  "metadata": {
+    "homeTitle": "Changwook Woo · Web Developer, expanding into SAR",
+    "homeDescription": "Self-diagnosed coordinates on a 5-stage AI usage model + 5 projects (snap · sdpe · sar-data-retrieval · him · Brain Trinity) — currently at stage 3+4.",
+    "resumeTitle": "Changwook Woo Resume · Web Developer, expanding into SAR",
+    "resumeDescription": "AI-native full-stack + domain expansion · base resume (no target company yet, print / PDF export ready).",
+    "projectSuffix": "· Changwook Woo Portfolio"
+  },
+  "nav": {
+    "location": "Location",
+    "projects": "Projects",
+    "stack": "Stack",
+    "about": "About",
+    "resume": "Resume",
+    "ariaLocale": "Language",
+    "ariaKo": "Korean",
+    "ariaEn": "English"
+  },
+  "hero": {
+    "stageLabel": "AI usage · 5 stages",
+    "ctaProjects": "See projects",
+    "ctaResume": "See resume",
+    "meta": {
+      "mainDomain": "Main role",
+      "mainDomainValue": "Web Dev · Full-stack",
+      "learnedDomain": "Learned domain",
+      "learnedDomainValue": "SAR · Satellite imagery",
+      "aiStage": "AI usage stage",
+      "yearsLabel": "Experience"
+    }
+  },
+  "coordinates": {
+    "eyebrow": "Where I am",
+    "title": "Stage diagnosis starts from your main role",
+    "lede": "The same SAR work means something different when a geospatial-engineering major does it as their main role versus when a web developer does it as a domain expansion. The matrix below and the 5-stage model anchor my current coordinates.",
+    "stagesTitle": "AI usage · 5 stages — in my own words",
+    "currentLabel": "Current coordinates",
+    "currentBadge": "Now",
+    "signalBadge": "Entry signal",
+    "ownFeel": "How I feel it:",
+    "resultLabel": "Output owner =",
+    "singleLeverEyebrow": "Single lever"
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "Same ingredients. Different course.",
+    "lede": "An assembled resume — the same 6 projects read differently for different audiences. Use the track toggle below to switch the depth and angle to the company / domain context.",
+    "trackAll": "All",
+    "trackSatellite": "Satellite track",
+    "trackRobotics": "Robotics track",
+    "sellingPoint": "Selling point",
+    "showingNow": "Now showing",
+    "total": "Total",
+    "projectsUnit": "projects",
+    "totalSuffix": "(Brain Trinity shows only on the robotics track)"
+  },
+  "projectCard": {
+    "roboticsOnly": "Robotics track only",
+    "problem": "Problem",
+    "system": "System",
+    "impact": "Impact",
+    "subLayers": "Layers",
+    "areas": "Areas",
+    "viewDetail": "View details"
+  },
+  "projectDetail": {
+    "backToList": "Back to projects",
+    "roboticsOnly": "Robotics track only",
+    "imagesGallery": "Screens · artifacts",
+    "problem": "Problem",
+    "system": "System",
+    "impact": "Impact",
+    "ownContribution": "My contribution",
+    "inheritedScope": "Inherited scope",
+    "honestyNote": "Honesty note (for interviews)",
+    "qaTitle": "Interview Q&A prep",
+    "keywords": "Keywords",
+    "measurementPending": "📊 Quantitative metrics pending (not yet measured)",
+    "subProjectsEyebrow": "Layer-by-layer depth",
+    "subProjectsTitle": "Each of the 3 layers in detail",
+    "subProjectsLede": "Each layer of the integrated box, expanded. These are the deep-link landing points for external search and sharing.",
+    "layerSuffix": "layer",
+    "honestyShort": "Honesty note"
+  },
+  "techStack": {
+    "eyebrow": "Tech stack",
+    "title": "Main role · Learned domain · Future",
+    "lede": "I separate my main role (web development) from the learned domain (SAR · satellite imagery) picked up at work. Depth-within-role and role-expansion are two distinct things.",
+    "mainColumn": "Main role · Web Development",
+    "mainStage": "Stage 4 · systemization",
+    "learnedColumn": "Learned domain · SAR · Satellite imagery",
+    "learnedStage": "Stage 3 · role expansion",
+    "futureHeading": "Next role expansion — projected"
+  },
+  "about": {
+    "eyebrow": "About",
+    "nameSuffix": "",
+    "brainTrinityEyebrow": "Brain Trinity · live demo available",
+    "brainTrinityBody1Pre": "This portfolio, the self-diagnosis, and all 6 project briefs were compiled from a meta system called ",
+    "brainTrinityBody1Bold": "Brain Trinity",
+    "brainTrinityBody1Post": ". It uses the Karpathy LLM Wiki pattern + Claude Code collaboration + a skill system, and currently holds 56+ accumulated wiki pages.",
+    "brainTrinityBody2": "Given an unfamiliar domain, I believe structured information + an AI-native foundation can solve almost anything. Brain Trinity is both the methodology and the asset — and I can demo it live in an interview.",
+    "futureHeading": "What's next"
+  },
+  "resume": {
+    "toolbarBack": "Back to portfolio",
+    "print": "Print · save PDF",
+    "header": "Resume · 2026-05 · Base version",
+    "meta": {
+      "mainDomain": "Main role",
+      "mainDomainValue": "Web Dev · Full-stack",
+      "learnedDomain": "Learned domain",
+      "learnedDomainValue": "SAR · Satellite imagery",
+      "aiStage": "AI usage stage",
+      "yearsLabel": "Experience"
+    },
+    "linkPortfolio": "Portfolio",
+    "sections": {
+      "summary": "Summary",
+      "summaryEyebrow": "summary",
+      "invitations": "If you're looking for",
+      "invitationsEyebrow": "invitations",
+      "experience": "Experience",
+      "experienceEyebrow": "company experience",
+      "side": "Side Projects",
+      "sideEyebrow": "side projects",
+      "stack": "Tech Stack",
+      "stackEyebrow": "tech stack",
+      "about": "About",
+      "aboutEyebrow": "about · what's next",
+      "contact": "Contact",
+      "contactEyebrow": "contact"
+    },
+    "stack": {
+      "mainColumn": "Main role · Web Development",
+      "learnedColumn": "Learned domain · SAR · Satellite imagery",
+      "nextDirection": "What's next: Embedded → Hardware → Robotics"
+    },
+    "about": {
+      "brainTrinityEyebrow": "Brain Trinity · live demo available",
+      "futureHeading": "What's next"
+    },
+    "contact": {
+      "portfolioLink": "Portfolio site",
+      "baseNote": "This is the base version of the resume. Once a target JD is in hand, the depth and emphasis will be reassembled for *the actual reader*."
+    },
+    "block": {
+      "whatLabel": "What I did",
+      "impactLabel": "Impact"
+    }
+  }
+}
