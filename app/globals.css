@@ -115,56 +115,6 @@ body {
   color: var(--accent-foreground);
 }
 
-/*
- * SAR 레이더 sweep — Hero 그리드 위에 회전하는 conic gradient.
- * radial mask로 가장자리는 페이드해서 한 아크만 보이고,
- * --accent 컬러로 위성·SAR 도메인 정합. prefers-reduced-motion 존중.
- */
-@keyframes sar-sweep-rotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.sar-sweep {
-  position: absolute;
-  inset: -25%;
-  pointer-events: none;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 320deg,
-    color-mix(in srgb, var(--accent) 40%, transparent) 350deg,
-    color-mix(in srgb, var(--accent) 70%, transparent) 358deg,
-    color-mix(in srgb, var(--accent) 90%, transparent) 360deg,
-    transparent 360deg
-  );
-  -webkit-mask: radial-gradient(
-    circle at center,
-    black 0%,
-    black 35%,
-    rgba(0, 0, 0, 0.6) 55%,
-    transparent 75%
-  );
-  mask: radial-gradient(
-    circle at center,
-    black 0%,
-    black 35%,
-    rgba(0, 0, 0, 0.6) 55%,
-    transparent 75%
-  );
-  opacity: 0.18;
-  animation: sar-sweep-rotate 12s linear infinite;
-  will-change: transform;
-}
-
-@media (prefers-color-scheme: dark) {
-  .sar-sweep { opacity: 0.28; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sar-sweep { animation: none; opacity: 0.08; }
-}
-
 /* Print — /resume 페이지 인쇄·PDF 저장 시 */
 @media print {
   :root {
