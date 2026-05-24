@@ -311,6 +311,21 @@ const sarSearchAndAnalyzerLayer: Project = {
       },
     },
   ],
+  videos: [
+    {
+      src: "/projects/sar-search-and-analyzer/tour.mp4",
+      poster: "/projects/sar-search-and-analyzer/tour-poster.png",
+      gif: "/projects/sar-search-and-analyzer/tour.gif",
+      alt: {
+        ko: "sar-search-and-analyzer 사용자/관리자 콘솔 투어 — 검색 · AOI · InSAR · 다운로드 · 관리자 대시보드",
+        en: "sar-search-and-analyzer user / admin console tour — search · AOI · InSAR · downloads · admin dashboard",
+      },
+      caption: {
+        ko: "Playwright e2e 녹화 (Plan mock 모드, 백엔드 의존 없음) — 사용자 검색 → AOI 관리 → InSAR 분석 요청 → 다운로드 → 관리자 대시보드 다섯 화면 자동 투어.",
+        en: "Recorded with Playwright e2e (Plan mock mode, no backend dependency) — auto-tour through five screens: user search → AOI manager → InSAR request → downloads → admin dashboard.",
+      },
+    },
+  ],
 };
 
 // 통합 박스 — sub-projects 3개를 묶는 wrapper

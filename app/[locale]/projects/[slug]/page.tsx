@@ -427,6 +427,47 @@ function SubProjectSection({
         ))}
       </div>
 
+      {/* Sub videos */}
+      {sub.videos && sub.videos.length > 0 && (
+        <div className="space-y-4 mb-8">
+          {sub.videos.map((vid) => (
+            <figure
+              key={vid.src}
+              className="rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--card)]"
+            >
+              <div className="relative w-full bg-[var(--subtle)]">
+                <video
+                  src={vid.src}
+                  poster={vid.poster}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  aria-label={pick(vid.alt, locale)}
+                  className="w-full h-auto block"
+                />
+              </div>
+              {(vid.caption || vid.gif) && (
+                <figcaption className="px-3 py-2 text-[11px] leading-relaxed text-[var(--muted)] border-t border-[var(--border)] flex flex-wrap items-start justify-between gap-3">
+                  {vid.caption && <span className="flex-1">{pick(vid.caption, locale)}</span>}
+                  {vid.gif && (
+                    <a
+                      href={vid.gif}
+                      download
+                      className="inline-flex items-center gap-1.5 shrink-0 font-mono text-[10px] uppercase tracking-widest text-[var(--accent)] hover:underline"
+                    >
+                      <Download className="size-3" />
+                      GIF
+                    </a>
+                  )}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      )}
+
       {/* Sub images */}
       {sub.images && sub.images.length > 0 && (
         <div

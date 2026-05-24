@@ -26,6 +26,15 @@ export function Hero() {
         />
       </div>
 
+      {/* SAR radar sweep — 위성 SAR 도메인 정합, 그리드 위에 한 아크가 회전 */}
+      <div className="sar-sweep" aria-hidden="true" />
+
+      {/* Sweep 중심 점 — 회전의 pivot 시각화 (점이 있어야 레이더 metaphor가 분명해짐) */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-1.5 rounded-full bg-[var(--accent)]/40"
+        aria-hidden="true"
+      />
+
       <div className="relative mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 pt-24 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
