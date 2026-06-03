@@ -12,6 +12,16 @@ export const personal = {
     ko: "웹 개발자, SAR 도메인 확장 중",
     en: "Web Developer, expanding into SAR",
   } satisfies L,
+  // Hero h1 타자기 효과용 — 본인 직군을 한 단어씩 순환 (모두 실제 프로필 기반)
+  roles: [
+    { ko: "웹 개발자", en: "Web Developer" },
+    { ko: "풀스택 개발자", en: "Full-stack Developer" },
+    { ko: "데이터 분석가", en: "Data Analyst" },
+    { ko: "프로덕트 엔지니어", en: "Product Engineer" },
+    { ko: "인프라 엔지니어", en: "Infra Engineer" },
+    { ko: "SAR·위성 도메인 엔지니어", en: "SAR / Satellite Engineer" },
+    { ko: "AI native 빌더", en: "AI-native Builder" },
+  ] satisfies L[],
   subTagline: {
     ko: "AI를 사고 파트너로 두고 직군을 확장하면서 시스템을 함께 만드는 개발자입니다",
     en: "A developer who uses AI as a thinking partner — expanding role boundaries while building systems alongside it",

@@ -88,6 +88,30 @@ html {
   }
 }
 
+/* Typewriter caret (Hero h1) */
+@keyframes tw-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.tw-cursor {
+  display: inline-block;
+  margin-left: 0.04em;
+  font-weight: 300;
+  color: var(--accent);
+  animation: tw-blink 1s step-end infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tw-cursor {
+    animation: none;
+  }
+}
+
 /* Section landing offset (Nav height = 4rem) */
 section[id] {
   scroll-margin-top: 4rem;

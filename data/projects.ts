@@ -121,8 +121,8 @@ const lumirLinuxSnapLayer: Project = {
     en: "Sentinel-1 InSAR processing pipeline",
   },
   subtitle: {
-    ko: "5종 도구 다중 스택 + AI native 진행 · 정부 공동 지표변위 모니터링",
-    en: "5-tool stack run AI-native · joint-gov surface-displacement monitoring",
+    ko: "5종 도구 다중 스택 + InSAR 결과 API(외부 플랫폼 전달) · 정부 공동 지표변위 모니터링",
+    en: "5-tool stack + an InSAR-results API delivered to an external platform · joint-gov surface-displacement monitoring",
   },
   badge: { ko: "3 → 4 + 5 신호", en: "Stage 3 → 4 + stage-5 signal" },
   problem: {
@@ -130,12 +130,12 @@ const lumirLinuxSnapLayer: Project = {
     en: "On the joint-gov surface-displacement monitoring program, a SNAP-only pipeline couldn't keep up with real-time service demands. The LOS 1-D limit of ASC-only SBAS, and the minimum 2-year stack required to identify per-building hotspots, also had to be addressed.",
   },
   system: {
-    ko: "5종 도구 다중 스택 (SNAP 12 + SNAPHU 2.0.3 + MintPy 1.6.2 + StaMPS PSI + ISCE2 2.6.3)을 운영했습니다. 오버엔지니어링 방지 원칙 + AI 사고 파트너로 도구 평가 + 다중 Claude Code agent 워크트리 (agent 1~4 병렬 + gpt_isolated wrapper + handoff 시스템)를 갖췄습니다.",
-    en: "Ran a 5-tool stack (SNAP 12 + SNAPHU 2.0.3 + MintPy 1.6.2 + StaMPS PSI + ISCE2 2.6.3). Anti-over-engineering as the working principle, tool selection done with AI as a thinking partner, and multi-Claude-Code agent worktrees (agents 1–4 in parallel + a gpt_isolated wrapper + handoff system).",
+    ko: "5종 도구 다중 스택 (SNAP 12 + SNAPHU 2.0.3 + MintPy 1.6.2 + StaMPS PSI + ISCE2 2.6.3)을 운영했습니다. 오버엔지니어링 방지 원칙 + AI 사고 파트너로 도구 평가 + 다중 Claude Code agent 워크트리 (agent 1~4 병렬 + gpt_isolated wrapper + handoff 시스템)를 갖췄습니다. 그 위에 처리 결과를 외부 3D 플랫폼으로 전달하는 FastAPI 운영 레이어(`/xyz/*` 시계열·`/aoi/assess`·`/baseline/perp`)를 직접 설계했고, 무거운 처리 전에 적합성을 초 단위로 진단하는 사전점검 엔드포인트 + 재부팅 자동기동(Docker)·디스크 풀 자동 이관(systemd 타이머)까지 운영 하드닝을 맡았습니다.",
+    en: "Ran a 5-tool stack (SNAP 12 + SNAPHU 2.0.3 + MintPy 1.6.2 + StaMPS PSI + ISCE2 2.6.3). Anti-over-engineering as the working principle, tool selection done with AI as a thinking partner, and multi-Claude-Code agent worktrees (agents 1–4 in parallel + a gpt_isolated wrapper + handoff system). On top of that I designed the FastAPI operational layer that delivers results to an external 3D platform (`/xyz/*` time series · `/aoi/assess` · `/baseline/perp`), plus preflight endpoints that diagnose suitability in seconds before any heavy run, and owned the ops hardening — auto-start on reboot (Docker) and automatic disk-full eviction to NAS (systemd timer).",
   },
   impact: {
-    ko: "ISCE2 도입으로 처리 속도를 확보해 3 레이어 통합 서비스의 분석 처리 레이어가 가능해졌습니다. 광교산 시루봉 -17.30 mm/yr (GNSS 검증) + PSI 5,143,119 PS + 5m DEM TC + 사업 보고서 v1~v4를 AI native로 작성 시간이 0에 가까웠습니다.",
-    en: "Introducing ISCE2 unlocked the processing speed needed to make the analysis layer of the 3-layer service viable. Outputs: Mt. Sirubong −17.30 mm/yr subsidence (GNSS-verified), 5,143,119 PSI persistent scatterers, 5 m DEM TC, and program reports v1–v4 — all AI-native, with near-zero writing time.",
+    ko: "ISCE2 도입으로 처리 속도를 확보해 3 레이어 통합 서비스의 분석 처리 레이어가 가능해졌습니다. 광교산 시루봉 -17.30 mm/yr (GNSS 검증) + PSI 5,143,119 PS + 5m DEM TC + 사업 보고서 v1~v4를 AI native로 작성 시간이 0에 가까웠습니다. 또한 외부 플랫폼이 요구한 'XYZ 좌표 시계열'을 전달하면서, 풀 시계열 일괄 응답(81MB·13s)을 시점 스냅샷 바이너리 + 점클릭 분리로 재설계해 1.1MB·0.56s로 줄였습니다 — DB 쿼리는 73ms라 병목이 직렬화·전송임을 측정으로 진단한 뒤 페이로드 구조를 바꾼 결과입니다.",
+    en: "Introducing ISCE2 unlocked the processing speed needed to make the analysis layer of the 3-layer service viable. Outputs: Mt. Sirubong −17.30 mm/yr subsidence (GNSS-verified), 5,143,119 PSI persistent scatterers, 5 m DEM TC, and program reports v1–v4 — all AI-native, with near-zero writing time. I also delivered the external platform's required 'XYZ coordinate time series': re-architecting the full-series bulk response (81 MB · 13 s) into a per-epoch snapshot binary + point-click split brought it to 1.1 MB · 0.56 s — done by first measuring that the DB query was only 73 ms, so the bottleneck was serialization and transfer, then changing the payload structure.",
   },
   keywords: [
     { ko: "Sentinel-1 SAR", en: "Sentinel-1 SAR" },
@@ -147,6 +147,9 @@ const lumirLinuxSnapLayer: Project = {
       ko: "사업 보고서 자동화",
       en: "Automated program reports",
     },
+    { ko: "InSAR 결과 API (FastAPI)", en: "InSAR-results API (FastAPI)" },
+    { ko: "성능 81MB→1.1MB", en: "Payload 81MB→1.1MB" },
+    { ko: "사전점검 엔드포인트", en: "Preflight endpoints" },
   ],
   trackVisibility: "both",
   honestyNote: {
@@ -168,6 +171,10 @@ const lumirLinuxSnapLayer: Project = {
     {
       label: { ko: "도구 스택", en: "Tool stack" },
       value: { ko: "5종 다중", en: "5 tools, blended" },
+    },
+    {
+      label: { ko: "응답 페이로드 최적화", en: "Payload optimization" },
+      value: { ko: "81MB → 1.1MB (0.56s)", en: "81MB → 1.1MB (0.56s)" },
     },
   ],
   measurementPending: [

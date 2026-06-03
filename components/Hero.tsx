@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { ArrowDown, FileText, Briefcase } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
-import { pick } from "@/data/i18n";
+import { pick, pickArr } from "@/data/i18n";
 import type { Locale } from "@/i18n/routing";
+import { Typewriter } from "./Typewriter";
 
 export function Hero() {
   const t = useTranslations("hero");
@@ -41,9 +42,9 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] break-keep"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] break-keep min-h-[1.2em]"
         >
-          {pick(personal.tagline, locale)}
+          <Typewriter key={locale} phrases={pickArr(personal.roles, locale)} />
         </motion.h1>
 
         <motion.p
