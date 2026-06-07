@@ -38,6 +38,41 @@ export interface ProjectQa {
   a: L;
 }
 
+// ---------------------------------------------------------------------------
+// 아키텍처 / 데이터플로우 다이어그램 — React Flow 렌더 (data 기반 · bilingual)
+// 좌표는 col/row 그리드로 선언 → 컴포넌트에서 x/y로 매핑 (레이아웃 결정적)
+// ---------------------------------------------------------------------------
+export type DiagramNodeKind = "layer" | "external" | "actor";
+export type DiagramSide = "top" | "right" | "bottom" | "left";
+
+export interface DiagramNode {
+  id: string;
+  label: L;
+  sublabel?: L;
+  icon?: string;
+  kind?: DiagramNodeKind; // 스타일 변형 (기본 layer)
+  cat?: number; // 카테고리 색 인덱스 (1-6) → var(--cat-N). layer "식별" 전용, 아이콘과 페어
+  col: number; // 그리드 열 (0-based)
+  row: number; // 그리드 행 (0-based)
+}
+
+export interface DiagramEdge {
+  from: string;
+  to: string;
+  label?: L;
+  fromSide?: DiagramSide; // 출발 핸들 (기본 bottom)
+  toSide?: DiagramSide; // 도착 핸들 (기본 top)
+  kind?: "primary" | "secondary"; // primary = accent 강조
+  dashed?: boolean;
+  animated?: boolean;
+}
+
+export interface ProjectDiagram {
+  caption?: L;
+  nodes: DiagramNode[];
+  edges: DiagramEdge[];
+}
+
 export interface Project {
   slug: string;
   title: L;
@@ -60,6 +95,7 @@ export interface Project {
   layerLabel?: L;
   layerIcon?: string;
   areas?: ProjectArea[];
+  diagram?: ProjectDiagram;
 }
 
 // ===========================================================================
@@ -68,6 +104,79 @@ export interface Project {
 
 const sarDataRetrievalLayer: Project = {
   slug: "sar-data-retrieval",
+  diagram: {
+    caption: {
+      ko: "사용자 위치 검색이 sentinel-retrieval(NestJS)로 들어오면 CDSE 카탈로그를 검색·다운로드해 NAS(SMB2)에 SLC를 저장하고, 메타·결과는 PostgreSQL+PostGIS에 적재합니다. 자매 레포 snap(Snappy·MintPy)이 NAS의 SLC를 읽어 분석 결과를 환류 — DDD 5-layer로 도메인 격리.",
+      en: "A user's location search hits sentinel-retrieval (NestJS), which searches/downloads the CDSE catalog, stores SLCs on NAS (SMB2), and writes metadata/results to PostgreSQL+PostGIS. The sister repo snap (Snappy · MintPy) reads SLCs from NAS and feeds analysis results back — domains isolated via DDD 5-layer.",
+    },
+    nodes: [
+      {
+        id: "api",
+        kind: "actor",
+        icon: "👤",
+        label: { ko: "사용자 API", en: "User API" },
+        sublabel: { ko: "위치·카탈로그 검색", en: "Location / catalog search" },
+        col: 1,
+        row: 0,
+      },
+      {
+        id: "retrieval",
+        kind: "layer",
+        cat: 2,
+        icon: "🗄",
+        label: { ko: "sentinel-retrieval", en: "sentinel-retrieval" },
+        sublabel: { ko: "NestJS · DDD 5-layer", en: "NestJS · DDD 5-layer" },
+        col: 1,
+        row: 1,
+      },
+      {
+        id: "cdse",
+        kind: "external",
+        icon: "🛰",
+        label: { ko: "CDSE", en: "CDSE" },
+        sublabel: { ko: "Sentinel-1 카탈로그 API", en: "Sentinel-1 catalog API" },
+        col: 0,
+        row: 1,
+      },
+      {
+        id: "db",
+        kind: "external",
+        icon: "🐘",
+        label: { ko: "PostgreSQL", en: "PostgreSQL" },
+        sublabel: { ko: "PostGIS · 메타·결과", en: "PostGIS · metadata/results" },
+        col: 2,
+        row: 1,
+      },
+      {
+        id: "nas",
+        kind: "external",
+        icon: "💾",
+        label: { ko: "NAS", en: "NAS" },
+        sublabel: { ko: "SLC 저장 (SMB2)", en: "SLC store (SMB2)" },
+        col: 0,
+        row: 2,
+      },
+      {
+        id: "snap",
+        kind: "layer",
+        cat: 6,
+        icon: "📡",
+        label: { ko: "snap 자매 레포", en: "snap sister repo" },
+        sublabel: { ko: "Snappy · MintPy 분석", en: "Snappy · MintPy analysis" },
+        col: 1,
+        row: 2,
+      },
+    ],
+    edges: [
+      { from: "api", to: "retrieval", kind: "primary", animated: true, label: { ko: "① 검색 요청", en: "① search request" } },
+      { from: "retrieval", to: "cdse", kind: "secondary", fromSide: "left", toSide: "right", label: { ko: "② 검색·다운로드", en: "② search·download" } },
+      { from: "retrieval", to: "nas", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "③ SLC 저장", en: "③ store SLC" } },
+      { from: "nas", to: "snap", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "④ SLC 읽기", en: "④ read SLC" } },
+      { from: "snap", to: "retrieval", kind: "secondary", dashed: true, label: { ko: "⑤ 분석 결과", en: "⑤ result" } },
+      { from: "retrieval", to: "db", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "메타 저장", en: "meta" } },
+      { from: "retrieval", to: "api", kind: "primary", dashed: true, fromSide: "right", toSide: "right", label: { ko: "⑥ 결과 응답", en: "⑥ response" } },
+    ],
+  },
   layerLabel: { ko: "저장", en: "Storage" },
   layerIcon: "🗄",
   title: {
@@ -114,6 +223,135 @@ const sarDataRetrievalLayer: Project = {
 
 const lumirLinuxSnapLayer: Project = {
   slug: "lumir-linux-snap",
+  diagram: {
+    caption: {
+      ko: "사용자가 지도에서 지역·AOI를 골라 변위 분석을 요청하는 데서 흐름이 시작됩니다. 대시보드(173)가 job을 만들어 작업 큐에 넣으면, 174(SBAS)·173(PSI) 워커가 frame 단위로 나눠(host affinity) 각자 처리하고 velocity를 173 DB에 적재 — 결과는 변위 지도로 사용자에게 돌아오고, XYZ 시계열은 외부 3D 플랫폼에 전달됩니다. (174 파랑 = SBAS, 173 초록 = PSI)",
+      en: "The flow starts when the user picks a region/AOI on the map and requests a displacement analysis. The dashboard (173) creates a job on the queue; the 174 (SBAS) and 173 (PSI) workers split it frame-by-frame (host affinity), process locally, and write velocity into the 173 DB — the result returns to the user as a velocity map, and the XYZ time series goes to the external 3D platform. (Blue = 174 SBAS, green = 173 PSI.)",
+    },
+    nodes: [
+      {
+        id: "user",
+        kind: "actor",
+        icon: "👤",
+        label: { ko: "사용자", en: "User" },
+        sublabel: { ko: "지도에서 지역·AOI 분석 요청", en: "Request analysis for an AOI" },
+        col: 0,
+        row: 0,
+      },
+      {
+        id: "dashboard",
+        kind: "layer",
+        cat: 2,
+        icon: "🖥",
+        label: { ko: "대시보드 (173)", en: "Dashboard (173)" },
+        sublabel: { ko: "FastAPI · 변위 지도·QA (NestJS)", en: "FastAPI · velocity map·QA (NestJS)" },
+        col: 1,
+        row: 0,
+      },
+      {
+        id: "queue",
+        kind: "layer",
+        cat: 1,
+        icon: "🔀",
+        label: { ko: "작업 큐 (173)", en: "Job queue (173)" },
+        sublabel: { ko: "insar_db.jobs · frame분할·SKIP LOCKED", en: "insar_db.jobs · frame-split·SKIP LOCKED" },
+        col: 0,
+        row: 1,
+      },
+      {
+        id: "isce174",
+        kind: "layer",
+        cat: 3,
+        icon: "🛰",
+        label: { ko: "ISCE2 stackSentinel", en: "ISCE2 stackSentinel" },
+        sublabel: { ko: "174 · TOPS coreg + 간섭도", en: "174 · TOPS coreg + ifg" },
+        col: 1,
+        row: 1,
+      },
+      {
+        id: "snaphu174",
+        kind: "layer",
+        cat: 3,
+        icon: "🧩",
+        label: { ko: "SNAPHU", en: "SNAPHU" },
+        sublabel: { ko: "174 · 위상 펼침", en: "174 · phase unwrap" },
+        col: 2,
+        row: 1,
+      },
+      {
+        id: "mintpy174",
+        kind: "layer",
+        cat: 3,
+        icon: "📈",
+        label: { ko: "MintPy SBAS", en: "MintPy SBAS" },
+        sublabel: { ko: "174 · ERA5 시계열", en: "174 · ERA5 time series" },
+        col: 3,
+        row: 1,
+      },
+      {
+        id: "nas",
+        kind: "external",
+        icon: "💾",
+        label: { ko: "NAS", en: "NAS" },
+        sublabel: { ko: "Sentinel-1 SLC (/mnt/sar)", en: "Sentinel-1 SLC (/mnt/sar)" },
+        col: 0,
+        row: 2,
+      },
+      {
+        id: "coreg173",
+        kind: "layer",
+        cat: 6,
+        icon: "🛰",
+        label: { ko: "ISCE2 coreg", en: "ISCE2 coreg" },
+        sublabel: { ko: "173 · PSI 자기완결 (-W slc)", en: "173 · self-contained (-W slc)" },
+        col: 1,
+        row: 2,
+      },
+      {
+        id: "miaplpy173",
+        kind: "layer",
+        cat: 6,
+        icon: "🟢",
+        label: { ko: "MiaplPy PSI", en: "MiaplPy PSI" },
+        sublabel: { ko: "173 · RTX4080 phase linking", en: "173 · RTX4080 phase linking" },
+        col: 2,
+        row: 2,
+      },
+      {
+        id: "db",
+        kind: "external",
+        icon: "🐘",
+        label: { ko: "PostgreSQL (173)", en: "PostgreSQL (173)" },
+        sublabel: { ko: "PostGIS · velocity_points", en: "PostGIS · velocity_points" },
+        col: 1,
+        row: 3,
+      },
+      {
+        id: "platform",
+        kind: "external",
+        icon: "🌐",
+        label: { ko: "외부 3D 플랫폼", en: "External 3D platform" },
+        sublabel: { ko: "XYZ 시계열 전달", en: "XYZ time series" },
+        col: 2,
+        row: 3,
+      },
+    ],
+    edges: [
+      { from: "user", to: "dashboard", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "① 지역 분석 요청", en: "① request" } },
+      { from: "dashboard", to: "queue", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "② job 생성", en: "② create job" } },
+      { from: "queue", to: "isce174", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "③ SBAS job", en: "③ SBAS job" } },
+      { from: "queue", to: "coreg173", kind: "primary", fromSide: "bottom", toSide: "left", label: { ko: "③ PSI job", en: "③ PSI job" } },
+      { from: "isce174", to: "snaphu174", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "간섭도", en: "ifg" } },
+      { from: "snaphu174", to: "mintpy174", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "unwrap", en: "unwrap" } },
+      { from: "coreg173", to: "miaplpy173", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "phase linking", en: "phase linking" } },
+      { from: "nas", to: "isce174", kind: "secondary", fromSide: "right", toSide: "bottom", label: { ko: "SLC", en: "SLC" } },
+      { from: "nas", to: "coreg173", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "SLC", en: "SLC" } },
+      { from: "mintpy174", to: "db", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "④ velocity", en: "④ velocity" } },
+      { from: "miaplpy173", to: "db", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "④ velocity", en: "④ velocity" } },
+      { from: "db", to: "dashboard", kind: "secondary", dashed: true, fromSide: "left", toSide: "left", label: { ko: "⑤ 변위 지도", en: "⑤ velocity map" } },
+      { from: "db", to: "platform", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "XYZ 시계열", en: "XYZ series" } },
+    ],
+  },
   layerLabel: { ko: "분석", en: "Analysis" },
   layerIcon: "⚙",
   title: {
@@ -464,6 +702,108 @@ const lumirSarPlatform: Project = {
       },
     },
   ],
+  diagram: {
+    caption: {
+      ko: "사용자 위치 요청이 프론트 → 저장 → 분석 레이어를 거쳐 결과로 돌아오는 흐름. 가운데 세로축(주황)이 정방향 요청, 오른쪽이 응답·결과 저장, 왼쪽이 외부 데이터 공급원. 한 사람이 3 레이어를 풀스택으로 묶고 있습니다.",
+      en: "A user's location request flows down the frontend → storage → analysis spine and returns as a result. The center axis (amber) is the forward request, the right side is response / write-back, the left side is the external data feeds. One person owns all three layers full-stack.",
+    },
+    nodes: [
+      {
+        id: "user",
+        kind: "actor",
+        icon: "👤",
+        label: { ko: "사용자", en: "User" },
+        sublabel: {
+          ko: "지도에서 위치·AOI 요청",
+          en: "Picks a location / AOI on the map",
+        },
+        col: 1,
+        row: 0,
+      },
+      {
+        id: "front",
+        kind: "layer",
+        cat: 3,
+        icon: "🖥",
+        label: { ko: "프론트 레이어", en: "Frontend layer" },
+        sublabel: {
+          ko: "sar-search-and-analyzer · Next.js · 지도+AOI",
+          en: "sar-search-and-analyzer · Next.js · map + AOI",
+        },
+        col: 1,
+        row: 1,
+      },
+      {
+        id: "store",
+        kind: "layer",
+        cat: 2,
+        icon: "🗄",
+        label: { ko: "저장 레이어", en: "Storage layer" },
+        sublabel: {
+          ko: "sar-data-retrieval · NestJS · DDD 5-layer",
+          en: "sar-data-retrieval · NestJS · DDD 5-layer",
+        },
+        col: 1,
+        row: 2,
+      },
+      {
+        id: "analyze",
+        kind: "layer",
+        cat: 6,
+        icon: "⚙",
+        label: { ko: "분석 레이어", en: "Analysis layer" },
+        sublabel: {
+          ko: "lumir-linux-snap · SNAP·ISCE2·MintPy",
+          en: "lumir-linux-snap · SNAP · ISCE2 · MintPy",
+        },
+        col: 1,
+        row: 3,
+      },
+      {
+        id: "cdse",
+        kind: "external",
+        icon: "🛰",
+        label: { ko: "CDSE", en: "CDSE" },
+        sublabel: {
+          ko: "Sentinel-1 SLC 외부 API",
+          en: "Sentinel-1 SLC external API",
+        },
+        col: 0,
+        row: 1,
+      },
+      {
+        id: "nas",
+        kind: "external",
+        icon: "💾",
+        label: { ko: "NAS", en: "NAS" },
+        sublabel: { ko: "SLC 원본 저장 (SMB2)", en: "Raw SLC store (SMB2)" },
+        col: 0,
+        row: 2,
+      },
+      {
+        id: "platform",
+        kind: "external",
+        icon: "🌐",
+        label: { ko: "외부 3D 플랫폼", en: "External 3D platform" },
+        sublabel: {
+          ko: "FastAPI XYZ 시계열 (81MB→1.1MB)",
+          en: "FastAPI XYZ time series (81MB→1.1MB)",
+        },
+        col: 2,
+        row: 3,
+      },
+    ],
+    edges: [
+      { from: "user", to: "front", kind: "primary", animated: true, label: { ko: "① 위치 요청", en: "① location request" } },
+      { from: "front", to: "store", kind: "primary", label: { ko: "② 검색 질의", en: "② search query" } },
+      { from: "store", to: "analyze", kind: "primary", dashed: true, label: { ko: "③ 신규 분석 (cache miss)", en: "③ new analysis (cache miss)" } },
+      { from: "analyze", to: "store", kind: "secondary", fromSide: "right", toSide: "right", label: { ko: "④ 결과 저장", en: "④ write-back" } },
+      { from: "store", to: "front", kind: "secondary", fromSide: "right", toSide: "right", label: { ko: "⑤ 응답", en: "⑤ response" } },
+      { from: "cdse", to: "store", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "SAR 데이터", en: "SAR data" } },
+      { from: "nas", to: "store", kind: "secondary", dashed: true, fromSide: "right", toSide: "left", label: { ko: "SLC I/O", en: "SLC I/O" } },
+      { from: "analyze", to: "platform", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "XYZ 시계열", en: "XYZ time series" } },
+    ],
+  },
   subProjects: [
     sarDataRetrievalLayer,
     lumirLinuxSnapLayer,
@@ -499,6 +839,126 @@ export const projects: Project[] = [
   lumirSarPlatform,
   {
     slug: "sdpe",
+    diagram: {
+      caption: {
+        ko: "운영자가 콘솔에서 DAG를 구성·실행하면 Pipeline Workflow가 L0→L3 처리를 pgmq 이벤트로 오케스트레이션합니다. CSC 1~9 인터페이스 체인(Python 알고리즘, 예: csc03 range compression)이 단계별 처리를 수행하고, 결과 카탈로그는 PostgreSQL에. 새 위성·알고리즘은 기획→DAG 매핑→프로파일 추가만으로 확장(코드 변경 최소). 가운데 주황 = 정방향 흐름.",
+        en: "From the console an operator composes and runs a DAG; Pipeline Workflow orchestrates the L0→L3 stages over pgmq events. A CSC 1–9 interface chain (Python algorithms, e.g. csc03 range compression) runs the per-stage processing, and the product catalog lands in PostgreSQL. A new satellite or algorithm is added by planning → DAG mapping → a processing profile (near-zero code change). Amber = forward flow.",
+      },
+      nodes: [
+        {
+          id: "console",
+          kind: "actor",
+          icon: "🖥",
+          label: { ko: "운영 콘솔", en: "Operator console" },
+          sublabel: { ko: "Next.js · DAG 구성·자동 재배포", en: "Next.js · DAG authoring · auto-redeploy" },
+          col: 0,
+          row: 0,
+        },
+        {
+          id: "workflow",
+          kind: "layer",
+          cat: 3,
+          icon: "🧩",
+          label: { ko: "Pipeline Workflow", en: "Pipeline Workflow" },
+          sublabel: { ko: "NestJS DAG 오케스트레이션", en: "NestJS DAG orchestration" },
+          col: 1,
+          row: 0,
+        },
+        {
+          id: "pgmq",
+          kind: "external",
+          icon: "🔀",
+          label: { ko: "pgmq", en: "pgmq" },
+          sublabel: { ko: "이벤트 큐 · sdpe.*.events", en: "Event queue · sdpe.*.events" },
+          col: 1,
+          row: 1,
+        },
+        {
+          id: "collection",
+          kind: "layer",
+          cat: 2,
+          icon: "📡",
+          label: { ko: "데이터 수집", en: "Data Collection" },
+          sublabel: { ko: "L0 원시 수집", en: "L0 raw ingest" },
+          col: 0,
+          row: 2,
+        },
+        {
+          id: "sarproc",
+          kind: "layer",
+          cat: 6,
+          icon: "⚙",
+          label: { ko: "SAR 처리", en: "SAR Processing" },
+          sublabel: { ko: "L1 · L2", en: "L1 · L2" },
+          col: 1,
+          row: 2,
+        },
+        {
+          id: "post",
+          kind: "layer",
+          cat: 4,
+          icon: "🛠",
+          label: { ko: "후처리", en: "Post-Processing" },
+          sublabel: { ko: "L3 산출", en: "L3 products" },
+          col: 2,
+          row: 2,
+        },
+        {
+          id: "dataservice",
+          kind: "layer",
+          cat: 5,
+          icon: "📦",
+          label: { ko: "데이터 제공", en: "Data Service" },
+          sublabel: { ko: "L3 산출물 서빙", en: "Serve L3 products" },
+          col: 3,
+          row: 2,
+        },
+        {
+          id: "cscChain",
+          kind: "layer",
+          cat: 1,
+          icon: "🧮",
+          label: { ko: "CSC 1~9 체인", en: "CSC 1–9 chain" },
+          sublabel: {
+            ko: "L0·L1 → GEC·MAP 인터페이스",
+            en: "L0·L1 → GEC·MAP interfaces",
+          },
+          col: 1,
+          row: 3,
+        },
+        {
+          id: "pyalgo",
+          kind: "external",
+          icon: "🐍",
+          label: { ko: "csc03 range compression", en: "csc03 range compression" },
+          sublabel: { ko: "Python 3.11 · mypy+ruff", en: "Python 3.11 · mypy+ruff" },
+          col: 0,
+          row: 3,
+        },
+        {
+          id: "db",
+          kind: "external",
+          icon: "🐘",
+          label: { ko: "PostgreSQL", en: "PostgreSQL" },
+          sublabel: { ko: "@sdpe/database · 카탈로그", en: "@sdpe/database · catalog" },
+          col: 3,
+          row: 3,
+        },
+      ],
+      edges: [
+        { from: "console", to: "workflow", kind: "primary", animated: true, fromSide: "right", toSide: "left", label: { ko: "① 구성·실행", en: "① compose & run" } },
+        { from: "workflow", to: "pgmq", kind: "primary", label: { ko: "② 이벤트 발행", en: "② publish" } },
+        { from: "pgmq", to: "collection", kind: "primary", label: { ko: "③ 구독·기동", en: "③ subscribe" } },
+        { from: "collection", to: "sarproc", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "④ L0", en: "④ L0" } },
+        { from: "sarproc", to: "post", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "⑤ L1·L2", en: "⑤ L1·L2" } },
+        { from: "post", to: "dataservice", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "⑥ L3", en: "⑥ L3" } },
+        { from: "cscChain", to: "sarproc", kind: "secondary", dashed: true, fromSide: "top", toSide: "bottom", label: { ko: "csc-1~6", en: "csc-1–6" } },
+        { from: "cscChain", to: "post", kind: "secondary", dashed: true, fromSide: "right", toSide: "bottom", label: { ko: "csc-7~9", en: "csc-7–9" } },
+        { from: "pyalgo", to: "cscChain", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "Python 구현", en: "impl" } },
+        { from: "dataservice", to: "db", kind: "secondary", label: { ko: "⑦ 카탈로그·메타", en: "⑦ catalog·meta" } },
+        { from: "db", to: "console", kind: "secondary", dashed: true, fromSide: "top", toSide: "top", label: { ko: "⑧ 작업·결과 모니터링", en: "⑧ monitor" } },
+      ],
+    },
     title: {
       ko: "SDPE — SAR 처리 파이프라인 오케스트레이션",
       en: "SDPE — SAR processing pipeline orchestration",
@@ -631,6 +1091,137 @@ export const projects: Project[] = [
   },
   {
     slug: "him",
+    diagram: {
+      caption: {
+        ko: "AI native 100% 풀스택 사이드 — NestJS CQRS 도메인 모듈 23개·페이지 다수. 핵심 재고 흐름을 페이지 단위로 봅니다: 대시보드·구매·이력·가전 페이지 → 각 CQRS 도메인 모듈 → PostgreSQL. 유통기한 임박은 알림 모듈이 FCM 푸시로 전달. (회계·자산·관리자 등 별도 도메인은 생략)",
+        en: "100% AI-native full-stack side project — 23 NestJS CQRS domain modules and many pages. Viewed at the page level: the Dashboard · Purchases · History · Appliances pages each call their CQRS domain module, which persists to PostgreSQL. Expiring items flow through the alert module to an FCM push. (Ledger / asset / admin domains omitted.)",
+      },
+      nodes: [
+        {
+          id: "user",
+          kind: "actor",
+          icon: "📱",
+          label: { ko: "사용자", en: "User" },
+          sublabel: { ko: "재고 관리 (모바일)", en: "Inventory (mobile)" },
+          col: 1.5,
+          row: 0,
+        },
+        {
+          id: "dashboard",
+          kind: "layer",
+          cat: 3,
+          icon: "📊",
+          label: { ko: "대시보드", en: "Dashboard" },
+          sublabel: { ko: "재고·룸 한눈에", en: "Stock by room" },
+          col: 0,
+          row: 1,
+        },
+        {
+          id: "purchases",
+          kind: "layer",
+          cat: 3,
+          icon: "🛒",
+          label: { ko: "구매", en: "Purchases" },
+          sublabel: { ko: "구매·로트 기록", en: "Purchases · lots" },
+          col: 1,
+          row: 1,
+        },
+        {
+          id: "history",
+          kind: "layer",
+          cat: 3,
+          icon: "📜",
+          label: { ko: "재고 이력", en: "Inventory history" },
+          sublabel: { ko: "소비·폐기 타임라인", en: "Use · disposal" },
+          col: 2,
+          row: 1,
+        },
+        {
+          id: "appliances",
+          kind: "layer",
+          cat: 3,
+          icon: "🔌",
+          label: { ko: "가전", en: "Appliances" },
+          sublabel: { ko: "가전 카탈로그", en: "Appliance catalog" },
+          col: 3,
+          row: 1,
+        },
+        {
+          id: "inventory",
+          kind: "layer",
+          cat: 2,
+          icon: "📦",
+          label: { ko: "inventory-item", en: "inventory-item" },
+          sublabel: { ko: "CQRS 모듈", en: "CQRS module" },
+          col: 0,
+          row: 2,
+        },
+        {
+          id: "purchase",
+          kind: "layer",
+          cat: 2,
+          icon: "🧾",
+          label: { ko: "purchase", en: "purchase" },
+          sublabel: { ko: "CQRS · 로트", en: "CQRS · lots" },
+          col: 1,
+          row: 2,
+        },
+        {
+          id: "log",
+          kind: "layer",
+          cat: 2,
+          icon: "🗒",
+          label: { ko: "inventory-log", en: "inventory-log" },
+          sublabel: { ko: "소비·폐기 로그", en: "Use / disposal log" },
+          col: 2,
+          row: 2,
+        },
+        {
+          id: "appliance",
+          kind: "layer",
+          cat: 2,
+          icon: "⚙",
+          label: { ko: "appliance", en: "appliance" },
+          sublabel: { ko: "CQRS 모듈", en: "CQRS module" },
+          col: 3,
+          row: 2,
+        },
+        {
+          id: "notify",
+          kind: "layer",
+          cat: 6,
+          icon: "🔔",
+          label: { ko: "유통기한 알림", en: "Expiry alerts" },
+          sublabel: { ko: "alert-rule → FCM push", en: "alert-rule → FCM push" },
+          col: 0,
+          row: 3,
+        },
+        {
+          id: "db",
+          kind: "external",
+          icon: "🐘",
+          label: { ko: "PostgreSQL", en: "PostgreSQL" },
+          sublabel: { ko: "도메인 데이터", en: "Domain data" },
+          col: 1.5,
+          row: 3,
+        },
+      ],
+      edges: [
+        { from: "user", to: "dashboard", kind: "primary" },
+        { from: "user", to: "purchases", kind: "primary" },
+        { from: "user", to: "history", kind: "primary" },
+        { from: "user", to: "appliances", kind: "primary" },
+        { from: "dashboard", to: "inventory", kind: "primary", label: { ko: "재고 조회", en: "read stock" } },
+        { from: "purchases", to: "purchase", kind: "primary", label: { ko: "구매 기록", en: "record" } },
+        { from: "history", to: "log", kind: "primary", label: { ko: "이력", en: "history" } },
+        { from: "appliances", to: "appliance", kind: "primary", label: { ko: "가전", en: "appliances" } },
+        { from: "inventory", to: "db", kind: "secondary", fromSide: "right", toSide: "left" },
+        { from: "purchase", to: "db", kind: "secondary" },
+        { from: "log", to: "db", kind: "secondary" },
+        { from: "appliance", to: "db", kind: "secondary", fromSide: "bottom", toSide: "right" },
+        { from: "inventory", to: "notify", kind: "secondary", dashed: true, label: { ko: "유통기한 임박", en: "expiring" } },
+      ],
+    },
     title: { ko: "집비치기 (him)", en: "him (home-inventory-manager)" },
     subtitle: {
       ko: "AI native 100% 풀스택 사이드 프로젝트",
@@ -744,6 +1335,92 @@ export const projects: Project[] = [
   },
   {
     slug: "lumir-erp",
+    diagram: {
+      caption: {
+        ko: "사내 전 사원 + 외부 입사지원자까지 4 도메인 백오피스. 프론트는 외부 API(AMS·CMS·LRIM)와 UAM용 MongoDB를 호출하는 오케스트레이터이고, CMS만 풀스택 단독(기획·BE·테스트)입니다. Plan(mock)/Current(실제 API) 환경 분리 패턴(파트장 인계)을 4 도메인에 일관 적용 — 핵심 자산은 4 도메인 동시 적응력.",
+        en: "A 4-domain back office serving every employee plus external applicants. The frontend orchestrates external APIs (AMS·CMS·LRIM) and MongoDB for UAM; only CMS is solo full-stack (planning · BE · tests). The Plan (mock) / Current (real API) split (inherited from the team lead) is applied consistently across all four — the real asset is adapting to four domains at once.",
+      },
+      nodes: [
+        {
+          id: "emp",
+          kind: "actor",
+          icon: "👥",
+          label: { ko: "사내 전 사원", en: "All employees" },
+          col: 1,
+          row: 0,
+        },
+        {
+          id: "applicant",
+          kind: "actor",
+          icon: "🧑‍💼",
+          label: { ko: "외부 입사지원자", en: "External applicants" },
+          col: 3,
+          row: 0,
+        },
+        {
+          id: "schedule",
+          kind: "layer",
+          cat: 3,
+          icon: "🗓",
+          label: { ko: "자원예약·일정", en: "Scheduling" },
+          sublabel: { ko: "프론트 전담", en: "Frontend only" },
+          col: 0,
+          row: 1,
+        },
+        {
+          id: "cms",
+          kind: "layer",
+          cat: 2,
+          icon: "📝",
+          label: { ko: "CMS", en: "CMS" },
+          sublabel: { ko: "풀스택 단독 · 기획·BE·테스트", en: "Solo full-stack" },
+          col: 1,
+          row: 1,
+        },
+        {
+          id: "lrimHire",
+          kind: "layer",
+          cat: 4,
+          icon: "👤",
+          label: { ko: "LRIM 채용", en: "LRIM hiring" },
+          sublabel: { ko: "프론트 전담", en: "Frontend only" },
+          col: 2,
+          row: 1,
+        },
+        {
+          id: "lrimInterview",
+          kind: "layer",
+          cat: 5,
+          icon: "📋",
+          label: { ko: "LRIM 면접관리", en: "LRIM interview mgmt" },
+          sublabel: { ko: "프론트 · 외부 노출", en: "Frontend · public" },
+          col: 3,
+          row: 1,
+        },
+        {
+          id: "backend",
+          kind: "external",
+          icon: "🔌",
+          label: { ko: "외부 백엔드", en: "External backends" },
+          sublabel: {
+            ko: "AMS·CMS·LRIM API + MongoDB(UAM)",
+            en: "AMS·CMS·LRIM API + MongoDB (UAM)",
+          },
+          col: 1.5,
+          row: 2,
+        },
+      ],
+      edges: [
+        { from: "emp", to: "cms", kind: "primary", animated: true, label: { ko: "사용", en: "use" } },
+        { from: "emp", to: "schedule", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "사용", en: "use" } },
+        { from: "emp", to: "lrimHire", kind: "secondary", fromSide: "right", toSide: "top", label: { ko: "사용", en: "use" } },
+        { from: "applicant", to: "lrimInterview", kind: "primary", animated: true, label: { ko: "면접 일정 제출", en: "submit slot" } },
+        { from: "schedule", to: "backend", kind: "secondary", label: { ko: "API", en: "API" } },
+        { from: "cms", to: "backend", kind: "secondary", label: { ko: "API", en: "API" } },
+        { from: "lrimHire", to: "backend", kind: "secondary", label: { ko: "API", en: "API" } },
+        { from: "lrimInterview", to: "backend", kind: "secondary", label: { ko: "API", en: "API" } },
+      ],
+    },
     title: {
       ko: "Lumir-ERP (사내 백오피스)",
       en: "Lumir-ERP (internal back office)",

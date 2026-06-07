@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/Nav";
 import { routing, type Locale } from "@/i18n/routing";
+import { siteUrl } from "@/lib/site";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -28,9 +29,41 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const title = t("homeTitle");
+  const description = t("homeDescription");
   return {
-    title: t("homeTitle"),
-    description: t("homeDescription"),
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
+    applicationName: "Changwook Woo · Portfolio",
+    authors: [{ name: "우창욱 (Changwook Woo)", url: "https://github.com/wukdddang" }],
+    creator: "우창욱 (Changwook Woo)",
+    keywords: [
+      "우창욱", "Changwook Woo", "Lumir", "루미르",
+      "Portfolio", "Web Developer", "Full-stack", "AI Native",
+      "SAR", "Satellite", "Sentinel", "InSAR",
+      "Next.js", "NestJS", "TypeScript",
+    ],
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { ko: "/ko", en: "/en", "x-default": "/" },
+    },
+    openGraph: {
+      type: "website",
+      url: `/${locale}`,
+      siteName: "Changwook Woo · Portfolio",
+      title,
+      description,
+      locale: locale === "ko" ? "ko_KR" : "en_US",
+      alternateLocale: locale === "ko" ? "en_US" : "ko_KR",
+    },
+    twitter: { card: "summary_large_image", title, description },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    },
+    icons: { icon: "/favicon.ico" },
   };
 }
 

@@ -67,6 +67,11 @@
     "backToList": "Back to projects",
     "roboticsOnly": "Robotics track only",
     "imagesGallery": "Screens · artifacts",
+    "architecture": "Architecture · data flow",
+    "diagramHint": "Drag to pan · zoom with the controls",
+    "legendForward": "Forward request",
+    "legendReturn": "Response · write-back",
+    "legendExternal": "External system",
     "problem": "Problem",
     "system": "System",
     "impact": "Impact",
@@ -146,7 +151,8 @@
     },
     "block": {
       "whatLabel": "What I did",
-      "impactLabel": "Impact"
+      "impactLabel": "Impact",
+      "viewDetail": "View project details →"
     }
   }
 }

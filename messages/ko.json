@@ -67,6 +67,11 @@
     "backToList": "프로젝트 목록으로",
     "roboticsOnly": "로보틱스 트랙 전용",
     "imagesGallery": "화면 · 산출물",
+    "architecture": "아키텍처 · 데이터 흐름",
+    "diagramHint": "드래그로 이동 · 컨트롤로 확대",
+    "legendForward": "정방향 요청",
+    "legendReturn": "응답 · 결과 저장",
+    "legendExternal": "외부 시스템",
     "problem": "문제",
     "system": "시스템",
     "impact": "임팩트",
@@ -146,7 +151,8 @@
     },
     "block": {
       "whatLabel": "한 일",
-      "impactLabel": "임팩트"
+      "impactLabel": "임팩트",
+      "viewDetail": "프로젝트 상세 보기 →"
     }
   }
 }

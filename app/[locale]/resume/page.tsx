@@ -12,6 +12,7 @@ import {
 import { mainStack, learnedDomain } from "@/data/stack";
 import { PrintButton } from "@/components/PrintButton";
 import { pick } from "@/data/i18n";
+import { Md } from "@/lib/markdown";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
@@ -21,9 +22,27 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const title = t("resumeTitle");
+  const description = t("resumeDescription");
   return {
-    title: t("resumeTitle"),
-    description: t("resumeDescription"),
+    title,
+    description,
+    alternates: {
+      canonical: `/${locale}/resume`,
+      languages: {
+        ko: "/ko/resume",
+        en: "/en/resume",
+        "x-default": "/resume",
+      },
+    },
+    openGraph: {
+      type: "article",
+      url: `/${locale}/resume`,
+      title,
+      description,
+      locale: locale === "ko" ? "ko_KR" : "en_US",
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -39,7 +58,7 @@ export default async function ResumePage({
   return (
     <article className="min-h-screen">
       <div className="print:hidden border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-md sticky top-16 z-30">
-        <div className="mx-auto w-full max-w-4xl px-6 md:px-16 lg:px-24 h-12 flex items-center justify-between">
+        <div className="mx-auto w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-6 md:px-10 lg:px-12 h-12 flex items-center justify-between">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
@@ -51,20 +70,20 @@ export default async function ResumePage({
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-4xl px-6 md:px-16 lg:px-24 pt-16 pb-32 print:pt-8 print:pb-8 print:max-w-none">
+      <div className="mx-auto w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-6 md:px-10 lg:px-12 pt-20 md:pt-24 pb-32 print:pt-8 print:pb-8 print:max-w-none">
         {/* Header */}
-        <header className="mb-12 print:mb-8">
-          <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] mb-3 print:text-[var(--muted)]">
+        <header className="mb-12 print:mb-6">
+          <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3 print:text-[var(--muted)]">
             {t("header")}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight mb-3">
             {pick(personal.name, locale)}
           </h1>
-          <p className="text-base md:text-lg text-[var(--muted)] leading-relaxed max-w-3xl">
-            {pick(resumeSummary.oneLiner, locale)}
+          <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed">
+            <Md>{pick(resumeSummary.oneLiner, locale)}</Md>
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs font-mono text-[var(--muted)]">
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-mono text-[var(--muted)]">
             <span>
               <span className="text-[var(--muted)]/60">{t("meta.mainDomain")}</span>{" "}
               <span className="text-[var(--foreground)]">{t("meta.mainDomainValue")}</span>
@@ -87,7 +106,7 @@ export default async function ResumePage({
             </span>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs font-mono">
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm font-mono">
             <a
               href={`mailto:${resumeContacts.email}`}
               className="hover:text-[var(--accent)] transition-colors"
@@ -110,25 +129,27 @@ export default async function ResumePage({
 
         {/* Summary */}
         <Section title={t("sections.summary")} eyebrow={t("sections.summaryEyebrow")}>
-          <div className="space-y-4 max-w-3xl">
+          <div className="space-y-4">
             {resumeSummary.paragraphs.map((p, i) => (
               <p
                 key={i}
-                className="text-[15px] leading-relaxed text-[var(--card-foreground)]"
+                className="text-lg leading-relaxed text-[var(--card-foreground)]"
               >
-                {pick(p, locale)}
+                <Md>{pick(p, locale)}</Md>
               </p>
             ))}
           </div>
-          <div className="mt-8 p-5 rounded-2xl border border-[var(--accent)]/30 bg-[var(--accent)]/5 print:bg-transparent">
+          <div className="mt-8 p-6 rounded-xl border border-[var(--accent)]/30 bg-[var(--accent)]/5 print:bg-transparent">
             <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
               {pick(resumeSummary.positioning.headline, locale)}
             </div>
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {resumeSummary.positioning.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm leading-relaxed">
+                <li key={i} className="flex items-start gap-2.5 text-base leading-relaxed">
                   <span className="text-[var(--accent)] font-mono mt-0.5">•</span>
-                  <span>{pick(b, locale)}</span>
+                  <span>
+                    <Md>{pick(b, locale)}</Md>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -141,14 +162,16 @@ export default async function ResumePage({
           eyebrow={t("sections.invitationsEyebrow")}
           subtle
         >
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {personal.invitations.map((q, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--card)] print:bg-transparent"
+                className="flex items-start gap-3 p-5 rounded-xl border border-[var(--border)] bg-[var(--card)] print:bg-transparent"
               >
                 <CheckCircle2 className="size-5 shrink-0 text-[var(--accent)] mt-0.5" />
-                <p className="text-sm leading-relaxed">{pick(q, locale)}</p>
+                <p className="text-base leading-relaxed">
+                  <Md>{pick(q, locale)}</Md>
+                </p>
               </div>
             ))}
           </div>
@@ -157,25 +180,25 @@ export default async function ResumePage({
         {/* Experience */}
         <Section title={t("sections.experience")} eyebrow={t("sections.experienceEyebrow")}>
           {resumeExperience.map((role, ri) => (
-            <div key={ri} className="mb-12 last:mb-0">
+            <div key={ri} className="mb-14 last:mb-0">
               <div className="mb-6 pb-3 border-b border-[var(--border)]">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="text-2xl font-bold tracking-tight">
+                  <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
                     {pick(role.company, locale)}
                   </h3>
-                  <span className="text-xs font-mono text-[var(--muted)]">
+                  <span className="text-sm font-mono text-[var(--muted)]">
                     {pick(role.period, locale)}
                   </span>
                 </div>
-                <div className="text-sm text-[var(--muted)] mt-1">
+                <div className="text-base text-[var(--muted)] mt-1.5">
                   {pick(role.position, locale)}
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--card-foreground)] max-w-3xl">
-                  {pick(role.summary, locale)}
+                <p className="mt-3 text-base leading-relaxed text-[var(--card-foreground)]">
+                  <Md>{pick(role.summary, locale)}</Md>
                 </p>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-9">
                 {role.projects.map((proj, pi) => (
                   <ProjectBlock key={pi} project={proj} locale={locale} t={t} />
                 ))}
@@ -186,7 +209,7 @@ export default async function ResumePage({
 
         {/* Side Projects */}
         <Section title={t("sections.side")} eyebrow={t("sections.sideEyebrow")}>
-          <div className="space-y-8">
+          <div className="space-y-9">
             {resumeSideProjects.map((proj, i) => (
               <ProjectBlock key={i} project={proj} locale={locale} t={t} />
             ))}
@@ -195,18 +218,18 @@ export default async function ResumePage({
 
         {/* Tech Stack */}
         <Section title={t("sections.stack")} eyebrow={t("sections.stackEyebrow")}>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
+          <div className="grid md:grid-cols-2 gap-8">
             <div>
               <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
                 {t("stack.mainColumn")}
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 {mainStack.map((cat, i) => (
                   <div key={i}>
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)]/70 mb-1">
+                    <div className="text-[11px] font-mono uppercase tracking-widest text-[var(--muted)]/70 mb-1">
                       {pick(cat.label, locale)}
                     </div>
-                    <div className="text-sm leading-relaxed">
+                    <div className="text-base leading-relaxed">
                       {cat.items.map((it) => it.name).join(" · ")}
                     </div>
                   </div>
@@ -217,19 +240,19 @@ export default async function ResumePage({
               <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
                 {t("stack.learnedColumn")}
               </div>
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 {learnedDomain.map((cat, i) => (
                   <div key={i}>
-                    <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)]/70 mb-1">
+                    <div className="text-[11px] font-mono uppercase tracking-widest text-[var(--muted)]/70 mb-1">
                       {pick(cat.label, locale)}
                     </div>
-                    <div className="text-sm leading-relaxed">
+                    <div className="text-base leading-relaxed">
                       {cat.items.map((it) => it.name).join(" · ")}
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-3 border-t border-dashed border-[var(--border)] text-xs font-mono text-[var(--muted)]">
+              <div className="mt-4 pt-3 border-t border-dashed border-[var(--border)] text-sm font-mono text-[var(--muted)]">
                 {t("stack.nextDirection")}
               </div>
             </div>
@@ -238,15 +261,15 @@ export default async function ResumePage({
 
         {/* About / Brain Trinity */}
         <Section title={t("sections.about")} eyebrow={t("sections.aboutEyebrow")}>
-          <div className="p-6 rounded-2xl bg-[var(--foreground)] text-[var(--background)] mb-6 print:bg-transparent print:text-[var(--foreground)] print:border print:border-[var(--border)]">
+          <div className="p-6 rounded-xl border border-[var(--accent)]/30 bg-[var(--card)] mb-6 print:bg-transparent">
             <div className="flex items-start gap-3">
-              <Sparkles className="size-5 mt-0.5 shrink-0 opacity-80" />
+              <Sparkles className="size-5 mt-0.5 shrink-0 text-[var(--accent)]" />
               <div>
-                <div className="text-xs font-mono uppercase tracking-widest opacity-60 mb-2">
+                <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-2">
                   {t("about.brainTrinityEyebrow")}
                 </div>
-                <p className="text-sm leading-relaxed">
-                  {pick(personal.brainTrinity.note, locale)}
+                <p className="text-base leading-relaxed">
+                  <Md>{pick(personal.brainTrinity.note, locale)}</Md>
                 </p>
               </div>
             </div>
@@ -256,9 +279,11 @@ export default async function ResumePage({
           </div>
           <ul className="space-y-2">
             {personal.futureVision.map((v, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm">
+              <li key={i} className="flex items-start gap-2.5 text-base">
                 <span className="text-[var(--accent)] font-mono">→</span>
-                <span>{pick(v, locale)}</span>
+                <span>
+                  <Md>{pick(v, locale)}</Md>
+                </span>
               </li>
             ))}
           </ul>
@@ -266,7 +291,7 @@ export default async function ResumePage({
 
         {/* Contact */}
         <Section title={t("sections.contact")} eyebrow={t("sections.contactEyebrow")}>
-          <div className="flex flex-wrap items-center gap-4 text-sm">
+          <div className="flex flex-wrap items-center gap-3 text-base">
             <a
               href={`mailto:${resumeContacts.email}`}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] hover:bg-[var(--subtle)] transition-colors print:border-none print:px-0"
@@ -289,8 +314,8 @@ export default async function ResumePage({
               {t("contact.portfolioLink")}
             </Link>
           </div>
-          <div className="mt-6 text-xs text-[var(--muted)] max-w-2xl print:hidden">
-            {t("contact.baseNote")}
+          <div className="mt-6 text-sm text-[var(--muted)] print:hidden">
+            <Md>{t("contact.baseNote")}</Md>
           </div>
         </Section>
       </div>
@@ -310,15 +335,15 @@ function Section({
   subtle?: boolean;
 }) {
   return (
-    <section className="mb-14 last:mb-0 print:mb-8">
-      <div className="mb-6 pb-2 border-b border-[var(--border)]">
+    <section className="mb-14 last:mb-0 print:mb-6">
+      <div className="mb-6 pb-2.5 border-b border-[var(--border)]">
         {eyebrow && (
-          <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-1">
+          <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-1.5">
             {eyebrow}
           </div>
         )}
         <h2
-          className={`text-2xl md:text-3xl font-bold tracking-tight ${
+          className={`text-3xl md:text-4xl font-bold tracking-tight ${
             subtle ? "text-[var(--card-foreground)]" : ""
           }`}
         >
@@ -342,7 +367,7 @@ function ProjectBlock({
   return (
     <div className="break-inside-avoid">
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
-        <h4 className="text-lg font-semibold tracking-tight">
+        <h4 className="text-lg md:text-xl font-bold tracking-tight">
           {project.slug ? (
             <Link
               href={`/projects/${project.slug}`}
@@ -354,9 +379,9 @@ function ProjectBlock({
             pick(project.name, locale)
           )}
         </h4>
-        <div className="flex items-center gap-2 text-xs font-mono">
+        <div className="flex items-center gap-2 text-sm font-mono">
           {project.badge && (
-            <span className="px-2 py-0.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30 print:border-current">
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30 print:border-current">
               {pick(project.badge, locale)}
             </span>
           )}
@@ -366,33 +391,37 @@ function ProjectBlock({
         </div>
       </div>
 
-      <p className="text-sm text-[var(--muted)] leading-relaxed mb-3 max-w-3xl">
-        {pick(project.context, locale)}
+      <p className="text-base text-[var(--muted)] leading-relaxed mb-3">
+        <Md>{pick(project.context, locale)}</Md>
       </p>
 
-      <div className="grid gap-4 md:grid-cols-2 mb-3">
+      <div className="grid gap-5 md:grid-cols-2 mb-3">
         <div>
-          <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
+          <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-2">
             {t("block.whatLabel")}
           </div>
-          <ul className="space-y-1.5 text-sm leading-relaxed">
+          <ul className="space-y-2 text-base leading-relaxed">
             {project.what.map((w, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="text-[var(--muted)] font-mono mt-1 text-[10px]">▸</span>
-                <span>{pick(w, locale)}</span>
+              <li key={i} className="flex items-start gap-2.5">
+                <span className="text-[var(--muted)] font-mono mt-1.5 text-[11px]">▸</span>
+                <span>
+                  <Md>{pick(w, locale)}</Md>
+                </span>
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] mb-2">
+          <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-2">
             {t("block.impactLabel")}
           </div>
-          <ul className="space-y-1.5 text-sm leading-relaxed">
+          <ul className="space-y-2 text-base leading-relaxed">
             {project.impact.map((im, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="text-[var(--accent)] font-mono mt-1 text-[10px]">▸</span>
-                <span>{pick(im, locale)}</span>
+              <li key={i} className="flex items-start gap-2.5">
+                <span className="text-[var(--accent)] font-mono mt-1.5 text-[11px]">▸</span>
+                <span>
+                  <Md>{pick(im, locale)}</Md>
+                </span>
               </li>
             ))}
           </ul>
@@ -404,7 +433,7 @@ function ProjectBlock({
           {project.stack.map((s) => (
             <span
               key={s}
-              className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--subtle)] text-[var(--muted)] print:bg-transparent print:border print:border-[var(--border)]"
+              className="text-[11px] font-mono px-2 py-0.5 rounded bg-[var(--subtle)] text-[var(--muted)] print:bg-transparent print:border print:border-[var(--border)]"
             >
               {s}
             </span>
@@ -413,9 +442,20 @@ function ProjectBlock({
       )}
 
       {project.honestyNote && (
-        <p className="mt-2 text-xs italic text-[var(--muted)] leading-relaxed max-w-3xl">
-          ※ {pick(project.honestyNote, locale)}
+        <p className="mt-2.5 text-sm italic text-[var(--muted)] leading-relaxed">
+          ※ <Md>{pick(project.honestyNote, locale)}</Md>
         </p>
+      )}
+
+      {project.slug && (
+        <div className="mt-3 print:hidden">
+          <Link
+            href={`/projects/${project.slug}`}
+            className="inline-flex items-center gap-1 text-sm font-mono text-[var(--accent)] hover:underline"
+          >
+            {t("block.viewDetail")}
+          </Link>
+        </div>
       )}
     </div>
   );

@@ -25,15 +25,32 @@
 }
 
 :root {
-  --background: #fafaf9;
-  --foreground: #0c0a09;
-  --muted: #57534e;
-  --subtle: #e7e5e4;
-  --border: #d6d3d1;
-  --accent: #f59e0b;
-  --accent-foreground: #422006;
-  --card: #ffffff;
-  --card-foreground: #1c1917;
+  /*
+   * 색은 OKLCH로 선언 (지각 균일 명도 → 톤 사다리·카테고리 색 제어 용이).
+   * 값은 기존 stone/amber hex를 OKLab 변환한 것 — 렌더 동일, 토큰만 정제.
+   * Light 톤 사다리(밝을수록 위): subtle(0.92) ↘ background(0.98) ↗ card(1.0).
+   */
+  --background: oklch(0.9848 0.0013 106.42); /* stone-50 */
+  --foreground: oklch(0.1469 0.0041 49.25); /* stone-950 */
+  --muted: oklch(0.4444 0.0096 73.64); /* stone-600 — secondary text */
+  --subtle: oklch(0.9232 0.0026 48.72); /* stone-200 — inset/hover surface */
+  --border: oklch(0.8687 0.0043 56.37); /* stone-300 — hairline */
+  --accent: oklch(0.7686 0.1647 70.08); /* amber-500 */
+  --accent-foreground: oklch(0.2857 0.0639 53.81); /* amber-950 */
+  --card: oklch(1 0 0); /* white — 배경 위로 톤으로 띄움 */
+  --card-foreground: oklch(0.2161 0.0061 56.04); /* stone-900 */
+
+  /*
+   * Diagram 카테고리 팔레트 — 레이어/서비스 "식별" 전용 (의미·상태·감정 아님).
+   * 규칙: 항상 아이콘·이니셜과 페어(색맹 안전). neon 회피 위해 chroma 중간(0.10~0.15).
+   * mid-lightness(~0.66~0.74) → 라이트(흰 카드)·다크(stone-900) 양쪽에서 읽힘.
+   */
+  --cat-1: oklch(0.72 0.15 70); /* amber-gold (brand-aligned) */
+  --cat-2: oklch(0.7 0.1 185); /* teal */
+  --cat-3: oklch(0.66 0.12 250); /* blue */
+  --cat-4: oklch(0.66 0.13 320); /* violet */
+  --cat-5: oklch(0.68 0.15 25); /* red-orange */
+  --cat-6: oklch(0.74 0.13 130); /* green */
 }
 
 @theme inline {
@@ -46,6 +63,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-cat-1: var(--cat-1);
+  --color-cat-2: var(--cat-2);
+  --color-cat-3: var(--cat-3);
+  --color-cat-4: var(--cat-4);
+  --color-cat-5: var(--cat-5);
+  --color-cat-6: var(--cat-6);
   /*
    * 한영 자동 매칭 (폰트 단위):
    * 1) PretendardKoreanOverride — CDN woff2 직접 + unicode-range로 한글 영역에만 매치
@@ -65,15 +88,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0c0a09;
-    --foreground: #fafaf9;
-    --muted: #a8a29e;
-    --subtle: #1c1917;
-    --border: #292524;
-    --accent: #fbbf24;
-    --accent-foreground: #422006;
-    --card: #1c1917;
-    --card-foreground: #fafaf9;
+    /*
+     * Dark 톤 사다리(어두울수록 아래): background(0.147) ↗ card/subtle(0.216) ↗ border(0.268).
+     * 그림자 없음 — 깊이는 이 명도 단계로만 표현(tonal depth). 띄우려면 명도를 한 단계 올린다.
+     */
+    --background: oklch(0.1469 0.0041 49.25); /* stone-950 — base canvas */
+    --foreground: oklch(0.9848 0.0013 106.42); /* stone-50 */
+    --muted: oklch(0.7161 0.0091 56.26); /* stone-400 — secondary text */
+    --subtle: oklch(0.2161 0.0061 56.04); /* stone-900 — inset/hover */
+    --border: oklch(0.2685 0.0063 34.3); /* stone-800 — hairline */
+    --accent: oklch(0.8369 0.1644 84.43); /* amber-400 */
+    --accent-foreground: oklch(0.2857 0.0639 53.81); /* amber-950 */
+    --card: oklch(0.2161 0.0061 56.04); /* stone-900 — 배경 위로 톤으로 띄움 */
+    --card-foreground: oklch(0.9848 0.0013 106.42); /* stone-50 */
   }
 }
 
@@ -139,17 +166,38 @@ body {
   color: var(--accent-foreground);
 }
 
+/*
+ * React Flow — 평면 시스템(maple Tonal-Depth 규칙)에 맞춰 그림자 제거.
+ * 깊이는 톤·hairline 보더로만. 컨트롤은 카드 톤·보더에 정렬.
+ */
+.react-flow__controls,
+.react-flow__controls-button {
+  box-shadow: none !important;
+}
+/* RF 기본 CSS가 import 순서로 이기므로 !important로 카드 톤 강제 */
+.react-flow__controls-button {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--muted) !important;
+}
+.react-flow__controls-button:hover {
+  background: var(--subtle) !important;
+}
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
+
 /* Print — /resume 페이지 인쇄·PDF 저장 시 */
 @media print {
   :root {
-    --background: #ffffff;
-    --foreground: #0c0a09;
-    --muted: #57534e;
-    --subtle: #f5f5f4;
-    --border: #d6d3d1;
-    --accent: #b45309;
-    --card: #ffffff;
-    --card-foreground: #0c0a09;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.1469 0.0041 49.25);
+    --muted: oklch(0.4444 0.0096 73.64);
+    --subtle: oklch(0.9699 0.0013 106.42); /* stone-100 */
+    --border: oklch(0.8687 0.0043 56.37);
+    --accent: oklch(0.5553 0.1455 49); /* amber-700 — 인쇄 대비 */
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.1469 0.0041 49.25);
   }
   html,
   body {

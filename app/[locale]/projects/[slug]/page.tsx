@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { projects, type Project } from "@/data/projects";
 import { pick } from "@/data/i18n";
+import { ProjectDiagram } from "@/components/ProjectDiagram";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -22,9 +23,28 @@ export async function generateMetadata({
   const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
   const t = await getTranslations({ locale, namespace: "metadata" });
+  const title = `${pick(project.title, locale)} ${t("projectSuffix")}`;
+  const description = pick(project.subtitle, locale);
+  const path = `/projects/${slug}`;
   return {
-    title: `${pick(project.title, locale)} ${t("projectSuffix")}`,
-    description: pick(project.subtitle, locale),
+    title,
+    description,
+    alternates: {
+      canonical: `/${locale}${path}`,
+      languages: {
+        ko: `/ko${path}`,
+        en: `/en${path}`,
+        "x-default": path,
+      },
+    },
+    openGraph: {
+      type: "article",
+      url: `/${locale}${path}`,
+      title,
+      description,
+      locale: locale === "ko" ? "ko_KR" : "en_US",
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -99,6 +119,9 @@ export default async function ProjectDetailPage({
             ))}
           </div>
         )}
+
+        {/* Architecture diagram (React Flow) */}
+        {project.diagram && <ProjectDiagram diagram={project.diagram} />}
 
         {/* Videos Gallery */}
         {project.videos && project.videos.length > 0 && (
@@ -404,6 +427,9 @@ function SubProjectSection({
           ))}
         </div>
       )}
+
+      {/* Architecture diagram (React Flow) */}
+      {sub.diagram && <ProjectDiagram diagram={sub.diagram} />}
 
       {/* Problem · System · Impact */}
       <div className="space-y-6 mb-8">
