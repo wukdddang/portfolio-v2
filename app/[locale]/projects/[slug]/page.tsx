@@ -8,6 +8,8 @@ import { projects, type Project } from "@/data/projects";
 import { pick } from "@/data/i18n";
 import { ProjectDiagram } from "@/components/ProjectDiagram";
 import { PlatformDiagram } from "@/components/PlatformDiagram";
+import { JsonLd } from "@/components/JsonLd";
+import { projectGraph } from "@/lib/jsonld";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -60,6 +62,9 @@ export default async function ProjectDetailPage({
   if (!project) notFound();
 
   const t = await getTranslations({ locale, namespace: "projectDetail" });
+  const tm = await getTranslations({ locale, namespace: "metadata" });
+  const jsonLdTitle = `${pick(project.title, locale)} ${tm("projectSuffix")}`;
+  const jsonLdDescription = pick(project.subtitle, locale);
 
   // 하위 프로젝트가 각자 다이어그램을 가진 통합 플랫폼이면, 4개를 1개 통합 캔버스로 대체
   const isUnifiedPlatform = !!(
@@ -76,6 +81,9 @@ export default async function ProjectDetailPage({
 
   return (
     <article className="min-h-screen">
+      <JsonLd
+        data={projectGraph(project, locale, jsonLdTitle, jsonLdDescription)}
+      />
       <div className="mx-auto w-full max-w-6xl px-6 md:px-12 lg:px-16 pt-24 pb-32">
         <Link
           href="/#projects"

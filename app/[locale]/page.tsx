@@ -1,9 +1,11 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Hero } from "@/components/Hero";
 import { Coordinates } from "@/components/Coordinates";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { TechStack } from "@/components/TechStack";
 import { About } from "@/components/About";
+import { JsonLd } from "@/components/JsonLd";
+import { homeGraph } from "@/lib/jsonld";
 import type { Locale } from "@/i18n/routing";
 
 export default async function HomePage({
@@ -13,8 +15,10 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "metadata" });
   return (
     <>
+      <JsonLd data={homeGraph(locale, t("homeTitle"), t("homeDescription"))} />
       <Hero />
       <Coordinates />
       <ProjectsGrid />
