@@ -52,6 +52,7 @@ export interface DiagramNode {
   icon?: string;
   kind?: DiagramNodeKind; // 스타일 변형 (기본 layer)
   cat?: number; // 카테고리 색 인덱스 (1-6) → var(--cat-N). layer "식별" 전용, 아이콘과 페어
+  group?: string; // 같은 group id끼리 그룹 프레임으로 묶어 렌더 (예: "ext" 외부 인프라)
   col: number; // 그리드 열 (0-based)
   row: number; // 그리드 행 (0-based)
 }
@@ -71,6 +72,7 @@ export interface ProjectDiagram {
   caption?: L;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
+  groups?: { id: string; label: L }[]; // 노드 묶음 프레임 (node.group === id 인 노드들)
 }
 
 export interface Project {
@@ -137,6 +139,7 @@ const sarDataRetrievalLayer: Project = {
         sublabel: { ko: "Sentinel-1 카탈로그 API", en: "Sentinel-1 catalog API" },
         col: 0,
         row: 1,
+        group: "ext",
       },
       {
         id: "db",
@@ -144,8 +147,9 @@ const sarDataRetrievalLayer: Project = {
         icon: "🐘",
         label: { ko: "PostgreSQL", en: "PostgreSQL" },
         sublabel: { ko: "PostGIS · 메타·결과", en: "PostGIS · metadata/results" },
-        col: 2,
-        row: 1,
+        col: 0,
+        row: 3,
+        group: "ext",
       },
       {
         id: "nas",
@@ -155,6 +159,7 @@ const sarDataRetrievalLayer: Project = {
         sublabel: { ko: "SLC 저장 (SMB2)", en: "SLC store (SMB2)" },
         col: 0,
         row: 2,
+        group: "ext",
       },
       {
         id: "snap",
@@ -173,8 +178,11 @@ const sarDataRetrievalLayer: Project = {
       { from: "retrieval", to: "nas", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "③ SLC 저장", en: "③ store SLC" } },
       { from: "nas", to: "snap", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "④ SLC 읽기", en: "④ read SLC" } },
       { from: "snap", to: "retrieval", kind: "secondary", dashed: true, fromSide: "top", toSide: "bottom", label: { ko: "⑤ 분석 결과", en: "⑤ result" } },
-      { from: "retrieval", to: "db", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "메타 저장", en: "meta" } },
+      { from: "retrieval", to: "db", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "메타 저장", en: "meta" } },
       { from: "retrieval", to: "api", kind: "primary", dashed: true, fromSide: "right", toSide: "right", label: { ko: "⑥ 결과 응답", en: "⑥ response" } },
+    ],
+    groups: [
+      { id: "ext", label: { ko: "외부 인프라", en: "External infrastructure" } },
     ],
   },
   layerLabel: { ko: "저장", en: "Storage" },
@@ -255,7 +263,7 @@ const lumirLinuxSnapLayer: Project = {
         icon: "🔀",
         label: { ko: "작업 큐 (173)", en: "Job queue (173)" },
         sublabel: { ko: "insar_db.jobs · frame분할·SKIP LOCKED", en: "insar_db.jobs · frame-split·SKIP LOCKED" },
-        col: 0,
+        col: 1,
         row: 1,
       },
       {
@@ -265,8 +273,8 @@ const lumirLinuxSnapLayer: Project = {
         icon: "🛰",
         label: { ko: "ISCE2 stackSentinel", en: "ISCE2 stackSentinel" },
         sublabel: { ko: "174 · TOPS coreg + 간섭도", en: "174 · TOPS coreg + ifg" },
-        col: 1,
-        row: 1,
+        col: 0,
+        row: 2,
       },
       {
         id: "snaphu174",
@@ -275,8 +283,8 @@ const lumirLinuxSnapLayer: Project = {
         icon: "🧩",
         label: { ko: "SNAPHU", en: "SNAPHU" },
         sublabel: { ko: "174 · 위상 펼침", en: "174 · phase unwrap" },
-        col: 2,
-        row: 1,
+        col: 0,
+        row: 3,
       },
       {
         id: "mintpy174",
@@ -285,8 +293,8 @@ const lumirLinuxSnapLayer: Project = {
         icon: "📈",
         label: { ko: "MintPy SBAS", en: "MintPy SBAS" },
         sublabel: { ko: "174 · ERA5 시계열", en: "174 · ERA5 time series" },
-        col: 3,
-        row: 1,
+        col: 0,
+        row: 4,
       },
       {
         id: "nas",
@@ -294,7 +302,7 @@ const lumirLinuxSnapLayer: Project = {
         icon: "💾",
         label: { ko: "NAS", en: "NAS" },
         sublabel: { ko: "Sentinel-1 SLC (/mnt/sar)", en: "Sentinel-1 SLC (/mnt/sar)" },
-        col: 0,
+        col: 1,
         row: 2,
       },
       {
@@ -304,7 +312,7 @@ const lumirLinuxSnapLayer: Project = {
         icon: "🛰",
         label: { ko: "ISCE2 coreg", en: "ISCE2 coreg" },
         sublabel: { ko: "173 · PSI 자기완결 (-W slc)", en: "173 · self-contained (-W slc)" },
-        col: 1,
+        col: 2,
         row: 2,
       },
       {
@@ -315,7 +323,7 @@ const lumirLinuxSnapLayer: Project = {
         label: { ko: "MiaplPy PSI", en: "MiaplPy PSI" },
         sublabel: { ko: "173 · RTX4080 phase linking", en: "173 · RTX4080 phase linking" },
         col: 2,
-        row: 2,
+        row: 3,
       },
       {
         id: "db",
@@ -324,7 +332,7 @@ const lumirLinuxSnapLayer: Project = {
         label: { ko: "PostgreSQL (173)", en: "PostgreSQL (173)" },
         sublabel: { ko: "PostGIS · velocity_points", en: "PostGIS · velocity_points" },
         col: 1,
-        row: 3,
+        row: 5,
       },
       {
         id: "platform",
@@ -332,24 +340,24 @@ const lumirLinuxSnapLayer: Project = {
         icon: "🌐",
         label: { ko: "외부 3D 플랫폼", en: "External 3D platform" },
         sublabel: { ko: "XYZ 시계열 전달", en: "XYZ time series" },
-        col: 2,
-        row: 3,
+        col: 1,
+        row: 6,
       },
     ],
     edges: [
       { from: "user", to: "dashboard", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "① 지역 분석 요청", en: "① request" } },
       { from: "dashboard", to: "queue", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "② job 생성", en: "② create job" } },
-      { from: "queue", to: "isce174", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "③ SBAS job", en: "③ SBAS job" } },
-      { from: "queue", to: "coreg173", kind: "primary", fromSide: "bottom", toSide: "left", label: { ko: "③ PSI job", en: "③ PSI job" } },
-      { from: "isce174", to: "snaphu174", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "간섭도", en: "ifg" } },
-      { from: "snaphu174", to: "mintpy174", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "unwrap", en: "unwrap" } },
-      { from: "coreg173", to: "miaplpy173", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "phase linking", en: "phase linking" } },
-      { from: "nas", to: "isce174", kind: "secondary", fromSide: "right", toSide: "bottom", label: { ko: "SLC", en: "SLC" } },
+      { from: "queue", to: "isce174", kind: "primary", fromSide: "left", toSide: "top", label: { ko: "③ SBAS job", en: "③ SBAS job" } },
+      { from: "queue", to: "coreg173", kind: "primary", fromSide: "right", toSide: "top", label: { ko: "③ PSI job", en: "③ PSI job" } },
+      { from: "isce174", to: "snaphu174", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "간섭도", en: "ifg" } },
+      { from: "snaphu174", to: "mintpy174", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "unwrap", en: "unwrap" } },
+      { from: "coreg173", to: "miaplpy173", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "phase linking", en: "phase linking" } },
+      { from: "nas", to: "isce174", kind: "secondary", fromSide: "left", toSide: "right", label: { ko: "SLC", en: "SLC" } },
       { from: "nas", to: "coreg173", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "SLC", en: "SLC" } },
       { from: "mintpy174", to: "db", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "④ velocity", en: "④ velocity" } },
       { from: "miaplpy173", to: "db", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "④ velocity", en: "④ velocity" } },
-      { from: "db", to: "dashboard", kind: "secondary", dashed: true, fromSide: "left", toSide: "left", label: { ko: "⑤ 변위 지도", en: "⑤ velocity map" } },
-      { from: "db", to: "platform", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "XYZ 시계열", en: "XYZ series" } },
+      { from: "db", to: "dashboard", kind: "secondary", dashed: true, fromSide: "left", toSide: "top", label: { ko: "⑤ 변위 지도", en: "⑤ velocity map" } },
+      { from: "db", to: "platform", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "XYZ 시계열", en: "XYZ series" } },
     ],
   },
   layerLabel: { ko: "분석", en: "Analysis" },
