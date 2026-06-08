@@ -7,6 +7,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import { projects, type Project } from "@/data/projects";
 import { pick } from "@/data/i18n";
 import { ProjectDiagram } from "@/components/ProjectDiagram";
+import { PlatformDiagram } from "@/components/PlatformDiagram";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -59,6 +60,13 @@ export default async function ProjectDetailPage({
   if (!project) notFound();
 
   const t = await getTranslations({ locale, namespace: "projectDetail" });
+
+  // 하위 프로젝트가 각자 다이어그램을 가진 통합 플랫폼이면, 4개를 1개 통합 캔버스로 대체
+  const isUnifiedPlatform = !!(
+    project.diagram &&
+    project.subProjects?.length &&
+    project.subProjects.every((s) => s.diagram)
+  );
 
   const sections = [
     { label: t("problem"), body: pick(project.problem, locale), accent: false },
@@ -120,8 +128,12 @@ export default async function ProjectDetailPage({
           </div>
         )}
 
-        {/* Architecture diagram (React Flow) */}
-        {project.diagram && <ProjectDiagram diagram={project.diagram} />}
+        {/* Architecture diagram (React Flow) — 통합 플랫폼은 Prezi식 드릴인 캔버스 */}
+        {isUnifiedPlatform ? (
+          <PlatformDiagram project={project} />
+        ) : (
+          project.diagram && <ProjectDiagram diagram={project.diagram} />
+        )}
 
         {/* Videos Gallery */}
         {project.videos && project.videos.length > 0 && (
@@ -365,7 +377,13 @@ export default async function ProjectDetailPage({
 
             <div className="space-y-16">
               {project.subProjects.map((sub) => (
-                <SubProjectSection key={sub.slug} sub={sub} locale={locale} t={t} />
+                <SubProjectSection
+                  key={sub.slug}
+                  sub={sub}
+                  locale={locale}
+                  t={t}
+                  showDiagram={!isUnifiedPlatform}
+                />
               ))}
             </div>
           </div>
@@ -379,10 +397,12 @@ function SubProjectSection({
   sub,
   locale,
   t,
+  showDiagram,
 }: {
   sub: Project;
   locale: Locale;
   t: (key: string) => string;
+  showDiagram: boolean;
 }) {
   return (
     <section
@@ -428,8 +448,8 @@ function SubProjectSection({
         </div>
       )}
 
-      {/* Architecture diagram (React Flow) */}
-      {sub.diagram && <ProjectDiagram diagram={sub.diagram} />}
+      {/* Architecture diagram (React Flow) — 통합 캔버스 사용 시 개별 렌더 생략 */}
+      {showDiagram && sub.diagram && <ProjectDiagram diagram={sub.diagram} />}
 
       {/* Problem · System · Impact */}
       <div className="space-y-6 mb-8">
