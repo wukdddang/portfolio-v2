@@ -138,7 +138,7 @@ const sarDataRetrievalLayer: Project = {
         label: { ko: "CDSE", en: "CDSE" },
         sublabel: { ko: "Sentinel-1 카탈로그 API", en: "Sentinel-1 catalog API" },
         col: 0,
-        row: 1,
+        row: 0,
         group: "ext",
       },
       {
@@ -148,7 +148,7 @@ const sarDataRetrievalLayer: Project = {
         label: { ko: "PostgreSQL", en: "PostgreSQL" },
         sublabel: { ko: "PostGIS · 메타·결과", en: "PostGIS · metadata/results" },
         col: 0,
-        row: 3,
+        row: 1,
         group: "ext",
       },
       {
@@ -175,10 +175,10 @@ const sarDataRetrievalLayer: Project = {
     edges: [
       { from: "api", to: "retrieval", kind: "primary", animated: true, label: { ko: "① 검색 요청", en: "① search request" } },
       { from: "retrieval", to: "cdse", kind: "secondary", fromSide: "left", toSide: "right", label: { ko: "② 검색·다운로드", en: "② search·download" } },
-      { from: "retrieval", to: "nas", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "③ SLC 저장", en: "③ store SLC" } },
+      { from: "retrieval", to: "nas", kind: "secondary", fromSide: "left", toSide: "right", label: { ko: "③ SLC 저장", en: "③ store SLC" } },
       { from: "nas", to: "snap", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "④ SLC 읽기", en: "④ read SLC" } },
       { from: "snap", to: "retrieval", kind: "secondary", dashed: true, fromSide: "top", toSide: "bottom", label: { ko: "⑤ 분석 결과", en: "⑤ result" } },
-      { from: "retrieval", to: "db", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "메타 저장", en: "meta" } },
+      { from: "retrieval", to: "db", kind: "secondary", fromSide: "left", toSide: "right", label: { ko: "메타 저장", en: "meta" } },
       { from: "retrieval", to: "api", kind: "primary", dashed: true, fromSide: "right", toSide: "right", label: { ko: "⑥ 결과 응답", en: "⑥ response" } },
     ],
     groups: [
@@ -233,8 +233,8 @@ const lumirLinuxSnapLayer: Project = {
   slug: "lumir-linux-snap",
   diagram: {
     caption: {
-      ko: "사용자가 지도에서 지역·AOI를 골라 변위 분석을 요청하는 데서 흐름이 시작됩니다. 대시보드(173)가 job을 만들어 작업 큐에 넣으면, 174(SBAS)·173(PSI) 워커가 frame 단위로 나눠(host affinity) 각자 처리하고 velocity를 173 DB에 적재 — 결과는 변위 지도로 사용자에게 돌아오고, XYZ 시계열은 외부 3D 플랫폼에 전달됩니다. (174 파랑 = SBAS, 173 초록 = PSI)",
-      en: "The flow starts when the user picks a region/AOI on the map and requests a displacement analysis. The dashboard (173) creates a job on the queue; the 174 (SBAS) and 173 (PSI) workers split it frame-by-frame (host affinity), process locally, and write velocity into the 173 DB — the result returns to the user as a velocity map, and the XYZ time series goes to the external 3D platform. (Blue = 174 SBAS, green = 173 PSI.)",
+      ko: "사용자가 지도에서 지역·AOI를 골라 변위 분석을 요청하는 데서 흐름이 시작됩니다. 대시보드가 job을 만들어 작업 큐에 넣으면, SBAS·PSI 워커가 frame 단위로 나눠(host affinity) 각자 처리하고 velocity를 PostgreSQL에 적재 — 결과는 변위 지도로 사용자에게 돌아오고, XYZ 시계열은 외부 3D 플랫폼에 전달됩니다. (파랑 = SBAS, 초록 = PSI)",
+      en: "The flow starts when the user picks a region/AOI on the map and requests a displacement analysis. The dashboard creates a job on the queue; the SBAS and PSI workers split it frame-by-frame (host affinity), process locally, and write velocity into PostgreSQL — the result returns to the user as a velocity map, and the XYZ time series goes to the external 3D platform. (Blue = SBAS, green = PSI.)",
     },
     nodes: [
       {
@@ -251,7 +251,7 @@ const lumirLinuxSnapLayer: Project = {
         kind: "layer",
         cat: 2,
         icon: "🖥",
-        label: { ko: "대시보드 (173)", en: "Dashboard (173)" },
+        label: { ko: "대시보드", en: "Dashboard" },
         sublabel: { ko: "FastAPI · 변위 지도·QA (NestJS)", en: "FastAPI · velocity map·QA (NestJS)" },
         col: 1,
         row: 0,
@@ -261,7 +261,7 @@ const lumirLinuxSnapLayer: Project = {
         kind: "layer",
         cat: 1,
         icon: "🔀",
-        label: { ko: "작업 큐 (173)", en: "Job queue (173)" },
+        label: { ko: "작업 큐", en: "Job queue" },
         sublabel: { ko: "insar_db.jobs · frame분할·SKIP LOCKED", en: "insar_db.jobs · frame-split·SKIP LOCKED" },
         col: 1,
         row: 1,
@@ -272,7 +272,7 @@ const lumirLinuxSnapLayer: Project = {
         cat: 3,
         icon: "🛰",
         label: { ko: "ISCE2 stackSentinel", en: "ISCE2 stackSentinel" },
-        sublabel: { ko: "174 · TOPS coreg + 간섭도", en: "174 · TOPS coreg + ifg" },
+        sublabel: { ko: "SBAS · TOPS coreg + 간섭도", en: "SBAS · TOPS coreg + ifg" },
         col: 0,
         row: 2,
       },
@@ -282,7 +282,7 @@ const lumirLinuxSnapLayer: Project = {
         cat: 3,
         icon: "🧩",
         label: { ko: "SNAPHU", en: "SNAPHU" },
-        sublabel: { ko: "174 · 위상 펼침", en: "174 · phase unwrap" },
+        sublabel: { ko: "SBAS · 위상 펼침", en: "SBAS · phase unwrap" },
         col: 0,
         row: 3,
       },
@@ -292,7 +292,7 @@ const lumirLinuxSnapLayer: Project = {
         cat: 3,
         icon: "📈",
         label: { ko: "MintPy SBAS", en: "MintPy SBAS" },
-        sublabel: { ko: "174 · ERA5 시계열", en: "174 · ERA5 time series" },
+        sublabel: { ko: "ERA5 시계열", en: "ERA5 time series" },
         col: 0,
         row: 4,
       },
@@ -311,7 +311,7 @@ const lumirLinuxSnapLayer: Project = {
         cat: 6,
         icon: "🛰",
         label: { ko: "ISCE2 coreg", en: "ISCE2 coreg" },
-        sublabel: { ko: "173 · PSI 자기완결 (-W slc)", en: "173 · self-contained (-W slc)" },
+        sublabel: { ko: "PSI · 자기완결 (-W slc)", en: "PSI · self-contained (-W slc)" },
         col: 2,
         row: 2,
       },
@@ -321,7 +321,7 @@ const lumirLinuxSnapLayer: Project = {
         cat: 6,
         icon: "🟢",
         label: { ko: "MiaplPy PSI", en: "MiaplPy PSI" },
-        sublabel: { ko: "173 · RTX4080 phase linking", en: "173 · RTX4080 phase linking" },
+        sublabel: { ko: "RTX4080 phase linking", en: "RTX4080 phase linking" },
         col: 2,
         row: 3,
       },
@@ -329,7 +329,7 @@ const lumirLinuxSnapLayer: Project = {
         id: "db",
         kind: "external",
         icon: "🐘",
-        label: { ko: "PostgreSQL (173)", en: "PostgreSQL (173)" },
+        label: { ko: "PostgreSQL", en: "PostgreSQL" },
         sublabel: { ko: "PostGIS · velocity_points", en: "PostGIS · velocity_points" },
         col: 1,
         row: 5,
@@ -818,8 +818,8 @@ const lumirSarPlatform: Project = {
   ],
   diagram: {
     caption: {
-      ko: "사용자 위치 요청이 프론트 → 저장 → 분석 레이어를 거쳐 결과로 돌아오는 흐름. 가운데 세로축(주황)이 정방향 요청, 오른쪽이 응답·결과 저장, 왼쪽이 외부 데이터 공급원. 한 사람이 3 레이어를 풀스택으로 묶고 있습니다.",
-      en: "A user's location request flows down the frontend → storage → analysis spine and returns as a result. The center axis (amber) is the forward request, the right side is response / write-back, the left side is the external data feeds. One person owns all three layers full-stack.",
+      ko: "사용자 요청이 프론트 → 저장(NestJS) → 분석(FastAPI) 레이어를 좌→우로 거치고, InSAR 결과가 저장 레이어로 되돌아와 사용자에게 응답되는 흐름. 저장 레이어(NestJS)는 분석 레이어(FastAPI)에서 InSAR 데이터를 API로 받아와 저장·중계합니다. 실선(주황)=정방향 요청, 점선=응답·데이터 환류. 한 사람이 3 레이어를 풀스택으로 묶고 있습니다.",
+      en: "A user request flows left→right through frontend → storage (NestJS) → analysis (FastAPI); the InSAR results return to the storage layer to answer the user. The storage layer (NestJS) fetches InSAR data from the analysis layer (FastAPI) over an API, then stores and relays it. Solid (amber) = forward request, dashed = response / data feedback. One person owns all three layers full-stack.",
     },
     nodes: [
       {

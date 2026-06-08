@@ -8,6 +8,7 @@ import type { Project } from "@/data/projects";
 import { pick } from "@/data/i18n";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { Md } from "@/lib/markdown";
 
 interface ProjectCardProps {
   project: Project;
@@ -70,19 +71,19 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] shrink-0 w-16 pt-0.5">
             {t("problem")}
           </span>
-          <p className="text-[var(--card-foreground)] line-clamp-2">{pick(project.problem, locale)}</p>
+          <p className="text-[var(--card-foreground)] line-clamp-2"><Md>{pick(project.problem, locale)}</Md></p>
         </div>
         <div className="flex gap-2">
           <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--muted)] shrink-0 w-16 pt-0.5">
             {t("system")}
           </span>
-          <p className="text-[var(--card-foreground)] line-clamp-2">{pick(project.system, locale)}</p>
+          <p className="text-[var(--card-foreground)] line-clamp-2"><Md>{pick(project.system, locale)}</Md></p>
         </div>
         <div className="flex gap-2">
           <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent)] shrink-0 w-16 pt-0.5">
             {t("impact")}
           </span>
-          <p className="text-[var(--card-foreground)] line-clamp-2">{pick(project.impact, locale)}</p>
+          <p className="text-[var(--card-foreground)] line-clamp-2"><Md>{pick(project.impact, locale)}</Md></p>
         </div>
       </div>
 
@@ -121,7 +122,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                     {pick(area.label, locale)}
                   </div>
                   <div className="text-[var(--muted)] line-clamp-1 text-[11px] leading-tight">
-                    {pick(area.description, locale)}
+                    <Md>{pick(area.description, locale)}</Md>
                   </div>
                 </div>
               </div>

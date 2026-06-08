@@ -1,13 +1,14 @@
 import * as React from "react";
 
 /**
- * 인라인 마크다운 렌더러 — `**bold**` · `*emphasis*` · `` `code` ``만 처리.
+ * 인라인 마크다운 렌더러 — `**bold**` · `*emphasis*` · `` `code` `` · `[[wikilink]]` 처리.
  * 한국어 본문에서 이탤릭은 어색하므로 `*emphasis*`는 이탤릭 대신 accent 컬러로 강조.
+ * `[[대상]]` / `[[대상|별칭]]`(Obsidian식)은 accent + 점선 밑줄의 참조 표기로 렌더 (별칭 우선 표시).
  * 다중 라인은 처리하지 않음 (인라인 강조 전용).
  */
 
 // 토큰 우선순위: 강한 → 약한 (**bold**가 *italic*보다 먼저 매칭되어야 함)
-const TOKEN = /(\*\*[^*\n]+\*\*|\*[^*\n]+\*|`[^`\n]+`)/g;
+const TOKEN = /(\*\*[^*\n]+\*\*|\*[^*\n]+\*|`[^`\n]+`|\[\[[^\]\n]+\]\])/g;
 
 export function renderInlineMarkdown(text: string): React.ReactNode {
   if (!text) return null;
@@ -42,6 +43,19 @@ export function renderInlineMarkdown(text: string): React.ReactNode {
         >
           {part.slice(1, -1)}
         </code>
+      );
+    }
+    if (part.startsWith("[[") && part.endsWith("]]") && part.length > 4) {
+      const inner = part.slice(2, -2);
+      const pipe = inner.indexOf("|");
+      const display = pipe >= 0 ? inner.slice(pipe + 1) : inner;
+      return (
+        <span
+          key={i}
+          className="font-medium text-[var(--accent)] border-b border-dotted border-[var(--accent)]/50"
+        >
+          {display}
+        </span>
       );
     }
     return <React.Fragment key={i}>{part}</React.Fragment>;
