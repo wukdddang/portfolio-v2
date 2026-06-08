@@ -4,7 +4,8 @@ import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { projects } from "@/data/projects";
 import { pick } from "@/data/i18n";
-import { MergedDiagram, NestedDiagram } from "@/components/lab/LabDiagrams";
+import { MergedDiagram } from "@/components/lab/LabDiagrams";
+import { PlatformDiagram } from "@/components/PlatformDiagram";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -76,10 +77,12 @@ export default async function DiagramLabPage({
               각 레이어가 하나의 &ldquo;박스&rdquo;이고, 그 박스{" "}
               <em>안에</em> 해당 레이어의 하위 다이어그램이 실제로 중첩되어 있습니다
               (React Flow parent/child 서브플로우). 박스를 클릭하면 그 안으로 줌인,
-              <span className="font-mono"> ⌂ 전체 보기</span>로 복귀합니다.
+              <span className="font-mono"> ⌂ 전체 보기</span>로 복귀합니다. 이 방식이
+              정식 채택되어, 아래는 프로덕션 컴포넌트{" "}
+              <span className="font-mono">PlatformDiagram</span>을 그대로 렌더합니다.
             </p>
           </div>
-          <NestedDiagram project={project} />
+          <PlatformDiagram project={project} />
         </section>
       </div>
     </article>
