@@ -10,6 +10,7 @@ import { ProjectDiagram } from "@/components/ProjectDiagram";
 import { PlatformDiagram } from "@/components/PlatformDiagram";
 import { JsonLd } from "@/components/JsonLd";
 import { projectGraph } from "@/lib/jsonld";
+import { Md } from "@/lib/markdown";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -241,7 +242,7 @@ export default async function ProjectDetailPage({
                 {section.label}
               </div>
               <p className="text-base md:text-lg leading-relaxed text-[var(--card-foreground)]">
-                {section.body}
+                <Md>{section.body}</Md>
               </p>
             </div>
           ))}
@@ -257,7 +258,7 @@ export default async function ProjectDetailPage({
                   {t("ownContribution")}
                 </div>
                 <p className="text-sm leading-relaxed">
-                  {pick(project.ownContribution, locale)}
+                  <Md>{pick(project.ownContribution, locale)}</Md>
                 </p>
               </div>
             )}
@@ -268,7 +269,7 @@ export default async function ProjectDetailPage({
                   {t("inheritedScope")}
                 </div>
                 <p className="text-sm leading-relaxed text-[var(--muted)]">
-                  {pick(project.inheritedScope, locale)}
+                  <Md>{pick(project.inheritedScope, locale)}</Md>
                 </p>
               </div>
             )}
@@ -282,7 +283,7 @@ export default async function ProjectDetailPage({
               {t("honestyNote")}
             </div>
             <p className="text-sm leading-relaxed text-[var(--muted)] italic">
-              {pick(project.honestyNote, locale)}
+              <Md>{pick(project.honestyNote, locale)}</Md>
             </p>
           </div>
         )}
@@ -310,7 +311,7 @@ export default async function ProjectDetailPage({
                   </summary>
                   <div className="mt-3 pt-3 border-t border-[var(--border)] text-sm leading-relaxed text-[var(--muted)]">
                     <span className="text-[var(--foreground)] font-mono mr-2">A.</span>
-                    {pick(item.a, locale)}
+                    <Md>{pick(item.a, locale)}</Md>
                   </div>
                 </details>
               ))}
@@ -475,7 +476,7 @@ function SubProjectSection({
               {section.label}
             </div>
             <p className="text-sm md:text-base leading-relaxed text-[var(--card-foreground)]">
-              {section.body}
+              <Md>{section.body}</Md>
             </p>
           </div>
         ))}
@@ -564,7 +565,7 @@ function SubProjectSection({
             {t("honestyShort")}
           </div>
           <p className="text-xs leading-relaxed text-[var(--muted)] italic">
-            {pick(sub.honestyNote, locale)}
+            <Md>{pick(sub.honestyNote, locale)}</Md>
           </p>
         </div>
       )}

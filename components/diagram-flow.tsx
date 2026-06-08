@@ -47,7 +47,7 @@ export type CardData = {
   onActivate?: () => void;
 };
 
-export type FlowEdgeData = { primary?: boolean; phase?: number };
+export type FlowEdgeData = { primary?: boolean; phase?: number; dim?: boolean };
 
 const SIDES: DiagramSide[] = ["top", "right", "bottom", "left"];
 const POS: Record<DiagramSide, Position> = {
@@ -198,8 +198,15 @@ export function FlowEdge({
     targetY,
     targetPosition,
   });
+  // 라벨을 선 위가 아니라 선 옆으로 살짝 비켜서 배치 → 선이 라벨에 가리지 않는다.
+  // 엣지가 가로 우세면 위로, 세로 우세면 옆으로 오프셋 (직각 경로 기준 근사).
+  const horizontalDominant =
+    Math.abs(targetX - sourceX) >= Math.abs(targetY - sourceY);
+  const labelOffX = horizontalDominant ? 0 : 13;
+  const labelOffY = horizontalDominant ? -13 : 0;
   const primary = !!data?.primary;
   const phase = data?.phase ?? 0;
+  const dim = !!data?.dim; // hover 포커스 트레이싱 시 비관련 엣지 흐리기
   const strokeColor = (style?.stroke as string) ?? "var(--foreground)";
   // 실제 경로 길이를 측정(getTotalLength) → 모든 엣지 동일 속도(px/s)·동일 점 간격.
   // (Manhattan 근사는 라우팅 우회 때문에 오차가 커서 실측 사용)
@@ -214,6 +221,7 @@ export function FlowEdge({
 
   return (
     <>
+      <g style={{ opacity: dim ? 0.1 : 1, transition: "opacity 0.24s ease" }}>
       {/* glow underlay — 같은 색의 두껍고 흐린 라인으로 네온 글로우 (+ 길이 측정용 ref) */}
       <path
         ref={pathRef}
@@ -257,13 +265,14 @@ export function FlowEdge({
             </g>
           );
         })}
+      </g>
       {label && (
         <EdgeLabelRenderer>
           <div
             className="nodrag nopan"
             style={{
               position: "absolute",
-              transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+              transform: `translate(-50%, -50%) translate(${labelX + labelOffX}px, ${labelY + labelOffY}px)`,
               fontFamily: "var(--font-mono)",
               fontSize: 10,
               lineHeight: 1.2,
@@ -277,6 +286,8 @@ export function FlowEdge({
               zIndex: 10,
               pointerEvents: "none",
               whiteSpace: "nowrap",
+              opacity: dim ? 0.1 : 1,
+              transition: "opacity 0.24s ease",
             }}
           >
             {label}
