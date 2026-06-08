@@ -7,7 +7,7 @@ import { routing, type Locale } from "@/i18n/routing";
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
-export const alt = "Project · Changwook Woo Portfolio";
+export const alt = "Project · Changuk Woo Portfolio";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -133,7 +133,7 @@ export default async function OgProject({
               </span>
             </div>
           ) : (
-            <span>Changwook Woo · Portfolio</span>
+            <span>Changuk Woo · Portfolio</span>
           )}
           <span style={{ fontWeight: 700, color: "#94a3b8" }}>
             {siteHost}/{locale}/projects/{slug}

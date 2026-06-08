@@ -7,7 +7,7 @@
 import type { L } from "./i18n";
 
 export const personal = {
-  name: { ko: "우창욱", en: "Changwook Woo" } satisfies L,
+  name: { ko: "우창욱", en: "Changuk Woo" } satisfies L,
   tagline: {
     ko: "웹 개발자, SAR 도메인 확장 중",
     en: "Web Developer, expanding into SAR",
