@@ -13,6 +13,8 @@ import { mainStack, learnedDomain } from "@/data/stack";
 import { PrintButton } from "@/components/PrintButton";
 import { pick } from "@/data/i18n";
 import { Md } from "@/lib/markdown";
+import { JsonLd } from "@/components/JsonLd";
+import { resumeGraph } from "@/lib/jsonld";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata({
@@ -54,9 +56,13 @@ export default async function ResumePage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "resume" });
+  const tm = await getTranslations({ locale, namespace: "metadata" });
 
   return (
     <article className="min-h-screen">
+      <JsonLd
+        data={resumeGraph(locale, tm("resumeTitle"), tm("resumeDescription"))}
+      />
       <div className="print:hidden border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-md sticky top-16 z-30">
         <div className="mx-auto w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-6 md:px-10 lg:px-12 h-12 flex items-center justify-between">
           <Link

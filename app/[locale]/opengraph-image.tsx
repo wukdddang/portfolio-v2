@@ -6,7 +6,7 @@ import type { Locale } from "@/i18n/routing";
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
-export const alt = "Changwook Woo · Portfolio";
+export const alt = "Changuk Woo · Portfolio";
 
 export default async function OgHome({
   params,
@@ -54,7 +54,7 @@ export default async function OgHome({
           }}
         >
           <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fbbf24" }} />
-          <span>Changwook Woo · Portfolio</span>
+          <span>Changuk Woo · Portfolio</span>
         </div>
 
         <div

@@ -6,7 +6,7 @@ import type { Locale } from "@/i18n/routing";
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
-export const alt = "Changwook Woo · Resume";
+export const alt = "Changuk Woo · Resume";
 
 export default async function OgResume({
   params,

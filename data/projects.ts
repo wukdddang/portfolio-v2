@@ -172,7 +172,7 @@ const sarDataRetrievalLayer: Project = {
       { from: "retrieval", to: "cdse", kind: "secondary", fromSide: "left", toSide: "right", label: { ko: "② 검색·다운로드", en: "② search·download" } },
       { from: "retrieval", to: "nas", kind: "secondary", fromSide: "left", toSide: "top", label: { ko: "③ SLC 저장", en: "③ store SLC" } },
       { from: "nas", to: "snap", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "④ SLC 읽기", en: "④ read SLC" } },
-      { from: "snap", to: "retrieval", kind: "secondary", dashed: true, label: { ko: "⑤ 분석 결과", en: "⑤ result" } },
+      { from: "snap", to: "retrieval", kind: "secondary", dashed: true, fromSide: "top", toSide: "bottom", label: { ko: "⑤ 분석 결과", en: "⑤ result" } },
       { from: "retrieval", to: "db", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "메타 저장", en: "meta" } },
       { from: "retrieval", to: "api", kind: "primary", dashed: true, fromSide: "right", toSide: "right", label: { ko: "⑥ 결과 응답", en: "⑥ response" } },
     ],

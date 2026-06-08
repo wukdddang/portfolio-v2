@@ -31,15 +31,21 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "metadata" });
   const title = t("homeTitle");
   const description = t("homeDescription");
+
+  // 검색엔진 소유권 인증 — Search Console / 네이버 서치어드바이저에서 발급한
+  // 토큰을 환경변수로 주입하면 <meta> 태그로 노출 (미설정 시 태그 생략).
+  const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+  const naverVerification = process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION;
+
   return {
     metadataBase: new URL(siteUrl),
     title,
     description,
-    applicationName: "Changwook Woo · Portfolio",
-    authors: [{ name: "우창욱 (Changwook Woo)", url: "https://github.com/wukdddang" }],
-    creator: "우창욱 (Changwook Woo)",
+    applicationName: "Changuk Woo · Portfolio",
+    authors: [{ name: "우창욱 (Changuk Woo)", url: "https://github.com/wukdddang" }],
+    creator: "우창욱 (Changuk Woo)",
     keywords: [
-      "우창욱", "Changwook Woo", "Lumir", "루미르",
+      "우창욱", "Changuk Woo", "Lumir", "루미르",
       "Portfolio", "Web Developer", "Full-stack", "AI Native",
       "SAR", "Satellite", "Sentinel", "InSAR",
       "Next.js", "NestJS", "TypeScript",
@@ -51,7 +57,7 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       url: `/${locale}`,
-      siteName: "Changwook Woo · Portfolio",
+      siteName: "Changuk Woo · Portfolio",
       title,
       description,
       locale: locale === "ko" ? "ko_KR" : "en_US",
@@ -62,6 +68,12 @@ export async function generateMetadata({
       index: true,
       follow: true,
       googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    },
+    verification: {
+      ...(googleVerification ? { google: googleVerification } : {}),
+      ...(naverVerification
+        ? { other: { "naver-site-verification": naverVerification } }
+        : {}),
     },
     icons: { icon: "/favicon.ico" },
   };
