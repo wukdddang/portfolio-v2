@@ -6,7 +6,7 @@
  * 레이아웃은 col/row 그리드를 x/y로 매핑해 결정적.
  */
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, memo, useEffect, useRef, useState } from "react";
 import {
   BaseEdge,
   EdgeLabelRenderer,
@@ -174,6 +174,59 @@ export function DiagramCard({ data }: NodeProps<Node<CardData>>) {
   );
 }
 
+// 흐름 점(데이터 패킷) 서브트리 — memo로 격리.
+// cx/cy 없는 circle은 SMIL animateMotion이 적용 안 되는 순간 (0,0)에 그려진다.
+// 엣지가 호버 dim 등으로 리렌더돼도 path/dotCount/durSec/phase/primary가 그대로면
+// 이 컴포넌트는 리렌더되지 않아 animateMotion이 재시작(→ (0,0) 깜빡임)되지 않는다.
+const FlowDots = memo(function FlowDots({
+  path,
+  dotCount,
+  durSec,
+  phase,
+  primary,
+}: {
+  path: string;
+  dotCount: number;
+  durSec: number;
+  phase: number;
+  primary: boolean;
+}) {
+  return (
+    <>
+      {Array.from({ length: dotCount }).map((_, k) => {
+        // 점들을 경로상 균등 간격으로 + 엣지별 위상차로 desync (음수 begin)
+        const begin = `-${(durSec * (k / dotCount) + phase).toFixed(2)}s`;
+        return (
+          <g key={k}>
+            {/* halo */}
+            <circle r={primary ? 6 : 4} fill="var(--foreground)" opacity={0.1}>
+              <animateMotion
+                dur={`${durSec}s`}
+                begin={begin}
+                repeatCount="indefinite"
+                path={path}
+              />
+            </circle>
+            {/* core */}
+            <circle
+              r={primary ? 2.8 : 2}
+              fill="var(--foreground)"
+              opacity={primary ? 0.9 : 0.55}
+            >
+              <animateMotion
+                dur={`${durSec}s`}
+                begin={begin}
+                repeatCount="indefinite"
+                path={path}
+              />
+            </circle>
+          </g>
+        );
+      })}
+    </>
+  );
+});
+
 // 라인 경로를 따라 흐르는 흰 점(데이터 패킷) — maple Service Map 스타일.
 // 색은 var(--foreground)로 적응(다크=흰·라이트=검). prefers-reduced-motion이면 점 생략.
 export function FlowEdge({
@@ -190,12 +243,14 @@ export function FlowEdge({
   data,
 }: EdgeProps<Edge<FlowEdgeData>>) {
   const reduce = useReducedMotion();
+  // 좌표를 정수로 고정 → 호버 리렌더 시 React Flow가 끝점을 서브픽셀로 재계산해도
+  // edgePath 문자열이 그대로 유지된다(아래 흐름 점 SMIL의 무의미한 재시작·깜빡임 방지).
   const [edgePath, labelX, labelY] = getSmoothStepPath({
-    sourceX,
-    sourceY,
+    sourceX: Math.round(sourceX),
+    sourceY: Math.round(sourceY),
     sourcePosition,
-    targetX,
-    targetY,
+    targetX: Math.round(targetX),
+    targetY: Math.round(targetY),
     targetPosition,
   });
   // 라벨을 선 위가 아니라 선 옆으로 살짝 비켜서 배치 → 선이 라벨에 가리지 않는다.
@@ -233,37 +288,15 @@ export function FlowEdge({
         style={{ filter: "blur(3px)" }}
       />
       <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={style} />
-      {!reduce &&
-        Array.from({ length: dotCount }).map((_, k) => {
-          // 점들을 경로상 균등 간격으로 + 엣지별 위상차로 desync (음수 begin)
-          const begin = `-${(durSec * (k / dotCount) + phase).toFixed(2)}s`;
-          return (
-            <g key={k}>
-              {/* halo */}
-              <circle r={primary ? 6 : 4} fill="var(--foreground)" opacity={0.1}>
-                <animateMotion
-                  dur={`${durSec}s`}
-                  begin={begin}
-                  repeatCount="indefinite"
-                  path={edgePath}
-                />
-              </circle>
-              {/* core */}
-              <circle
-                r={primary ? 2.8 : 2}
-                fill="var(--foreground)"
-                opacity={primary ? 0.9 : 0.55}
-              >
-                <animateMotion
-                  dur={`${durSec}s`}
-                  begin={begin}
-                  repeatCount="indefinite"
-                  path={edgePath}
-                />
-              </circle>
-            </g>
-          );
-        })}
+      {!reduce && (
+        <FlowDots
+          path={edgePath}
+          dotCount={dotCount}
+          durSec={durSec}
+          phase={phase}
+          primary={primary}
+        />
+      )}
       {label && (
         <EdgeLabelRenderer>
           <div
