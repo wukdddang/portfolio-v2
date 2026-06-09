@@ -185,7 +185,7 @@ const sarDataRetrievalLayer: Project = {
       { id: "ext", label: { ko: "외부 인프라", en: "External infrastructure" } },
     ],
   },
-  layerLabel: { ko: "저장", en: "Storage" },
+  layerLabel: { ko: "데이터·운영 플랫폼", en: "Data & Ops Platform" },
   layerIcon: "🗄",
   title: {
     ko: "Sentinel SAR 검색·분석 백엔드",
@@ -205,8 +205,8 @@ const sarDataRetrievalLayer: Project = {
     en: "Built a NestJS monorepo (sentinel-retrieval + ai-processing) on top of the CDSE API, ran a NAS PoC (SMB2 vs direct FS), modeled the SLC domain, applied DDD 5-layer, and added an integration layer for the snap sister repo. Done AI-native; the domain structure was only tweaked at the points where predictable boilerplate emerged.",
   },
   impact: {
-    ko: "3 레이어 통합 서비스의 데이터 저장 레이어를 담당합니다. 사용자 위치 요청에 분석 데이터를 즉시 제공하거나 신규 처리 후 제공할 수 있는 구조의 기초가 됩니다.",
-    en: "This is the storage layer of the 3-layer integrated service — the foundation that lets a user's location query be answered with already-analyzed data instantly, or with newly-processed data on the fly.",
+    ko: "3 레이어 통합 서비스의 데이터·운영 플랫폼을 담당합니다. 사용자 위치 요청에 분석 데이터를 즉시 제공하거나 신규 처리 후 제공할 수 있는 구조의 기초가 됩니다.",
+    en: "This is the data & ops platform of the 3-layer integrated service — the foundation that lets a user's location query be answered with already-analyzed data instantly, or with newly-processed data on the fly.",
   },
   keywords: [
     { ko: "NestJS 모노레포", en: "NestJS monorepo" },
@@ -360,7 +360,7 @@ const lumirLinuxSnapLayer: Project = {
       { from: "db", to: "platform", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "XYZ 시계열", en: "XYZ series" } },
     ],
   },
-  layerLabel: { ko: "분석", en: "Analysis" },
+  layerLabel: { ko: "InSAR 분석 플랫폼", en: "InSAR Analysis Platform" },
   layerIcon: "⚙",
   title: {
     ko: "Sentinel-1 InSAR 처리 파이프라인",
@@ -380,8 +380,8 @@ const lumirLinuxSnapLayer: Project = {
     en: "Ran a 5-tool stack (SNAP 12 + SNAPHU 2.0.3 + MintPy 1.6.2 + StaMPS PSI + ISCE2 2.6.3). Anti-over-engineering as the working principle, tool selection done with AI as a thinking partner, and multi-Claude-Code agent worktrees (agents 1–4 in parallel + a gpt_isolated wrapper + handoff system). On top of that I designed the FastAPI operational layer that delivers results to an external 3D platform (`/xyz/*` time series · `/aoi/assess` · `/baseline/perp`), plus preflight endpoints that diagnose suitability in seconds before any heavy run, and owned the ops hardening — auto-start on reboot (Docker) and automatic disk-full eviction to NAS (systemd timer).",
   },
   impact: {
-    ko: "ISCE2 도입으로 처리 속도를 확보해 3 레이어 통합 서비스의 분석 처리 레이어가 가능해졌습니다. 광교산 시루봉 -17.30 mm/yr (GNSS 검증) + PSI 5,143,119 PS + 5m DEM TC + 사업 보고서 v1~v4를 AI native로 작성 시간이 0에 가까웠습니다. 또한 외부 플랫폼이 요구한 'XYZ 좌표 시계열'을 전달하면서, 풀 시계열 일괄 응답(81MB·13s)을 시점 스냅샷 바이너리 + 점클릭 분리로 재설계해 1.1MB·0.56s로 줄였습니다 — DB 쿼리는 73ms라 병목이 직렬화·전송임을 측정으로 진단한 뒤 페이로드 구조를 바꾼 결과입니다.",
-    en: "Introducing ISCE2 unlocked the processing speed needed to make the analysis layer of the 3-layer service viable. Outputs: Mt. Sirubong −17.30 mm/yr subsidence (GNSS-verified), 5,143,119 PSI persistent scatterers, 5 m DEM TC, and program reports v1–v4 — all AI-native, with near-zero writing time. I also delivered the external platform's required 'XYZ coordinate time series': re-architecting the full-series bulk response (81 MB · 13 s) into a per-epoch snapshot binary + point-click split brought it to 1.1 MB · 0.56 s — done by first measuring that the DB query was only 73 ms, so the bottleneck was serialization and transfer, then changing the payload structure.",
+    ko: "ISCE2 도입으로 처리 속도를 확보해 3 레이어 통합 서비스의 InSAR 분석 플랫폼이 가능해졌습니다. 광교산 시루봉 -17.30 mm/yr (GNSS 검증) + PSI 5,143,119 PS + 5m DEM TC + 사업 보고서 v1~v4를 AI native로 작성 시간이 0에 가까웠습니다. 또한 외부 플랫폼이 요구한 'XYZ 좌표 시계열'을 전달하면서, 풀 시계열 일괄 응답(81MB·13s)을 시점 스냅샷 바이너리 + 점클릭 분리로 재설계해 1.1MB·0.56s로 줄였습니다 — DB 쿼리는 73ms라 병목이 직렬화·전송임을 측정으로 진단한 뒤 페이로드 구조를 바꾼 결과입니다.",
+    en: "Introducing ISCE2 unlocked the processing speed needed to make the InSAR analysis platform of the 3-layer service viable. Outputs: Mt. Sirubong −17.30 mm/yr subsidence (GNSS-verified), 5,143,119 PSI persistent scatterers, 5 m DEM TC, and program reports v1–v4 — all AI-native, with near-zero writing time. I also delivered the external platform's required 'XYZ coordinate time series': re-architecting the full-series bulk response (81 MB · 13 s) into a per-epoch snapshot binary + point-click split brought it to 1.1 MB · 0.56 s — done by first measuring that the DB query was only 73 ms, so the bottleneck was serialization and transfer, then changing the payload structure.",
   },
   keywords: [
     { ko: "Sentinel-1 SAR", en: "Sentinel-1 SAR" },
@@ -474,8 +474,8 @@ const sarSearchAndAnalyzerLayer: Project = {
   slug: "sar-search-and-analyzer",
   diagram: {
     caption: {
-      ko: "사용자가 지도에서 지역·AOI를 골라 SAR 데이터를 검색하고 InSAR 분석을 요청하는 프론트엔드. Next.js Route Handler BFF가 Plan(mock)/Current(실제 API) 환경 분리로 저장 레이어(카탈로그·SLC)와 분석 레이어(InSAR)를 호출하고, 결과를 사용자가 다운로드합니다. 관리자는 별도 콘솔로 운영 — 3 레이어 통합의 사용자 진입점입니다.",
-      en: "The user-facing frontend where a user picks a region/AOI on the map to search SAR data and request InSAR analysis. A Next.js Route-Handler BFF (Plan-mock / Current-real env split) calls the storage layer (catalog · SLC) and the analysis layer (InSAR); the user then downloads results. Admins run it from a separate console — this is the user entry point of the 3-layer service.",
+      ko: "사용자가 지도에서 지역·AOI를 골라 SAR 데이터를 검색하고 InSAR 분석을 요청하는 프론트엔드. Next.js Route Handler BFF가 Plan(mock)/Current(실제 API) 환경 분리로 데이터·운영 플랫폼과 InSAR 분석 플랫폼을 호출하고, 결과를 사용자가 다운로드합니다. 관리자는 별도 콘솔로 운영 — 3 레이어 통합의 사용자 진입점입니다.",
+      en: "The user-facing frontend where a user picks a region/AOI on the map to search SAR data and request InSAR analysis. A Next.js Route-Handler BFF (Plan-mock / Current-real env split) calls the data & ops platform and the InSAR analysis platform; the user then downloads results. Admins run it from a separate console — this is the user entry point of the 3-layer service.",
     },
     nodes: [
       {
@@ -550,8 +550,8 @@ const sarSearchAndAnalyzerLayer: Project = {
         id: "storage",
         kind: "external",
         icon: "🗄",
-        label: { ko: "저장 레이어", en: "Storage layer" },
-        sublabel: { ko: "sar-data-retrieval · 카탈로그·SLC", en: "sar-data-retrieval · catalog·SLC" },
+        label: { ko: "데이터·운영 플랫폼", en: "Data & Ops Platform" },
+        sublabel: { ko: "sar-data-retrieval · 데이터·사용자·로그·알림", en: "sar-data-retrieval · data·users·logs·alerts" },
         col: 1,
         row: 3,
       },
@@ -559,7 +559,7 @@ const sarSearchAndAnalyzerLayer: Project = {
         id: "analysis",
         kind: "external",
         icon: "⚙",
-        label: { ko: "분석 레이어", en: "Analysis layer" },
+        label: { ko: "InSAR 분석 플랫폼", en: "InSAR Analysis Platform" },
         sublabel: { ko: "lumir-linux-snap · InSAR", en: "lumir-linux-snap · InSAR" },
         col: 2,
         row: 3,
@@ -568,7 +568,7 @@ const sarSearchAndAnalyzerLayer: Project = {
     edges: [
       { from: "user", to: "search", kind: "primary", animated: true, label: { ko: "① 검색·AOI", en: "① search·AOI" } },
       { from: "search", to: "bff", kind: "secondary", fromSide: "bottom", toSide: "left", label: { ko: "② 카탈로그 질의", en: "② catalog" } },
-      { from: "bff", to: "storage", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "저장 레이어", en: "storage" } },
+      { from: "bff", to: "storage", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "데이터·운영", en: "data·ops" } },
       { from: "search", to: "request", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "③ 분석 요청", en: "③ request" } },
       { from: "request", to: "bff", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "InSAR 요청", en: "InSAR req" } },
       { from: "bff", to: "analysis", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "④ InSAR 분석", en: "④ InSAR" } },
@@ -593,8 +593,8 @@ const sarSearchAndAnalyzerLayer: Project = {
     en: "Stage 4 in progress (in-role · UI planning + backend concurrent)",
   },
   problem: {
-    ko: "사내에서 위성 데이터를 지도에서 검색·요청하고 InSAR 분석까지 요청하는 통합 프론트 서버가 필요했습니다. 저장 레이어와 분석 레이어를 묶어주는 사용자 진입점입니다.",
-    en: "We needed an internal frontend that lets users search satellite data on a map and request InSAR analysis in one place — the entry point that ties the storage and analysis layers together.",
+    ko: "사내에서 위성 데이터를 지도에서 검색·요청하고 InSAR 분석까지 요청하는 통합 프론트 서버가 필요했습니다. 데이터·운영 플랫폼과 InSAR 분석 플랫폼을 묶어주는 사용자 진입점입니다.",
+    en: "We needed an internal frontend that lets users search satellite data on a map and request InSAR analysis in one place — the entry point that ties the data & ops platform and the InSAR analysis platform together.",
   },
   system: {
     ko: "Next.js (App Router) + Plan/Current 환경 분리 패턴 + (sar) 도메인 (user·admin 페이지) + Next.js Route Handler BFF를 갖췄습니다. 현재는 apps/web 단독 운영이며, 모노레포(pnpm + libs/*)는 향후 백엔드(apps/api·worker·crawler) 추가 대비 사전 셋업입니다. CLAUDE.md에 4-Layer Clean Architecture + CQRS + 한글 메서드명 백엔드 설계 문서를 본인이 직접 작성했고, 집비치기에서 검증한 패턴을 가져왔습니다.",
@@ -707,12 +707,12 @@ const lumirSarPlatform: Project = {
     en: "There was no integrated service to take Sentinel and LumirX data from search through storage, analysis, and request in one cycle. Storage (NAS + CDSE), InSAR analysis (SNAP · ISCE2 · MintPy), and the user-facing frontend were all separate — making it hard for a user to get from 'I want this location' to a finished result.",
   },
   system: {
-    ko: "3 레이어 통합 서비스를 본인이 단독으로 설계·구축하고 있습니다. **저장 레이어**(sar-data-retrieval, NestJS 모노레포 + CDSE + NAS PoC + DDD 5-layer) + **분석 레이어**(lumir-linux-snap, 5종 도구 다중 스택 + 다중 agent 워크트리) + **프론트 레이어**(sar-search-and-analyzer, Next.js + 지도 + AOI + 분석 요청 UI). 모두 AI native 100%로 진행하며, [[집비치기-him]]에서 검증한 4-Layer + CQRS + 한글 메서드명 패턴을 회사 백엔드 설계에 역전이 중입니다.",
-    en: "I'm solo-designing and building the 3-layer integrated service. **Storage layer** (sar-data-retrieval, NestJS monorepo + CDSE + NAS PoC + DDD 5-layer) + **Analysis layer** (lumir-linux-snap, 5-tool stack + multi-agent worktrees) + **Frontend layer** (sar-search-and-analyzer, Next.js + map + AOI + analysis-request UI). All three are 100% AI-native, and I'm back-transferring the 4-layer + CQRS + Korean-method-name pattern validated in him into the company backend design.",
+    ko: "3 레이어 통합 서비스를 본인이 단독으로 설계·구축하고 있습니다. **데이터·운영 플랫폼**(sar-data-retrieval, NestJS 모노레포 + CDSE + NAS PoC + DDD 5-layer) + **InSAR 분석 플랫폼**(lumir-linux-snap, 5종 도구 다중 스택 + 다중 agent 워크트리) + **프론트 레이어**(sar-search-and-analyzer, Next.js + 지도 + AOI + 분석 요청 UI). 모두 AI native 100%로 진행하며, [[집비치기-him]]에서 검증한 4-Layer + CQRS + 한글 메서드명 패턴을 회사 백엔드 설계에 역전이 중입니다.",
+    en: "I'm solo-designing and building the 3-layer integrated service. **Data & Ops Platform** (sar-data-retrieval, NestJS monorepo + CDSE + NAS PoC + DDD 5-layer) + **InSAR Analysis Platform** (lumir-linux-snap, 5-tool stack + multi-agent worktrees) + **Frontend layer** (sar-search-and-analyzer, Next.js + map + AOI + analysis-request UI). All three are 100% AI-native, and I'm back-transferring the 4-layer + CQRS + Korean-method-name pattern validated in him into the company backend design.",
   },
   impact: {
     ko: "ISCE2 도입으로 분석 처리 속도를 확보해 *날씨·계절 무관 지표 변위 데이터 서비스화*가 가능한 단계에 진입했습니다. 사용자가 지도에서 위치를 요청하면 저장된 분석 데이터를 즉시 제공하거나, 없으면 신규 처리 후 제공하는 흐름을 한 사람이 풀스택으로 묶고 있다는 점이 핵심입니다.",
-    en: "With ISCE2 in place, the analysis layer is fast enough that *weather- and season-independent surface-displacement data as a service* is now feasible. The key point: a user picking a location on the map gets either the stored result instantly, or a freshly-processed one — and the whole pipeline is full-stack-owned by a single person.",
+    en: "With ISCE2 in place, the InSAR analysis platform is fast enough that *weather- and season-independent surface-displacement data as a service* is now feasible. The key point: a user picking a location on the map gets either the stored result instantly, or a freshly-processed one — and the whole pipeline is full-stack-owned by a single person.",
   },
   keywords: [
     { ko: "3 레이어 풀스택", en: "3-layer full-stack" },
@@ -740,8 +740,8 @@ const lumirSarPlatform: Project = {
     {
       label: { ko: "통합 레이어", en: "Integrated layers" },
       value: {
-        ko: "3 (저장·분석·프론트)",
-        en: "3 (storage · analysis · frontend)",
+        ko: "3 (데이터·운영·분석·프론트)",
+        en: "3 (data & ops · analysis · frontend)",
       },
     },
     {
@@ -765,8 +765,8 @@ const lumirSarPlatform: Project = {
   ],
   measurementPending: [
     {
-      ko: "통합 완성 시점 (분석→저장→프론트 end-to-end)",
-      en: "End-to-end completion date (analysis → storage → frontend)",
+      ko: "통합 완성 시점 (분석→데이터·운영→프론트 end-to-end)",
+      en: "End-to-end completion date (analysis → data & ops → frontend)",
     },
     { ko: "사내 사용자 수", en: "Internal user count" },
     {
@@ -818,8 +818,8 @@ const lumirSarPlatform: Project = {
   ],
   diagram: {
     caption: {
-      ko: "사용자 요청이 프론트 → 저장(NestJS) → 분석(FastAPI) 레이어를 좌→우로 거치고, InSAR 결과가 저장 레이어로 되돌아와 사용자에게 응답되는 흐름. 저장 레이어(NestJS)는 분석 레이어(FastAPI)에서 InSAR 데이터를 API로 받아와 저장·중계합니다. 실선(주황)=정방향 요청, 점선=응답·데이터 환류. 한 사람이 3 레이어를 풀스택으로 묶고 있습니다.",
-      en: "A user request flows left→right through frontend → storage (NestJS) → analysis (FastAPI); the InSAR results return to the storage layer to answer the user. The storage layer (NestJS) fetches InSAR data from the analysis layer (FastAPI) over an API, then stores and relays it. Solid (amber) = forward request, dashed = response / data feedback. One person owns all three layers full-stack.",
+      ko: "사용자 요청이 프론트 → 데이터·운영 플랫폼(NestJS) → InSAR 분석 플랫폼(FastAPI)을 좌→우로 거치고, InSAR 결과가 데이터·운영 플랫폼으로 되돌아와 사용자에게 응답되는 흐름. 데이터·운영 플랫폼(NestJS)은 InSAR 분석 플랫폼(FastAPI)에서 InSAR 데이터를 API로 받아와 저장·중계합니다. 실선(주황)=정방향 요청, 점선=응답·데이터 환류. 한 사람이 3 레이어를 풀스택으로 묶고 있습니다.",
+      en: "A user request flows left→right through frontend → data & ops platform (NestJS) → InSAR analysis platform (FastAPI); the InSAR results return to the data & ops platform to answer the user. The data & ops platform (NestJS) fetches InSAR data from the InSAR analysis platform (FastAPI) over an API, then stores and relays it. Solid (amber) = forward request, dashed = response / data feedback. One person owns all three layers full-stack.",
     },
     nodes: [
       {
@@ -852,7 +852,7 @@ const lumirSarPlatform: Project = {
         kind: "layer",
         cat: 2,
         icon: "🗄",
-        label: { ko: "저장 레이어", en: "Storage layer" },
+        label: { ko: "데이터·운영 플랫폼", en: "Data & Ops Platform" },
         sublabel: {
           ko: "sar-data-retrieval · NestJS · DDD 5-layer",
           en: "sar-data-retrieval · NestJS · DDD 5-layer",
@@ -865,7 +865,7 @@ const lumirSarPlatform: Project = {
         kind: "layer",
         cat: 6,
         icon: "⚙",
-        label: { ko: "분석 레이어", en: "Analysis layer" },
+        label: { ko: "InSAR 분석 플랫폼", en: "InSAR Analysis Platform" },
         sublabel: {
           ko: "lumir-linux-snap · SNAP·ISCE2·MintPy",
           en: "lumir-linux-snap · SNAP · ISCE2 · MintPy",
@@ -938,12 +938,12 @@ const lumirSarPlatform: Project = {
     {
       src: "/projects/lumir-linux-snap/timeseries-65epoch.png",
       alt: {
-        ko: "InSAR 시계열 (분석 레이어)",
-        en: "InSAR time series (analysis layer)",
+        ko: "InSAR 시계열 (InSAR 분석 플랫폼)",
+        en: "InSAR time series (InSAR analysis platform)",
       },
       caption: {
-        ko: "분석 레이어 — Control points 시계열 (65 epoch / 2.30 yr stack)",
-        en: "Analysis layer — control-point time series (65 epochs / 2.30-yr stack)",
+        ko: "InSAR 분석 플랫폼 — Control points 시계열 (65 epoch / 2.30 yr stack)",
+        en: "Analysis platform — control-point time series (65 epochs / 2.30-yr stack)",
       },
     },
   ],
