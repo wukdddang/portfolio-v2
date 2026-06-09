@@ -168,8 +168,10 @@ const INTER_FLOW: {
   // 프론트의 '저장 레이어' 노드(박스 하단) → 저장 박스. bottom으로 빼 빈 공간으로 우회 →
   // 박스 내부 노드(admin·분석 stub)를 가로지르지 않고 저장 박스 좌측에 진입.
   { from: "sar-search-and-analyzer", fromNode: "storage", to: "sar-data-retrieval", label: { ko: "② 검색 질의", en: "② query" }, kind: "primary", fromSide: "bottom", toSide: "left" },
-  { from: "sar-data-retrieval", to: "lumir-linux-snap", label: { ko: "③ InSAR 요청", en: "③ InSAR request" }, kind: "primary", fromSide: "right", toSide: "left" },
-  { from: "lumir-linux-snap", to: "sar-data-retrieval", label: { ko: "④ InSAR 데이터 (API)", en: "④ InSAR data (API)" }, kind: "secondary", dashed: true, fromSide: "bottom", toSide: "bottom" },
+  // 프론트의 '분석 레이어' 노드 → 분석 박스 (저장 레이어와 대칭 — 분석 stub이 dead-end가 안 되게).
+  // toSide=bottom: 분석 박스를 아래로 진입 → ②(저장행)보다 낮은 레인으로 떨어져 겹침 방지.
+  { from: "sar-search-and-analyzer", fromNode: "analysis", to: "lumir-linux-snap", label: { ko: "③ InSAR 요청", en: "③ InSAR request" }, kind: "primary", fromSide: "bottom", toSide: "bottom" },
+  { from: "lumir-linux-snap", to: "sar-data-retrieval", label: { ko: "④ InSAR 데이터 (API)", en: "④ InSAR data (API)" }, kind: "secondary", dashed: true, fromSide: "top", toSide: "top" },
   { from: "sar-data-retrieval", to: "sar-search-and-analyzer", label: { ko: "⑤ 응답", en: "⑤ response" }, kind: "secondary", dashed: true, fromSide: "top", toSide: "top" },
 ];
 
