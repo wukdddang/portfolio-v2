@@ -334,22 +334,31 @@ export function PlatformDiagram({ project }: { project: Project }) {
   }, [base.nodes, activeBox, locale]);
 
   // hover dim — 호버 안 하면 styledNodes 참조 그대로(리렌더 없음).
-  // 호버 시 '흐려지는' 카드만 새 객체로 (호버 카드·연결 카드는 참조 유지 → 깜빡임 방지)
+  // 호버 시 '흐려지는' 카드만 새 객체로 (호버 카드·연결 카드는 참조 유지 → 깜빡임 방지).
+  // dim은 'rf-dim' 클래스 토글로만 표현 → 트랜지션은 globals.css의 .react-flow__node에
+  // 상주하므로 dim 진입·해제 양방향 모두 부드럽게 페이드한다.
   const displayNodes = useMemo(() => {
     if (!hovered) return styledNodes;
     return styledNodes.map((n) =>
       n.type === "card" && !connected.has(n.id)
-        ? { ...n, style: { ...n.style, opacity: 0.22, transition: "opacity 0.24s ease" } }
+        ? { ...n, className: cn(n.className, "rf-dim") }
         : n
     );
   }, [styledNodes, hovered, connected]);
 
-  // hover 시 '연결 안 된' 엣지만 새 객체로 dim (연결 엣지는 참조 유지 → 흐름 애니메이션 끊김 없음)
+  // hover 시 '연결 안 된' 엣지만 새 객체로 dim (연결 엣지는 참조 유지 → 흐름 애니메이션 끊김 없음).
+  // 선·점은 .react-flow__edge.rf-dim(클래스)로, 라벨은 별도 포털이라 data.dim → 라벨 클래스로 dim.
   const displayEdges = useMemo(() => {
     if (!hovered) return base.edges;
     return base.edges.map((e) => {
       const touches = e.source === hovered || e.target === hovered;
-      return touches ? e : { ...e, data: { ...(e.data as object), dim: true } };
+      return touches
+        ? e
+        : {
+            ...e,
+            className: cn(e.className, "rf-dim"),
+            data: { ...(e.data as object), dim: true },
+          };
     });
   }, [base.edges, hovered]);
 

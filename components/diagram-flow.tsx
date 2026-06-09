@@ -221,7 +221,6 @@ export function FlowEdge({
 
   return (
     <>
-      <g style={{ opacity: dim ? 0.1 : 1, transition: "opacity 0.24s ease" }}>
       {/* glow underlay — 같은 색의 두껍고 흐린 라인으로 네온 글로우 (+ 길이 측정용 ref) */}
       <path
         ref={pathRef}
@@ -265,11 +264,10 @@ export function FlowEdge({
             </g>
           );
         })}
-      </g>
       {label && (
         <EdgeLabelRenderer>
           <div
-            className="nodrag nopan"
+            className={cn("nodrag nopan rf-edge-label", dim && "rf-dim")}
             style={{
               position: "absolute",
               transform: `translate(-50%, -50%) translate(${labelX + labelOffX}px, ${labelY + labelOffY}px)`,
@@ -286,8 +284,6 @@ export function FlowEdge({
               zIndex: 10,
               pointerEvents: "none",
               whiteSpace: "nowrap",
-              opacity: dim ? 0.1 : 1,
-              transition: "opacity 0.24s ease",
             }}
           >
             {label}
