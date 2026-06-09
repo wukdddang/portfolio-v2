@@ -150,18 +150,24 @@ function GroupFrame({ data }: NodeProps<Node<GroupData>>) {
 const nodeTypes = { card: DiagramCard, layerBox: LayerBox, groupFrame: GroupFrame };
 const edgeTypes = { flow: FlowEdge };
 
-// 레이어 간 흐름 — 박스 ↔ 박스 핸들로 연결 (박스 사이 빈 공간으로만 흐름, 노드 가로지름 없음).
-//  정방향(검색·분석)은 오른쪽→왼쪽 면(좌→우 진행), 복귀(결과·응답)는 아래/위로 우회 루프.
+// 레이어 간 흐름 — 기본은 박스 ↔ 박스 핸들(빈 공간으로만 흐름). fromNode/toNode를 주면
+// 박스 대신 그 레이어 *내부 노드*에서 출발/도착한다 → 프론트의 '저장 레이어' 노드처럼
+// "그 흐름이 어느 노드에서 나가는지"를 명확히 이어 보여줄 수 있다.
+//  정방향(검색·분석)은 좌→우 진행, 복귀(결과·응답)는 아래/위로 우회 루프.
 const INTER_FLOW: {
   from: string;
   to: string;
+  fromNode?: string; // from 레이어 내부 노드 id (생략 시 박스 핸들)
+  toNode?: string; // to 레이어 내부 노드 id (생략 시 박스 핸들)
   label: L;
   kind: "primary" | "secondary";
   dashed?: boolean;
   fromSide: string;
   toSide: string;
 }[] = [
-  { from: "sar-search-and-analyzer", to: "sar-data-retrieval", label: { ko: "② 검색 질의", en: "② query" }, kind: "primary", fromSide: "right", toSide: "left" },
+  // 프론트의 '저장 레이어' 노드(박스 하단) → 저장 박스. bottom으로 빼 빈 공간으로 우회 →
+  // 박스 내부 노드(admin·분석 stub)를 가로지르지 않고 저장 박스 좌측에 진입.
+  { from: "sar-search-and-analyzer", fromNode: "storage", to: "sar-data-retrieval", label: { ko: "② 검색 질의", en: "② query" }, kind: "primary", fromSide: "bottom", toSide: "left" },
   { from: "sar-data-retrieval", to: "lumir-linux-snap", label: { ko: "③ InSAR 요청", en: "③ InSAR request" }, kind: "primary", fromSide: "right", toSide: "left" },
   { from: "lumir-linux-snap", to: "sar-data-retrieval", label: { ko: "④ InSAR 데이터 (API)", en: "④ InSAR data (API)" }, kind: "secondary", dashed: true, fromSide: "bottom", toSide: "bottom" },
   { from: "sar-data-retrieval", to: "sar-search-and-analyzer", label: { ko: "⑤ 응답", en: "⑤ response" }, kind: "secondary", dashed: true, fromSide: "top", toSide: "top" },
@@ -252,15 +258,17 @@ function buildPlatformGraph(project: Project, locale: Locale) {
     cursorX += w + GAP;
   }
 
-  // 레이어 간 흐름 — 박스 핸들 ↔ 박스 핸들
+  // 레이어 간 흐름 — 박스(또는 fromNode/toNode가 가리키는 내부 노드) 핸들 ↔ 핸들
   INTER_FLOW.forEach((f, i) => {
     if (!boxIds[f.from] || !boxIds[f.to]) return;
     const primary = f.kind === "primary";
     const color = primary ? ACCENT : MUTED;
+    const source = f.fromNode ? `${f.from}__${f.fromNode}` : boxIds[f.from];
+    const target = f.toNode ? `${f.to}__${f.toNode}` : boxIds[f.to];
     edges.push({
       id: `inter-${i}`,
-      source: boxIds[f.from],
-      target: boxIds[f.to],
+      source,
+      target,
       sourceHandle: `${f.fromSide}-s`,
       targetHandle: `${f.toSide}-t`,
       type: "flow",
