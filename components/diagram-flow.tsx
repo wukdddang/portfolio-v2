@@ -176,7 +176,7 @@ export function DiagramCard({ data }: NodeProps<Node<CardData>>) {
 
 // 흐름 점(데이터 패킷) 서브트리 — memo로 격리.
 // cx/cy 없는 circle은 SMIL animateMotion이 적용 안 되는 순간 (0,0)에 그려진다.
-// 엣지가 호버 dim 등으로 리렌더돼도 path/dotCount/durSec/phase/primary가 그대로면
+// 엣지가 포커스 dim 등으로 리렌더돼도 path/dotCount/durSec/phase/primary가 그대로면
 // 이 컴포넌트는 리렌더되지 않아 animateMotion이 재시작(→ (0,0) 깜빡임)되지 않는다.
 const FlowDots = memo(function FlowDots({
   path,
@@ -243,7 +243,7 @@ export function FlowEdge({
   data,
 }: EdgeProps<Edge<FlowEdgeData>>) {
   const reduce = useReducedMotion();
-  // 좌표를 정수로 고정 → 호버 리렌더 시 React Flow가 끝점을 서브픽셀로 재계산해도
+  // 좌표를 정수로 고정 → 포커스 리렌더 시 React Flow가 끝점을 서브픽셀로 재계산해도
   // edgePath 문자열이 그대로 유지된다(아래 흐름 점 SMIL의 무의미한 재시작·깜빡임 방지).
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX: Math.round(sourceX),
@@ -261,7 +261,7 @@ export function FlowEdge({
   const labelOffY = horizontalDominant ? -13 : 0;
   const primary = !!data?.primary;
   const phase = data?.phase ?? 0;
-  const dim = !!data?.dim; // hover 포커스 트레이싱 시 비관련 엣지 흐리기
+  const dim = !!data?.dim; // 포커스 트레이싱 시 비관련 엣지 흐리기
   const strokeColor = (style?.stroke as string) ?? "var(--foreground)";
   // 실제 경로 길이를 측정(getTotalLength) → 모든 엣지 동일 속도(px/s)·동일 점 간격.
   // (Manhattan 근사는 라우팅 우회 때문에 오차가 커서 실측 사용)

@@ -188,7 +188,7 @@ body {
 }
 
 /*
- * 다이어그램 hover 포커스 트레이싱 — dim을 '클래스 토글'로 처리한다.
+ * 다이어그램 클릭 포커스 트레이싱 — dim을 '클래스 토글'로 처리한다.
  * 트랜지션을 상주 wrapper(.react-flow__node / .react-flow__edge)·라벨에 항상 두므로
  * dim 진입(opacity↓)·해제(opacity↑) 양방향 모두 0.24s로 부드럽게 페이드한다.
  * (인라인 style로 dim 될 때만 transition을 붙이면 해제 시 transition이 함께 사라져 확 튄다)
