@@ -169,7 +169,7 @@ const INTER_FLOW: {
   // 박스 내부 노드(admin·분석 stub)를 가로지르지 않고 저장 박스 좌측에 진입.
   { from: "sar-search-and-analyzer", fromNode: "storage", to: "sar-data-retrieval", label: { ko: "② 검색 질의", en: "② query" }, kind: "primary", fromSide: "bottom", toSide: "left" },
   // 프론트 '분석 레이어' 노드 → 데이터·운영 플랫폼 *박스*(하위 다이어그램). 분석 InSAR 데이터가 플랫폼으로 유입.
-  { from: "sar-search-and-analyzer", fromNode: "analysis", to: "sar-data-retrieval", label: { ko: "InSAR 데이터", en: "InSAR data" }, kind: "secondary", fromSide: "right", toSide: "left" },
+  { from: "sar-search-and-analyzer", fromNode: "analysis", to: "sar-data-retrieval", label: { ko: "InSAR 데이터", en: "InSAR data" }, kind: "secondary", dashed: true, fromSide: "right", toSide: "left" },
   // 데이터·운영 플랫폼 박스 → 분석 박스 (플랫폼이 분석을 오케스트레이션 — 프론트는 분석에 직접 안 붙음).
   { from: "sar-data-retrieval", to: "lumir-linux-snap", label: { ko: "③ InSAR 요청", en: "③ InSAR request" }, kind: "primary", fromSide: "right", toSide: "left" },
   { from: "lumir-linux-snap", to: "sar-data-retrieval", label: { ko: "④ InSAR 데이터 (API)", en: "④ InSAR data (API)" }, kind: "secondary", dashed: true, fromSide: "bottom", toSide: "bottom" },
