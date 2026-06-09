@@ -185,7 +185,7 @@ const sarDataRetrievalLayer: Project = {
       { id: "ext", label: { ko: "외부 인프라", en: "External infrastructure" } },
     ],
   },
-  layerLabel: { ko: "저장", en: "Storage" },
+  layerLabel: { ko: "데이터·운영 플랫폼", en: "Data & Ops Platform" },
   layerIcon: "🗄",
   title: {
     ko: "Sentinel SAR 검색·분석 백엔드",
@@ -550,8 +550,8 @@ const sarSearchAndAnalyzerLayer: Project = {
         id: "storage",
         kind: "external",
         icon: "🗄",
-        label: { ko: "저장 레이어", en: "Storage layer" },
-        sublabel: { ko: "sar-data-retrieval · 카탈로그·SLC", en: "sar-data-retrieval · catalog·SLC" },
+        label: { ko: "데이터·운영 플랫폼", en: "Data & Ops Platform" },
+        sublabel: { ko: "sar-data-retrieval · 데이터·사용자·로그·알림", en: "sar-data-retrieval · data·users·logs·alerts" },
         col: 1,
         row: 3,
       },
@@ -568,7 +568,7 @@ const sarSearchAndAnalyzerLayer: Project = {
     edges: [
       { from: "user", to: "search", kind: "primary", animated: true, label: { ko: "① 검색·AOI", en: "① search·AOI" } },
       { from: "search", to: "bff", kind: "secondary", fromSide: "bottom", toSide: "left", label: { ko: "② 카탈로그 질의", en: "② catalog" } },
-      { from: "bff", to: "storage", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "저장 레이어", en: "storage" } },
+      { from: "bff", to: "storage", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "데이터·운영", en: "data·ops" } },
       { from: "search", to: "request", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "③ 분석 요청", en: "③ request" } },
       { from: "request", to: "bff", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "InSAR 요청", en: "InSAR req" } },
       { from: "bff", to: "analysis", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "④ InSAR 분석", en: "④ InSAR" } },
@@ -852,7 +852,7 @@ const lumirSarPlatform: Project = {
         kind: "layer",
         cat: 2,
         icon: "🗄",
-        label: { ko: "저장 레이어", en: "Storage layer" },
+        label: { ko: "데이터·운영 플랫폼", en: "Data & Ops Platform" },
         sublabel: {
           ko: "sar-data-retrieval · NestJS · DDD 5-layer",
           en: "sar-data-retrieval · NestJS · DDD 5-layer",
