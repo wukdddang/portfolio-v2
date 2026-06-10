@@ -108,8 +108,8 @@ const sarDataRetrievalLayer: Project = {
   slug: "sar-data-retrieval",
   diagram: {
     caption: {
-      ko: "사용자 위치 검색이 sentinel-retrieval(NestJS)로 들어오면 CDSE 카탈로그를 검색·다운로드해 NAS(SMB2)에 SLC를 저장하고, 메타·결과는 PostgreSQL+PostGIS에 적재합니다. 자매 레포 snap(Snappy·MintPy)이 NAS의 SLC를 읽어 분석 결과를 환류 — DDD 5-layer로 도메인 격리.",
-      en: "A user's location search hits sentinel-retrieval (NestJS), which searches/downloads the CDSE catalog, stores SLCs on NAS (SMB2), and writes metadata/results to PostgreSQL+PostGIS. The sister repo snap (Snappy · MintPy) reads SLCs from NAS and feeds analysis results back — domains isolated via DDD 5-layer.",
+      ko: "사용자 위치 검색이 sentinel-retrieval(NestJS)로 들어오면 CDSE 카탈로그를 검색·다운로드해 NAS(SMB2)에 SLC를 저장하고, 메타·결과는 PostgreSQL+PostGIS에 적재합니다. 별도 레포 snap(Snappy·MintPy)이 NAS의 SLC를 읽어 분석 결과를 환류 — DDD 5-layer로 도메인 격리.",
+      en: "A user's location search hits sentinel-retrieval (NestJS), which searches/downloads the CDSE catalog, stores SLCs on NAS (SMB2), and writes metadata/results to PostgreSQL+PostGIS. The separate repo snap (Snappy · MintPy) reads SLCs from NAS and feeds analysis results back — domains isolated via DDD 5-layer.",
     },
     nodes: [
       {
@@ -166,7 +166,7 @@ const sarDataRetrievalLayer: Project = {
         kind: "layer",
         cat: 6,
         icon: "📡",
-        label: { ko: "snap 자매 레포", en: "snap sister repo" },
+        label: { ko: "snap 별도 레포", en: "snap separate repo" },
         sublabel: { ko: "Snappy · MintPy 분석", en: "Snappy · MintPy analysis" },
         col: 1,
         row: 2,
@@ -201,8 +201,8 @@ const sarDataRetrievalLayer: Project = {
     en: "We needed a previously-nonexistent platform for weather- and season-independent surface displacement data, plus a unified backend for Sentinel SAR search, download, and metadata. A service layer that exposes snap-processed results in location-searchable form was also missing.",
   },
   system: {
-    ko: "NestJS 모노레포 (sentinel-retrieval + ai-processing) + CDSE API + NAS(SMB2 vs 직접 FS) PoC + SLC 도메인 모델링 + DDD 5-layer + snap 자매 레포 통합 레이어를 구축했습니다. AI native 진행으로 예측 보일러플레이트 시점만 도메인 구조를 일부 수정했습니다.",
-    en: "Built a NestJS monorepo (sentinel-retrieval + ai-processing) on top of the CDSE API, ran a NAS PoC (SMB2 vs direct FS), modeled the SLC domain, applied DDD 5-layer, and added an integration layer for the snap sister repo. Done AI-native; the domain structure was only tweaked at the points where predictable boilerplate emerged.",
+    ko: "NestJS 모노레포 (sentinel-retrieval + ai-processing) + CDSE API + NAS(SMB2 vs 직접 FS) PoC + SLC 도메인 모델링 + DDD 5-layer + snap 별도 레포 통합 레이어를 구축했습니다. AI native 진행으로 예측 보일러플레이트 시점만 도메인 구조를 일부 수정했습니다.",
+    en: "Built a NestJS monorepo (sentinel-retrieval + ai-processing) on top of the CDSE API, ran a NAS PoC (SMB2 vs direct FS), modeled the SLC domain, applied DDD 5-layer, and added an integration layer for the snap separate repo. Done AI-native; the domain structure was only tweaked at the points where predictable boilerplate emerged.",
   },
   impact: {
     ko: "3 레이어 통합 서비스의 데이터·운영 플랫폼을 담당합니다. 사용자 위치 요청에 분석 데이터를 즉시 제공하거나 신규 처리 후 제공할 수 있는 구조의 기초가 됩니다.",

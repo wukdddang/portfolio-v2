@@ -1,4 +1,3 @@
-import { ArrowLeft, Mail, Sparkles, CheckCircle2 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
@@ -70,7 +69,6 @@ export default async function ResumePage({
             href="/"
             className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
           >
-            <ArrowLeft className="size-3.5" />
             {t("toolbarBack")}
           </Link>
           <PrintButton />
@@ -102,7 +100,7 @@ export default async function ResumePage({
             <span>
               <span className="text-[var(--muted)]/60">{t("meta.aiStage")}</span>{" "}
               <span className="text-[var(--foreground)]">
-                {pick(personal.currentStage.range, locale)}
+                {pick(personal.currentStage.plain, locale)}
               </span>
             </span>
             <span>
@@ -175,7 +173,6 @@ export default async function ResumePage({
                 key={i}
                 className="flex items-start gap-3 p-5 rounded-xl border border-[var(--border)] bg-[var(--card)] print:bg-transparent"
               >
-                <CheckCircle2 className="size-5 shrink-0 text-[var(--accent)] mt-0.5" />
                 <p className="text-base leading-relaxed">
                   <Md>{pick(q, locale)}</Md>
                 </p>
@@ -270,7 +267,6 @@ export default async function ResumePage({
         <Section title={t("sections.about")} eyebrow={t("sections.aboutEyebrow")}>
           <div className="p-6 rounded-xl border border-[var(--accent)]/30 bg-[var(--card)] mb-6 print:bg-transparent">
             <div className="flex items-start gap-3">
-              <Sparkles className="size-5 mt-0.5 shrink-0 text-[var(--accent)]" />
               <div>
                 <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-2">
                   {t("about.brainTrinityEyebrow")}
@@ -303,7 +299,6 @@ export default async function ResumePage({
               href={`mailto:${resumeContacts.email}`}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] hover:bg-[var(--subtle)] transition-colors print:border-none print:px-0"
             >
-              <Mail className="size-4" />
               {resumeContacts.email}
             </a>
             <a

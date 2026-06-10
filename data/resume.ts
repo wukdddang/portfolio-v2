@@ -28,21 +28,21 @@ export interface ResumeRole {
 
 export const resumeSummary = {
   oneLiner: {
-    ko: "웹 개발자, SAR 도메인 확장 중 · AI를 사고 파트너로 두고 직군을 확장하면서 시스템을 함께 만드는 풀스택입니다.",
-    en: "Web developer expanding into SAR · a full-stack engineer who treats AI as a thinking partner while widening the role boundary and building systems alongside it.",
+    ko: "웹 개발자로 출발해 SAR(위성 레이더) 도메인까지 영역을 넓혀가는 풀스택 개발자입니다. AI를 단순한 코드 생성 도구가 아니라 함께 고민하는 사고 파트너로 두고, 원래 제 직군이 아니던 영역까지 들어가 시스템을 만듭니다.",
+    en: "A full-stack developer who started in web and keeps widening the scope — most recently into the SAR (satellite-radar) domain. I treat AI not as a code-generation tool but as a thinking partner, and use it to step into areas outside my original role and build real systems there.",
   } satisfies L,
   paragraphs: [
     {
-      ko: "프론트엔드 + 백엔드 + 인프라/CI-CD를 한 사람이 풀스택으로 다루며, 루미르 입사 후 만난 SAR/위성 도메인을 직군 확장으로 흡수해 적용하고 있습니다. 모든 코드 작업은 AI native 패턴으로 진행하며, 사람은 UI 기획·코드 연결 검토·e2e 테스트의 사람 노드를 맡고 있습니다.",
-      en: "I run frontend + backend + infra/CI-CD end-to-end as one full-stack engineer, absorbing the SAR / satellite domain I first met at Lumir as a role expansion and applying it back. All code work runs on an AI-native pattern; the human nodes are UI planning, code-connection review, and e2e testing.",
+      ko: "프론트엔드부터 백엔드, 인프라·CI/CD까지 한 사람이 풀스택으로 맡습니다. 루미르에 입사한 뒤 처음 마주친 SAR(합성개구레이더)·위성 도메인도 '내 전공이 아니'라고 미루지 않고 직군 확장으로 흡수해 실제 서비스에 적용해 왔습니다. 일하는 방식은 'AI native'입니다 — 코드 작성은 AI가 맡고, 저는 UI를 기획하고, AI가 연결한 코드를 검토하고, e2e 테스트로 동작을 보증하는 '사람이 책임지는 노드'에 집중합니다.",
+      en: "I run frontend, backend, and infra/CI-CD end-to-end as a single full-stack engineer. The SAR (synthetic-aperture radar) and satellite domain I first met after joining Lumir wasn't 'someone else's job' — I absorbed it as a role expansion and put it into real services. The way I work is 'AI-native': AI writes the code, and I focus on the human-owned nodes — planning the UI, reviewing how AI wires the code together, and guaranteeing behavior with e2e tests.",
     },
     {
-      ko: "회사에서는 LumirX SAR 처리 파이프라인(SDPE)의 DAG UI 기획·구현·GitLab CI/CD 구축·인터페이스 세부 설계와, Sentinel SAR 검색·분석 NestJS 백엔드(sar-data-retrieval) + 자매 InSAR 처리 레포(lumir-linux-snap, 5종 도구 다중 스택), 사내 백오피스 4 도메인 풀스택(Lumir-ERP — CMS·자원예약·LRIM·면접관리)을 동시에 다루고 있습니다.",
-      en: "At work I run three workstreams in parallel: the LumirX SAR-pipeline (SDPE) DAG UI, GitLab CI/CD build-out and interface-detail design; the Sentinel SAR search/analysis NestJS backend (sar-data-retrieval) + its sister InSAR processing repo (lumir-linux-snap, 5-tool stack); and a four-domain internal back office (Lumir-ERP — CMS · resource scheduling · LRIM · interview management) full-stack.",
+      ko: "회사에서는 성격이 다른 세 갈래 일을 동시에 끌고 갑니다. (1) **LumirX 위성 SAR 처리 파이프라인(SDPE)** — 운영자가 처리 단계를 구성·실행하는 DAG UI를 만들고, GitLab CI/CD를 맨바닥부터 구축했으며, 처리 단계 사이의 인터페이스를 세부 설계했습니다. (2) **Sentinel SAR 검색·분석 백엔드(sar-data-retrieval, NestJS)** 와 실제 InSAR 분석을 담당하는 별도 레포(lumir-linux-snap, 분석 도구 5종을 묶은 다중 스택). (3) **사내 백오피스 4개 도메인(Lumir-ERP — CMS·자원예약·채용·면접관리)** 풀스택.",
+      en: "At work I run three quite different workstreams in parallel: (1) the **LumirX SAR processing pipeline (SDPE)** — I built the DAG UI operators use to compose and run processing stages, stood up GitLab CI/CD from scratch, and did the detailed design of the interfaces between stages; (2) the **Sentinel SAR search/analysis backend (sar-data-retrieval, NestJS)** plus a separate repo that handles the actual InSAR analysis (lumir-linux-snap, a 5-tool stack); and (3) a four-domain **internal back office (Lumir-ERP — CMS · resource scheduling · hiring · interview management)**, full-stack.",
     },
     {
-      ko: "사이드로는 집비치기(home-inventory-manager)를 AI native 100%로 운영하며 검증한 풀스택 e2e 테스트 패턴이 회사 프론트엔드 강화에 역도입되고 있고, Brain Trinity라는 메타 위키 시스템(Karpathy LLM Wiki + Claude Code + skill 시스템)을 운영해 이 이력서·포트폴리오 자체를 컴파일했습니다.",
-      en: "On the side I run him (home-inventory-manager) 100% AI-native; the full-stack e2e test pattern validated there is now being back-transferred into the company frontend. I also run Brain Trinity, a meta wiki system (Karpathy LLM Wiki + Claude Code + skill system) that compiled this very resume and portfolio.",
+      ko: "사이드 프로젝트도 그냥 취미가 아니라 회사 일과 양방향으로 이어집니다. 가정 재고 관리 앱 **'집비치기'** 를 AI native 100%로 직접 만들어 풀스택 e2e 테스트 패턴을 검증했고, 그 패턴이 지금 거꾸로 회사 프론트엔드 강화에 도입되고 있습니다. 또 **'Brain Trinity'** 라는 개인 지식 시스템(위키를 AI가 컴파일하는 구조)을 운영하는데, 지금 보고 계신 이 이력서와 포트폴리오 자체가 그 시스템이 만들어낸 결과물입니다.",
+      en: "My side projects aren't just hobbies — they loop back into work both ways. I built **'him' (home-inventory-manager)** 100% AI-native and validated a full-stack e2e testing pattern there; that pattern is now being adopted, in reverse, to strengthen the company frontend. I also run **'Brain Trinity'**, a personal knowledge system where AI compiles a wiki — and this very resume and portfolio are outputs of that system.",
     },
   ] satisfies L[],
   positioning: {
@@ -52,16 +52,16 @@ export const resumeSummary = {
     } satisfies L,
     bullets: [
       {
-        ko: "AI native 100% — 코드 작성은 AI, 사람은 기획·설계·검토 노드입니다. 동시에 여러 워크스트림을 운영하는 시스템 설계자 모드를 추구합니다.",
-        en: "100% AI-native — AI writes the code; the human is the planning, design, and review node. I aim for the system-designer mode where multiple workstreams run in parallel.",
+        ko: "**AI native 100%** — 코드는 AI가 쓰고, 사람은 기획·설계·검토를 책임지는 노드입니다. 한 명이 여러 워크스트림을 동시에 굴리는 '시스템 설계자' 모드를 지향합니다.",
+        en: "**100% AI-native** — AI writes the code; the human is the node that owns planning, design, and review. I aim for a 'system-designer' mode where one person keeps several workstreams running at once.",
       },
       {
-        ko: "도메인 적응력 — SAR/InSAR/MintPy/SNAPHU 같은 직군 외 영역도 AI 사고 파트너로 진입해 결과를 내며, 같은 메커니즘이 임베디드·로보틱스에도 작동한다고 봅니다.",
-        en: "Domain adaptability — I enter out-of-role areas like SAR, InSAR, MintPy, and SNAPHU with AI as a thinking partner and produce results. I expect the same mechanism to work for embedded and robotics.",
+        ko: "**도메인 적응력** — SAR·InSAR·MintPy·SNAPHU처럼 제 전공 밖의 영역도 AI를 사고 파트너 삼아 진입해 실제 결과를 냅니다. 같은 방식이면 임베디드·로보틱스도 흡수할 수 있다고 봅니다.",
+        en: "**Domain adaptability** — I enter areas well outside my background (SAR, InSAR, MintPy, SNAPHU) with AI as a thinking partner and produce real results. The same approach, I believe, extends to embedded and robotics.",
       },
       {
-        ko: "풀스택 + 사이클 — 기획·프론트·백·인프라·테스트·CI/CD까지 한 사이클을 책임지는 경험이 있습니다. CMS 풀스택 단독, GitLab CI/CD 0에서 구축 같은 사례가 있습니다.",
-        en: "Full-stack + full cycle — I've owned full cycles spanning planning · frontend · backend · infra · testing · CI/CD. Concrete examples include solo full-stack CMS delivery and standing up GitLab CI/CD from zero.",
+        ko: "**풀스택 · 한 사이클 책임** — 기획·프론트·백엔드·인프라·테스트·CI/CD까지 한 사이클을 끝까지 책임진 경험이 있습니다. 예를 들어 CMS를 풀스택 단독으로 납품했고, GitLab CI/CD를 맨바닥부터 구축했습니다.",
+        en: "**Full-stack · owns the whole cycle** — I've taken full cycles end to end: planning · frontend · backend · infra · testing · CI/CD. For example, I delivered a CMS solo full-stack and stood up GitLab CI/CD from scratch.",
       },
     ] satisfies L[],
   },
@@ -90,8 +90,8 @@ export const resumeExperience: ResumeRole[] = [
         },
         slug: "lumir-sar-platform",
         badge: {
-          ko: "3+4 통합 (3 레이어 풀스택)",
-          en: "Stage 3+4 integrated (3-layer full-stack)",
+          ko: "3 레이어 단독 통합 (저장·분석·프론트)",
+          en: "Solo-integrated 3 layers (storage · analysis · frontend)",
         },
         context: {
           ko: "Sentinel과 LumirX 위성 데이터를 사내에서 검색·저장·분석·요청까지 한 사이클로 처리할 통합 서비스가 부재했습니다. 데이터 저장(NAS+CDSE), InSAR 분석(SNAP·ISCE2·MintPy), 사용자 진입 프론트엔드 3 레이어를 본인이 단독으로 묶고 있습니다.",
@@ -99,16 +99,16 @@ export const resumeExperience: ResumeRole[] = [
         },
         what: [
           {
-            ko: "🗄 **저장 레이어** (sar-data-retrieval) — NestJS 모노레포 단독 + CDSE 외부 API 통합 + NAS PoC (SMB2 vs 직접 FS) + SLC 도메인 모델링 + DDD 5-layer 테스트 분리",
-            en: "🗄 **Storage layer** (sar-data-retrieval) — solo NestJS monorepo + CDSE external API integration + NAS PoC (SMB2 vs direct FS) + SLC domain modeling + DDD 5-layer test separation.",
+            ko: "**저장 레이어** (sar-data-retrieval) — NestJS 모노레포 단독 + CDSE 외부 API 통합 + NAS PoC (SMB2 vs 직접 FS) + SLC 도메인 모델링 + DDD 5-layer 테스트 분리",
+            en: "**Storage layer** (sar-data-retrieval) — solo NestJS monorepo + CDSE external API integration + NAS PoC (SMB2 vs direct FS) + SLC domain modeling + DDD 5-layer test separation.",
           },
           {
-            ko: "⚙ **분석 레이어** (lumir-linux-snap) — 5종 도구 다중 스택 (SNAP 12 + SNAPHU + MintPy + StaMPS PSI + ISCE2) + 다중 Claude Code agent 워크트리 (agent 1~4 병렬) + 1.12 yr → 2.30 yr stack 확장 + 사업 보고서 v1~v4 AI native 자동화",
-            en: "⚙ **Analysis layer** (lumir-linux-snap) — 5-tool stack (SNAP 12 + SNAPHU + MintPy + StaMPS PSI + ISCE2) + multi-Claude-Code agent worktrees (agents 1–4 in parallel) + stack extended from 1.12 yr to 2.30 yr + AI-native automation of program reports v1–v4.",
+            ko: "**분석 레이어** (lumir-linux-snap) — 5종 도구 다중 스택 (SNAP 12 + SNAPHU + MintPy + StaMPS PSI + ISCE2) + 다중 Claude Code agent 워크트리 (agent 1~4 병렬) + 1.12 yr → 2.30 yr stack 확장 + 사업 보고서 v1~v4 AI native 자동화",
+            en: "**Analysis layer** (lumir-linux-snap) — 5-tool stack (SNAP 12 + SNAPHU + MintPy + StaMPS PSI + ISCE2) + multi-Claude-Code agent worktrees (agents 1–4 in parallel) + stack extended from 1.12 yr to 2.30 yr + AI-native automation of program reports v1–v4.",
           },
           {
-            ko: "🖥 **프론트 레이어** (sar-search-and-analyzer) — Next.js + Plan/Current 환경 분리 + 지도 기반 AOI 폴리곤 + 카탈로그 검색 + InSAR 분석 요청 UI + CLAUDE.md 4-Layer 백엔드 설계 본인 작성 (집비치기 패턴 역전이)",
-            en: "🖥 **Frontend layer** (sar-search-and-analyzer) — Next.js + Plan/Current environment split + map-based AOI polygons + catalog search + InSAR-request UI + the CLAUDE.md 4-layer backend design (written by me, back-transferring the him pattern).",
+            ko: "**프론트 레이어** (sar-search-and-analyzer) — Next.js + Plan/Current 환경 분리 + 지도 기반 AOI 폴리곤 + 카탈로그 검색 + InSAR 분석 요청 UI (순수 프론트엔드 — 백엔드는 별도 레포 sar-data-retrieval)",
+            en: "**Frontend layer** (sar-search-and-analyzer) — Next.js + Plan/Current environment split + map-based AOI polygons + catalog search + InSAR-request UI (frontend-only — the backend is the separate sar-data-retrieval repo).",
           },
           {
             ko: "오버엔지니어링 방지 원칙 + 모든 도구 평가·선정에 AI 사고 파트너 활용 + AI native 100%",
@@ -128,10 +128,6 @@ export const resumeExperience: ResumeRole[] = [
             ko: "사용자가 지도에서 위치를 요청하면 저장된 분석 데이터를 즉시 제공하거나 신규 처리 후 제공하는 흐름을 한 사람이 풀스택으로 묶고 있다는 점이 핵심 자산입니다",
             en: "The core asset: a single person owns the full-stack flow that turns a user's location pick into either an instant cached result or a freshly-processed one.",
           },
-          {
-            ko: "집비치기에서 검증한 4-Layer + CQRS + 한글 메서드명 패턴이 sar-search-and-analyzer 백엔드 설계에 역전이 — 셩PM 5단계 사이드 권한 우회의 두 번째 사례",
-            en: "The 4-layer + CQRS + Korean-method-name pattern validated in him is back-transferred into the sar-search-and-analyzer backend design — the second instance of the stage-5 side-project authority bypass.",
-          },
         ],
         stack: [
           "NestJS",
@@ -145,8 +141,8 @@ export const resumeExperience: ResumeRole[] = [
           "Playwright",
         ],
         honestyNote: {
-          ko: "각 레이어의 일부 패턴은 외부 인계입니다 — Plan/Current 환경 분리(파트장)·일부 SAR 도메인 지식(AI 사고 파트너 도움). sar-search-and-analyzer 백엔드(apps/api·worker·crawler)는 CLAUDE.md 설계 문서 단계이며 실제 구현은 다음 Phase입니다.",
-          en: "Some patterns in each layer came from elsewhere — the Plan/Current split (team lead) and parts of the SAR domain knowledge (AI as a thinking partner). The sar-search-and-analyzer backend (apps/api · worker · crawler) is still at the CLAUDE.md design-document stage; actual implementation is the next phase.",
+          ko: "각 레이어의 일부 패턴은 외부 인계입니다 — Plan/Current 환경 분리(파트장)·일부 SAR 도메인 지식(AI 사고 파트너 도움).",
+          en: "Some patterns in each layer came from elsewhere — the Plan/Current split (team lead) and parts of the SAR domain knowledge (AI as a thinking partner).",
         },
       },
       {
@@ -156,8 +152,8 @@ export const resumeExperience: ResumeRole[] = [
         },
         slug: "sdpe",
         badge: {
-          ko: "3+4 혼합 · 직군 확장 표본",
-          en: "Stage 3+4 blend · textbook role-expansion case",
+          ko: "직군 확장 · SAR 처리 도메인 진입",
+          en: "Role expansion · into SAR processing",
         },
         context: {
           ko: "LumirX 위성 원시 SAR 데이터(L0~L3) 다단계 파이프라인을 운영자가 안전하게 구성·실행·추적·복구할 시스템이 필요했고, 본인은 백지 상태에서 SAR 처리 도메인에 투입됐습니다.",
@@ -215,8 +211,8 @@ export const resumeExperience: ResumeRole[] = [
         },
         slug: "lumir-erp",
         badge: {
-          ko: "4 (직군 안 · 4 도메인 적응)",
-          en: "Stage 4 (in-role · 4-domain adaptation)",
+          ko: "4 도메인 동시 적응 (직군 안)",
+          en: "4 domains in parallel (in-role)",
         },
         context: {
           ko: "루미르 사내 백오피스 4개 도메인(자원예약·CMS·LRIM 채용·LRIM 면접관리)을 풀스택으로 구축할 필요가 있었고, 사용자 풀은 사내 전 사원 + 외부 입사지원자까지였습니다.",
@@ -280,8 +276,8 @@ export const resumeSideProjects: ResumeProject[] = [
     },
     slug: "him",
     badge: {
-      ko: "4 + 5 (회사 역전이)",
-      en: "Stage 4 + 5 (back-transferred into work)",
+      ko: "사이드 → 회사 역전이",
+      en: "Side project → back-transferred to work",
     },
     period: {
       ko: "2026-03 ~ 현재 · 누적 227h",
@@ -341,8 +337,8 @@ export const resumeSideProjects: ResumeProject[] = [
     },
     slug: "brain-trinity",
     badge: {
-      ko: "4 + 5 신호 · 로보틱스 트랙 변별점",
-      en: "Stage 4 + 5 signal · differentiator for the robotics track",
+      ko: "이 이력서·포트폴리오를 만든 메타 시스템",
+      en: "The meta system that compiled this resume",
     },
     period: {
       ko: "2026-04-16 ~ 현재 · 위키 56+ 누적",
