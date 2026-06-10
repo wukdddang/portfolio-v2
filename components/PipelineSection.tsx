@@ -113,7 +113,8 @@ function Connector({
           {label}
         </span>
       </div>
-      <div className="hidden flex-col items-center gap-1.5 px-1 lg:flex">
+      {/* -translate-y: 칩+선 블록을 칩 높이의 절반만큼 올려 *선*이 카드 중앙선에 오도록 */}
+      <div className="hidden flex-col items-center gap-1.5 px-1 lg:flex lg:-translate-y-3">
         <span className={chipCls}>{label}</span>
         <FlowLine phase={phase} reduce={reduce} />
       </div>
