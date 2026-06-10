@@ -6,13 +6,13 @@
  * 프로젝트 상세의 React Flow 다이어그램과 같은 시각 언어(카테고리 색 카드, amber 흐름선
  * + glow, SMIL 흐름 점, 점선 환류)를 순수 SVG/DOM으로 그려 메인 번들에 @xyflow를 싣지 않는다.
  *
- * 파이프라인마다 성격이 달라 표현(variant)을 다르게 둔다 — '복붙' 인상 회피:
- *  - spine  (SAR)  : 가로 스파인 (끝점 pill + 레이어 카드 + amber 흐름 + 점선 환류).
- *  - levels (SDPE) : L0→L1·L2→L3 처리 레벨 트랙 (운영 콘솔 트리거 + 레벨 배지 카드 + 카탈로그).
- *  - stack  (him)  : 세로 컴팩트 스택 (사이드 프로젝트답게 좁고 작게).
+ * 셋 다 가로 스파인(흐르는 amber)이되 디테일로 차별 — '복붙' 인상 회피:
+ *  - SAR  : 일반 크기 카드 (간판).
+ *  - SDPE : 카드에 L0/L1·L2/L3 레벨 배지 + 오케스트레이션 note.
+ *  - him  : compact(작은 카드) — 사이드 프로젝트.
  */
 
-import { Fragment, useMemo, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 const chipCls =
   "whitespace-nowrap rounded-md border border-[var(--border)] bg-[var(--card)] px-1.5 py-0.5 font-mono text-[10px] leading-tight text-[var(--foreground)]";
 
-/** amber 정방향 흐름선 — glow 밑줄 + 본선 + 화살촉 + SMIL 흐름 점 (spine 전용) */
+/** amber 정방향 흐름선 — glow 밑줄 + 본선 + 화살촉 + SMIL 흐름 점 (diagram-flow 에코) */
 function FlowLine({
   vertical = false,
   phase = 0,
@@ -70,7 +70,7 @@ function FlowLine({
   );
 }
 
-/** spine 커넥터 — lg+: 라벨 칩 위 + 가로선, lg 미만: 세로선 + 옆 칩 */
+/** 단계 사이 커넥터 — lg+: 라벨 칩 위 + 가로선, lg 미만: 세로선 + 옆 칩 */
 function Connector({ label, phase, reduce }: { label: string; phase: number; reduce: boolean }) {
   return (
     <>
@@ -86,35 +86,23 @@ function Connector({ label, phase, reduce }: { label: string; phase: number; red
   );
 }
 
-/** 간단한 화살표 — levels/stack 트랙용 (가로 → / 세로 ↓) + 라벨 */
-function Arrow({ vertical = false, label }: { vertical?: boolean; label?: string }) {
-  return (
-    <div
-      className={cn(
-        "flex shrink-0 items-center justify-center gap-1.5 text-[var(--accent)]",
-        vertical ? "flex-col py-0.5" : "flex-col px-0.5"
-      )}
-    >
-      {label && (
-        <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--muted)]">
-          {label}
-        </span>
-      )}
-      <span aria-hidden className="text-base leading-none">
-        {vertical ? "↓" : "→"}
-      </span>
-    </div>
-  );
-}
-
-/** 외부 끝점 pill — external=점선(외부 시스템), actor=반전(사람) */
-function StagePill({ stage, locale }: { stage: PipelineStage; locale: Locale }) {
+/** 외부 끝점 pill — external=점선(외부 시스템), actor=반전(사람). compact면 한 단계 작게 */
+function StagePill({
+  stage,
+  locale,
+  compact = false,
+}: {
+  stage: PipelineStage;
+  locale: Locale;
+  compact?: boolean;
+}) {
   const actor = stage.tone === "actor";
   return (
-    <div className="flex w-28 shrink-0 flex-col items-center gap-1.5 px-1 text-center">
+    <div className={cn("flex shrink-0 flex-col items-center gap-1.5 px-1 text-center", compact ? "w-24" : "w-28")}>
       <div
         className={cn(
-          "flex size-12 items-center justify-center rounded-full text-xl leading-none",
+          "flex items-center justify-center rounded-full leading-none",
+          compact ? "size-10 text-lg" : "size-12 text-xl",
           actor
             ? "bg-[var(--foreground)] text-[var(--background)]"
             : "border border-dashed border-[var(--border)] bg-[var(--subtle)]"
@@ -122,7 +110,9 @@ function StagePill({ stage, locale }: { stage: PipelineStage; locale: Locale }) 
       >
         {stage.icon}
       </div>
-      <div className="font-mono text-[11px] font-semibold leading-tight">{pick(stage.label, locale)}</div>
+      <div className={cn("font-mono font-semibold leading-tight", compact ? "text-[10px]" : "text-[11px]")}>
+        {pick(stage.label, locale)}
+      </div>
       <div className="font-mono text-[9px] uppercase tracking-wider leading-tight text-[var(--muted)]">
         {pick(stage.sublabel, locale)}
       </div>
@@ -130,7 +120,7 @@ function StagePill({ stage, locale }: { stage: PipelineStage; locale: Locale }) 
   );
 }
 
-/** 레이어 카드 — DiagramCard 시각 언어. badge 있으면 레벨 칩(L0/L1·L2/L3) 표시 */
+/** 레이어 카드 — DiagramCard 시각 언어. badge 있으면 레벨 칩(L0/L1·L2/L3), compact면 작고 desc 생략 */
 function StageCard({
   stage,
   label,
@@ -156,7 +146,7 @@ function StageCard({
       }}
       className="group/card relative flex h-full min-w-0 flex-col rounded-xl border transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
     >
-      <div className="flex items-center gap-2 px-4 py-3">
+      <div className={cn("flex items-center gap-2", compact ? "px-3 py-2.5" : "px-4 py-3")}>
         {stage.badge ? (
           <span
             className="shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[11px] font-bold leading-none"
@@ -171,10 +161,17 @@ function StageCard({
           <span className="size-1.5 shrink-0 rounded-full" style={{ background: catColor }} />
         )}
         <span className="text-base leading-none">{icon}</span>
-        <span className="min-w-0 flex-1 text-[15px] font-semibold leading-tight">{label}</span>
+        <span className={cn("min-w-0 flex-1 font-semibold leading-tight", compact ? "text-sm" : "text-[15px]")}>
+          {label}
+        </span>
         <ArrowUpRight className="size-3.5 shrink-0 -translate-x-0.5 translate-y-0.5 text-[var(--accent)] opacity-0 transition-all group-hover/card:translate-x-0 group-hover/card:translate-y-0 group-hover/card:opacity-100" />
       </div>
-      <div className="border-t border-[var(--border)]/60 px-4 py-2 font-mono text-[10px] leading-snug text-[var(--muted)]">
+      <div
+        className={cn(
+          "border-t border-[var(--border)]/60 font-mono text-[10px] leading-snug text-[var(--muted)]",
+          compact ? "px-3 py-1.5" : "px-4 py-2"
+        )}
+      >
         {pick(stage.sublabel, locale)}
       </div>
       {!compact && stage.desc && (
@@ -205,17 +202,6 @@ function RowHeader({ pipeline, locale }: { pipeline: Pipeline; locale: Locale })
   );
 }
 
-/** 점선 환류 노트 (모든 variant 공용, 본문 아래) */
-function ReturnNote({ note }: { note: string }) {
-  return (
-    <div className="mt-6 flex items-center justify-center gap-2.5 px-2">
-      <span className="hidden h-px w-10 shrink-0 border-t border-dashed border-[var(--muted)]/60 sm:inline-block" />
-      <span className="text-center font-mono text-[10px] leading-relaxed text-[var(--muted)]">{note}</span>
-      <span className="hidden h-px w-10 shrink-0 border-t border-dashed border-[var(--muted)]/60 sm:inline-block" />
-    </div>
-  );
-}
-
 const rise = (reduce: boolean, i: number) =>
   ({
     initial: reduce ? false : ({ opacity: 0, y: 16 } as const),
@@ -224,8 +210,17 @@ const rise = (reduce: boolean, i: number) =>
     transition: { duration: 0.45, delay: i * 0.05 },
   }) as const;
 
-/** variant: spine — 가로 스파인 (SAR) */
-function SpineRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
+/** 한 프로젝트의 파이프라인 — 가로 스파인 (compact면 작은 카드/pill) + 점선 환류 */
+function PipelineRow({
+  pipeline,
+  locale,
+  reduce,
+}: {
+  pipeline: Pipeline;
+  locale: Locale;
+  reduce: boolean;
+}) {
+  const compact = !!pipeline.compact;
   const subBySlug = useMemo(
     () =>
       new Map(
@@ -252,13 +247,13 @@ function SpineRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Lo
       const icon = sub?.layerIcon ?? stage.icon;
       items.push(
         <motion.div key={`s-${i}`} {...rise(reduce, i * 2)} className="min-w-0">
-          <StageCard stage={stage} label={label} icon={icon} locale={locale} projectSlug={pipeline.projectSlug} />
+          <StageCard stage={stage} label={label} icon={icon} locale={locale} projectSlug={pipeline.projectSlug} compact={compact} />
         </motion.div>
       );
     } else {
       items.push(
         <motion.div key={`s-${i}`} {...rise(reduce, i * 2)} className="flex justify-center lg:self-center">
-          <StagePill stage={stage} locale={locale} />
+          <StagePill stage={stage} locale={locale} compact={compact} />
         </motion.div>
       );
     }
@@ -282,104 +277,17 @@ function SpineRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Lo
                 <span className="font-mono text-[10px] text-[var(--muted)]">{pick(pipeline.returnNote, locale)}</span>
               </div>
             </div>
-            <div className="lg:hidden">
-              <ReturnNote note={pick(pipeline.returnNote, locale)} />
+            <div className="mt-5 flex items-center justify-center gap-2 px-2 lg:hidden">
+              <span className="inline-block w-6 shrink-0 border-t border-dashed border-[var(--muted)]" />
+              <span className="text-center font-mono text-[10px] leading-relaxed text-[var(--muted)]">
+                {pick(pipeline.returnNote, locale)}
+              </span>
             </div>
           </>
         )}
       </div>
     </div>
   );
-}
-
-/** variant: levels — L0→L1·L2→L3 처리 레벨 트랙 (SDPE) */
-function LevelsRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
-  const start = pipeline.stages.find((s) => s.kind === "endpoint" && s.tone === "actor");
-  const end = [...pipeline.stages].reverse().find((s) => s.kind === "endpoint" && s.tone !== "actor");
-  const levels = pipeline.stages.filter((s) => s.kind === "layer");
-
-  return (
-    <div>
-      <RowHeader pipeline={pipeline} locale={locale} />
-      <motion.div
-        {...rise(reduce, 0)}
-        className="flex flex-col items-stretch gap-3 md:flex-row md:items-center"
-      >
-        {start && <StagePill stage={start} locale={locale} />}
-        {start && <Arrow label={pick(pipeline.edges[0]?.label ?? { ko: "", en: "" }, locale)} />}
-
-        {/* 레벨 트랙 — 레벨 카드들이 한 묶음(track)으로 */}
-        <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-[var(--border)] bg-[var(--subtle)]/40 p-2.5 md:flex-row md:items-stretch">
-          {levels.map((lv, i) => (
-            <Fragment key={`lv-${i}`}>
-              {i > 0 && <Arrow />}
-              <div className="min-w-0 flex-1">
-                <StageCard
-                  stage={lv}
-                  label={pick(lv.label, locale)}
-                  icon={lv.icon}
-                  locale={locale}
-                  projectSlug={pipeline.projectSlug}
-                  compact
-                />
-              </div>
-            </Fragment>
-          ))}
-        </div>
-
-        {end && <Arrow label={pick(pipeline.edges[pipeline.edges.length - 1]?.label ?? { ko: "", en: "" }, locale)} />}
-        {end && <StagePill stage={end} locale={locale} />}
-      </motion.div>
-      {pipeline.returnNote && <ReturnNote note={pick(pipeline.returnNote, locale)} />}
-    </div>
-  );
-}
-
-/** variant: stack — 세로 컴팩트 스택 (him) */
-function StackRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
-  return (
-    <div>
-      <RowHeader pipeline={pipeline} locale={locale} />
-      <motion.div {...rise(reduce, 0)} className="flex flex-col items-stretch gap-1.5 sm:max-w-md">
-        {pipeline.stages.map((stage, i) => (
-          <Fragment key={`st-${i}`}>
-            {i > 0 && (
-              <div className="flex items-center justify-center">
-                <Arrow vertical label={pick(pipeline.edges[i - 1]?.label ?? { ko: "", en: "" }, locale)} />
-              </div>
-            )}
-            {stage.kind === "layer" ? (
-              <StageCard
-                stage={stage}
-                label={pick(stage.label, locale)}
-                icon={stage.icon}
-                locale={locale}
-                projectSlug={pipeline.projectSlug}
-                compact
-              />
-            ) : (
-              <div className="flex items-center gap-3 rounded-xl border border-dashed border-[var(--border)] bg-[var(--subtle)]/60 px-4 py-2.5">
-                <span className="text-lg leading-none">{stage.icon}</span>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold leading-tight">{pick(stage.label, locale)}</div>
-                  <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">
-                    {pick(stage.sublabel, locale)}
-                  </div>
-                </div>
-              </div>
-            )}
-          </Fragment>
-        ))}
-      </motion.div>
-      {pipeline.returnNote && <ReturnNote note={pick(pipeline.returnNote, locale)} />}
-    </div>
-  );
-}
-
-function PipelineBlock({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
-  if (pipeline.variant === "levels") return <LevelsRow pipeline={pipeline} locale={locale} reduce={reduce} />;
-  if (pipeline.variant === "stack") return <StackRow pipeline={pipeline} locale={locale} reduce={reduce} />;
-  return <SpineRow pipeline={pipeline} locale={locale} reduce={reduce} />;
 }
 
 export function PipelineSection() {
@@ -410,7 +318,7 @@ export function PipelineSection() {
 
         <div className="space-y-16">
           {pipelines.map((p) => (
-            <PipelineBlock key={p.id} pipeline={p} locale={locale} reduce={reduce} />
+            <PipelineRow key={p.id} pipeline={p} locale={locale} reduce={reduce} />
           ))}
         </div>
       </div>

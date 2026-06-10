@@ -6,10 +6,10 @@ import type { L } from "@/data/i18n";
  * 시스템 간 정밀한 호출 관계가 아니라 *데이터 여정*의 요약이다. 정확한 토폴로지는
  * 각 프로젝트 상세의 다이어그램(PlatformDiagram·ProjectDiagram)이 담당한다.
  *
- * 파이프라인마다 성격이 달라 표현(variant)을 다르게 둔다:
- *  - spine  (SAR)  : 가로 스파인 — 위성·사용자 끝점 + 레이어 카드.
- *  - levels (SDPE) : L0→L1·L2→L3 처리 레벨 트랙 — 운영 콘솔 트리거 + 레벨 카드 + 카탈로그.
- *  - stack  (him)  : 세로 컴팩트 스택 — 사이드 프로젝트답게 작게, 프론트→백엔드→DB.
+ * 셋 다 가로 스파인(흐르는 amber·끝점 pill + 레이어 카드)이되, 디테일로 차별한다:
+ *  - SAR  : 일반 크기 카드 (간판).
+ *  - SDPE : L0/L1·L2/L3 레벨 배지를 단 카드 + 오케스트레이션 note.
+ *  - him  : compact(작은 카드) — 사이드 프로젝트.
  *
  * layer 단계의 label·icon은 같은 slug의 subProject가 있으면 그 layerLabel·layerIcon을
  * 런타임 조회해 rename에 동기화한다(여기 값은 fallback). 단일 프로젝트는 여기 값을 그대로 쓴다.
@@ -39,9 +39,9 @@ export interface Pipeline {
   projectSlug: string;
   title: L;
   icon: string;
-  /** 시각 표현 — 파이프라인 성격별로 다르게 */
-  variant: "spine" | "levels" | "stack";
-  /** 좌→우(또는 위→아래) 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
+  /** 컴팩트(작은 카드) 렌더 — 사이드 프로젝트(him)용. 미지정 시 일반 크기 */
+  compact?: boolean;
+  /** 좌→우 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
   stages: PipelineStage[];
   edges: PipelineEdge[];
   /** 역방향/부가 흐름 한 줄 (점선 환류) */
@@ -56,7 +56,6 @@ export const pipelines: Pipeline[] = [
     id: "sar",
     projectSlug: "lumir-sar-platform",
     icon: "🛰",
-    variant: "spine",
     title: { ko: "루미르 SAR 데이터 플랫폼", en: "Lumir SAR Data Platform" },
     stages: [
       {
@@ -136,7 +135,6 @@ export const pipelines: Pipeline[] = [
     id: "sdpe",
     projectSlug: "sdpe",
     icon: "🛰",
-    variant: "levels",
     title: { ko: "SDPE — LumirX 처리 파이프라인", en: "SDPE — LumirX processing pipeline" },
     note: {
       ko: "운영 콘솔에서 DAG를 구성하면 Pipeline Workflow(NestJS)가 pgmq 이벤트로 오케스트레이션하고, CSC 1~9 인터페이스 체인이 각 레벨을 처리합니다.",
@@ -199,7 +197,7 @@ export const pipelines: Pipeline[] = [
     id: "him",
     projectSlug: "him",
     icon: "📦",
-    variant: "stack",
+    compact: true,
     title: { ko: "집비치기 (him) — 개인 풀스택", en: "him — personal full-stack" },
     stages: [
       {
