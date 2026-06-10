@@ -626,28 +626,28 @@ const sarSearchAndAnalyzerLayer: Project = {
   layerLabel: { ko: "프론트", en: "Frontend" },
   layerIcon: "🖥",
   title: {
-    ko: "Sentinel SAR 검색·요청 프론트엔드 (풀스택 준비)",
-    en: "Sentinel SAR search & request frontend (full-stack-ready)",
+    ko: "Sentinel SAR 검색·요청 프론트엔드",
+    en: "Sentinel SAR search & request frontend",
   },
   subtitle: {
     ko: "지도 기반 SAR 데이터 검색·다운로드·InSAR 분석 요청",
     en: "Map-driven SAR data search · download · InSAR analysis requests",
   },
   badge: {
-    ko: "4 진행 중 (직군 안 · UI 기획·백엔드 동시)",
-    en: "Stage 4 in progress (in-role · UI planning + backend concurrent)",
+    ko: "4 진행 중 (직군 안 · UI 기획·구현)",
+    en: "Stage 4 in progress (in-role · UI planning + build)",
   },
   problem: {
     ko: "사내에서 위성 데이터를 지도에서 검색·요청하고 InSAR 분석까지 요청하는 통합 프론트 서버가 필요했습니다. 데이터·운영 플랫폼과 InSAR 분석 플랫폼을 묶어주는 사용자 진입점입니다.",
     en: "We needed an internal frontend that lets users search satellite data on a map and request InSAR analysis in one place — the entry point that ties the data & ops platform and the InSAR analysis platform together.",
   },
   system: {
-    ko: "Next.js (App Router) + Plan/Current 환경 분리 패턴 + (sar) 도메인 (user·admin 페이지) + Next.js Route Handler BFF를 갖췄습니다. 현재는 apps/web 단독 운영이며, 모노레포(pnpm + libs/*)는 향후 백엔드(apps/api·worker·crawler) 추가 대비 사전 셋업입니다. CLAUDE.md에 4-Layer Clean Architecture + CQRS + 한글 메서드명 백엔드 설계 문서를 본인이 직접 작성했고, 집비치기에서 검증한 패턴을 가져왔습니다.",
-    en: "Next.js (App Router) + a Plan/Current environment-split pattern + a (sar) domain with user and admin pages + a Next.js Route-Handler BFF. Currently apps/web only; the monorepo (pnpm + libs/*) is pre-staged for future backend additions (apps/api · worker · crawler). I wrote the CLAUDE.md backend design (4-layer Clean Architecture + CQRS + Korean method names) myself, importing the patterns validated in him.",
+    ko: "Next.js (App Router) + Plan/Current 환경 분리 패턴 + (sar) 도메인(user·admin 페이지) + Next.js Route Handler BFF로 구성된 프론트엔드입니다. BFF가 데이터·운영 플랫폼(sar-data-retrieval)과 InSAR 분석 플랫폼을 호출해 검색·다운로드·분석 요청을 한 진입점에 묶습니다.",
+    en: "A Next.js (App Router) frontend: a Plan/Current environment-split pattern, a (sar) domain (user/admin pages), and a Next.js Route-Handler BFF. The BFF calls the data & ops platform (sar-data-retrieval) and the InSAR analysis platform, tying search, download, and analysis requests into a single entry point.",
   },
   impact: {
-    ko: "지도 기반 AOI 폴리곤 설정 + 카탈로그 검색 + InSAR 분석 요청까지 가능한 사용자 UI 기획·구현이 진행 중입니다. 백엔드 개발과 기획이 동시 진행되어 혼선을 막는 인터페이스 설계가 핵심 작업입니다.",
-    en: "Map-based AOI polygons + catalog search + InSAR analysis requests — the user UI is being planned and built right now. With backend dev and planning happening in parallel, the interface design that keeps both sides aligned is the core work.",
+    ko: "지도 기반 AOI 폴리곤 설정 + 카탈로그 검색 + InSAR 분석 요청까지 가능한 사용자 UI 기획·구현이 진행 중입니다. 데이터·운영 플랫폼·InSAR 분석 플랫폼과의 인터페이스 정합이 핵심 작업입니다.",
+    en: "Map-based AOI polygons + catalog search + InSAR analysis requests — the user UI is being planned and built right now. The core work is keeping the interfaces with the data & ops platform and the InSAR analysis platform consistent.",
   },
   keywords: [
     { ko: "Next.js App Router", en: "Next.js App Router" },
@@ -657,17 +657,16 @@ const sarSearchAndAnalyzerLayer: Project = {
     },
     { ko: "지도 + AOI", en: "Map + AOI" },
     { ko: "InSAR 분석 요청", en: "InSAR analysis requests" },
-    { ko: "pnpm 모노레포", en: "pnpm monorepo" },
     { ko: "Route Handler BFF", en: "Route Handler BFF" },
   ],
   trackVisibility: "both",
   ownContribution: {
-    ko: "apps/web 전부 본인 단독 (UI 기획·구현·Route Handler BFF). CLAUDE.md의 백엔드 설계 문서(4-Layer + CQRS + 한글 메서드명)도 본인이 직접 작성했습니다 — 집비치기 검증 패턴을 본 프로젝트에 적용 예정.",
-    en: "apps/web — entirely solo (UI planning · implementation · Route-Handler BFF). The backend design document in CLAUDE.md (4-layer + CQRS + Korean method names) is also mine — applying patterns validated in him to this project.",
+    ko: "프론트엔드 전부 본인 단독 (UI 기획·구현·Route Handler BFF).",
+    en: "The frontend, entirely solo (UI planning · implementation · Route-Handler BFF).",
   },
   honestyNote: {
-    ko: "현재 코드는 apps/web 단독입니다 (apps/api·worker·crawler 미구현). 모노레포는 향후 백엔드 추가 대비 사전 셋업이며, 백엔드 4-Layer는 CLAUDE.md 설계 문서 단계입니다. UI 기획·백엔드 설계가 동시 진행 중이라 인터페이스 정합이 중요한 시점입니다.",
-    en: "Right now there's only apps/web; apps/api · worker · crawler aren't implemented yet. The monorepo is pre-staged for future backend work, and the 4-layer backend is still at the CLAUDE.md design stage. With UI planning and backend design running in parallel, keeping the interface consistent is the priority of this moment.",
+    ko: "현재는 Plan(mock) 모드로 백엔드 의존 없이 단독 동작합니다. Plan/Current 환경 분리 패턴은 파트장에게서 인계받았습니다.",
+    en: "Currently runs standalone in Plan (mock) mode, with no backend dependency. The Plan/Current environment-split pattern was inherited from the team lead.",
   },
   metrics: [
     {
@@ -688,10 +687,6 @@ const sarSearchAndAnalyzerLayer: Project = {
     {
       ko: "구현 완료 화면 수",
       en: "Screens completed",
-    },
-    {
-      ko: "백엔드 Phase 진척 (0~9)",
-      en: "Backend phase progress (0–9)",
     },
   ],
   images: [
@@ -752,8 +747,8 @@ const lumirSarPlatform: Project = {
     en: "There was no integrated service to take Sentinel and LumirX data from search through storage, analysis, and request in one cycle. Storage (NAS + CDSE), InSAR analysis (SNAP · ISCE2 · MintPy), and the user-facing frontend were all separate — making it hard for a user to get from 'I want this location' to a finished result.",
   },
   system: {
-    ko: "3 레이어 통합 서비스를 본인이 단독으로 설계·구축하고 있습니다. **데이터·운영 플랫폼**(sar-data-retrieval, NestJS 모노레포 + CDSE + NAS PoC + DDD 5-layer) + **InSAR 분석 플랫폼**(lumir-linux-snap, 5종 도구 다중 스택 + 다중 agent 워크트리) + **프론트 레이어**(sar-search-and-analyzer, Next.js + 지도 + AOI + 분석 요청 UI). 모두 AI native 100%로 진행하며, [[집비치기-him]]에서 검증한 4-Layer + CQRS + 한글 메서드명 패턴을 회사 백엔드 설계에 역전이 중입니다.",
-    en: "I'm solo-designing and building the 3-layer integrated service. **Data & Ops Platform** (sar-data-retrieval, NestJS monorepo + CDSE + NAS PoC + DDD 5-layer) + **InSAR Analysis Platform** (lumir-linux-snap, 5-tool stack + multi-agent worktrees) + **Frontend layer** (sar-search-and-analyzer, Next.js + map + AOI + analysis-request UI). All three are 100% AI-native, and I'm back-transferring the 4-layer + CQRS + Korean-method-name pattern validated in him into the company backend design.",
+    ko: "3 레이어 통합 서비스를 본인이 단독으로 설계·구축하고 있습니다. **데이터·운영 플랫폼**(sar-data-retrieval, NestJS 모노레포 + CDSE + NAS PoC + DDD 5-layer) + **InSAR 분석 플랫폼**(lumir-linux-snap, 5종 도구 다중 스택 + 다중 agent 워크트리) + **프론트 레이어**(sar-search-and-analyzer, Next.js + 지도 + AOI + 분석 요청 UI). 모두 AI native 100%로 진행합니다.",
+    en: "I'm solo-designing and building the 3-layer integrated service. **Data & Ops Platform** (sar-data-retrieval, NestJS monorepo + CDSE + NAS PoC + DDD 5-layer) + **InSAR Analysis Platform** (lumir-linux-snap, 5-tool stack + multi-agent worktrees) + **Frontend layer** (sar-search-and-analyzer, Next.js + map + AOI + analysis-request UI). All three are 100% AI-native.",
   },
   impact: {
     ko: "ISCE2 도입으로 분석 처리 속도를 확보해 *날씨·계절 무관 지표 변위 데이터 서비스화*가 가능한 단계에 진입했습니다. 사용자가 지도에서 위치를 요청하면 저장된 분석 데이터를 즉시 제공하거나, 없으면 신규 처리 후 제공하는 흐름을 한 사람이 풀스택으로 묶고 있다는 점이 핵심입니다.",
@@ -767,19 +762,15 @@ const lumirSarPlatform: Project = {
     { ko: "다중 agent 워크트리", en: "Multi-agent worktrees" },
     { ko: "지도 + AOI", en: "Map + AOI" },
     { ko: "AI native 100%", en: "100% AI native" },
-    {
-      ko: "집비치기 패턴 역전이",
-      en: "Back-transfer from the him pattern",
-    },
   ],
   trackVisibility: "both",
   ownContribution: {
-    ko: "3 레이어 모든 코드 단독 (sar-data-retrieval 5개 영역 전부, lumir-linux-snap 도구 평가·운영, sar-search-and-analyzer apps/web 전부 + 백엔드 설계 문서). 통합 비전 설계 본인.",
-    en: "All three layers, solo (sar-data-retrieval's 5 areas in full · lumir-linux-snap tool selection & operation · sar-search-and-analyzer apps/web in full + the backend design doc). The integrated vision is also mine.",
+    ko: "3 레이어 모든 코드 단독 (sar-data-retrieval 5개 영역 전부, lumir-linux-snap 도구 평가·운영, sar-search-and-analyzer 프론트엔드 전부). 통합 비전 설계 본인.",
+    en: "All three layers, solo (sar-data-retrieval's 5 areas in full · lumir-linux-snap tool selection & operation · sar-search-and-analyzer's frontend in full). The integrated vision is also mine.",
   },
   honestyNote: {
-    ko: "각 레이어의 일부 패턴은 외부 인계입니다 — Plan/Current 환경 분리(파트장)·일부 SAR 도메인 지식(AI 사고 파트너 도움). sar-search-and-analyzer 백엔드(apps/api·worker·crawler)는 CLAUDE.md 설계 문서 단계이며 실제 구현은 다음 Phase입니다.",
-    en: "Some patterns in each layer came from elsewhere — the Plan/Current environment split (from the team lead) and parts of the SAR domain knowledge (AI as a thinking partner). The sar-search-and-analyzer backend (apps/api · worker · crawler) is still at the CLAUDE.md design-document stage; actual implementation belongs to the next phase.",
+    ko: "각 레이어의 일부 패턴은 외부 인계입니다 — Plan/Current 환경 분리(파트장)·일부 SAR 도메인 지식(AI 사고 파트너 도움).",
+    en: "Some patterns in each layer came from elsewhere — the Plan/Current environment split (from the team lead) and parts of the SAR domain knowledge (AI as a thinking partner).",
   },
   metrics: [
     {
@@ -836,8 +827,8 @@ const lumirSarPlatform: Project = {
         en: "How is one person able to run all three layers at once?",
       },
       a: {
-        ko: "AI native 100% — 코드 작성은 AI, 본인은 UI 기획·코드 검토·통합 인터페이스 정합을 담당합니다. 또한 집비치기에서 검증한 4-Layer + CQRS + 한글 메서드명 패턴을 회사 백엔드 설계에 역전이해서 패턴 일관성을 유지합니다.",
-        en: "100% AI-native — AI writes the code; I plan the UI, review the code, and keep the integration interfaces consistent. The 4-layer + CQRS + Korean-method-name pattern validated in him is back-transferred into the company backend so the patterns stay consistent across layers.",
+        ko: "AI native 100% — 코드 작성은 AI, 본인은 UI 기획·코드 검토·통합 인터페이스 정합을 담당합니다.",
+        en: "100% AI-native — AI writes the code; I plan the UI, review the code, and keep the integration interfaces consistent.",
       },
     },
     {
@@ -846,8 +837,8 @@ const lumirSarPlatform: Project = {
         en: "What's your contribution vs. inherited scope in each layer?",
       },
       a: {
-        ko: "저장(sar-data-retrieval): 5개 영역 전부 본인. 분석(lumir-linux-snap): SAR 도메인은 학부 수준이라 AI 사고 파트너 의존이 큼. 프론트(sar-search-and-analyzer): apps/web 전부 본인, Plan/Current 패턴은 파트장 인계.",
-        en: "Storage (sar-data-retrieval): all 5 areas mine. Analysis (lumir-linux-snap): SAR domain knowledge was undergraduate-level, so heavy reliance on AI as a thinking partner. Frontend (sar-search-and-analyzer): apps/web all mine; the Plan/Current pattern came from the team lead.",
+        ko: "저장(sar-data-retrieval): 5개 영역 전부 본인. 분석(lumir-linux-snap): SAR 도메인은 학부 수준이라 AI 사고 파트너 의존이 큼. 프론트(sar-search-and-analyzer): 프론트엔드 전부 본인, Plan/Current 패턴은 파트장 인계.",
+        en: "Storage (sar-data-retrieval): all 5 areas mine. Analysis (lumir-linux-snap): SAR domain knowledge was undergraduate-level, so heavy reliance on AI as a thinking partner. Frontend (sar-search-and-analyzer): the frontend all mine; the Plan/Current pattern came from the team lead.",
       },
     },
     {
