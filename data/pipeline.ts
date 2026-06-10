@@ -3,12 +3,16 @@ import type { L } from "@/data/i18n";
 /**
  * 메인 페이지 파이프라인 섹션 데이터 — 프로젝트별 "데이터가 거치는 단계" 요약.
  *
- * 시스템 간 정밀한 호출 관계(콜 그래프)가 아니라 *데이터 여정*의 요약이다.
- * 정확한 토폴로지는 각 프로젝트 상세의 다이어그램(PlatformDiagram·ProjectDiagram)이 담당한다.
+ * 시스템 간 정밀한 호출 관계가 아니라 *데이터 여정*의 요약이다. 정확한 토폴로지는
+ * 각 프로젝트 상세의 다이어그램(PlatformDiagram·ProjectDiagram)이 담당한다.
  *
- * layer 단계의 label·icon은, 해당 프로젝트에 같은 slug의 subProject가 있으면
- * 그 layerLabel·layerIcon을 런타임에 조회해 rename에 동기화한다 (여기 값은 fallback).
- * subProject가 없는 단일 프로젝트(SDPE·him)는 여기 값을 그대로 쓴다.
+ * 파이프라인마다 성격이 달라 표현(variant)을 다르게 둔다:
+ *  - spine  (SAR)  : 가로 스파인 — 위성·사용자 끝점 + 레이어 카드.
+ *  - levels (SDPE) : L0→L1·L2→L3 처리 레벨 트랙 — 운영 콘솔 트리거 + 레벨 카드 + 카탈로그.
+ *  - stack  (him)  : 세로 컴팩트 스택 — 사이드 프로젝트답게 작게, 프론트→백엔드→DB.
+ *
+ * layer 단계의 label·icon은 같은 slug의 subProject가 있으면 그 layerLabel·layerIcon을
+ * 런타임 조회해 rename에 동기화한다(여기 값은 fallback). 단일 프로젝트는 여기 값을 그대로 쓴다.
  */
 
 export interface PipelineStage {
@@ -19,9 +23,10 @@ export interface PipelineStage {
   tone?: "external" | "actor";
   icon: string;
   label: L;
-  sublabel: L; // repo · 스택 (mono 한 줄)
+  sublabel: L;
   desc?: L; // 이 단계에서 일어나는 일 (layer 카드 전용)
-  cat?: number; // 카테고리 색 — 통합 다이어그램의 cat 인덱스와 동일하게 유지
+  cat?: number; // 카테고리 색 — 통합 다이어그램의 cat 인덱스와 동일
+  badge?: string; // levels 변형의 레벨 칩 (L0 / L1·L2 / L3)
 }
 
 export interface PipelineEdge {
@@ -34,19 +39,24 @@ export interface Pipeline {
   projectSlug: string;
   title: L;
   icon: string;
-  /** 좌→우 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
+  /** 시각 표현 — 파이프라인 성격별로 다르게 */
+  variant: "spine" | "levels" | "stack";
+  /** 좌→우(또는 위→아래) 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
   stages: PipelineStage[];
   edges: PipelineEdge[];
   /** 역방향/부가 흐름 한 줄 (점선 환류) */
   returnNote?: L;
+  /** 보조 설명 한 줄 (levels 변형의 오케스트레이션 설명 등) */
+  note?: L;
 }
 
 export const pipelines: Pipeline[] = [
-  // ── 루미르 SAR 데이터 플랫폼 (3 레이어 통합) ──────────────────────────────
+  // ── 루미르 SAR 데이터 플랫폼 (3 레이어 통합) · 가로 스파인 ────────────────
   {
     id: "sar",
     projectSlug: "lumir-sar-platform",
     icon: "🛰",
+    variant: "spine",
     title: { ko: "루미르 SAR 데이터 플랫폼", en: "Lumir SAR Data Platform" },
     stages: [
       {
@@ -121,66 +131,62 @@ export const pipelines: Pipeline[] = [
     },
   },
 
-  // ── SDPE — LumirX 처리 파이프라인 (L0→L3) ────────────────────────────────
+  // ── SDPE — LumirX 처리 파이프라인 · L0→L3 레벨 트랙 ───────────────────────
   {
     id: "sdpe",
     projectSlug: "sdpe",
     icon: "🛰",
+    variant: "levels",
     title: { ko: "SDPE — LumirX 처리 파이프라인", en: "SDPE — LumirX processing pipeline" },
+    note: {
+      ko: "운영 콘솔에서 DAG를 구성하면 Pipeline Workflow(NestJS)가 pgmq 이벤트로 오케스트레이션하고, CSC 1~9 인터페이스 체인이 각 레벨을 처리합니다.",
+      en: "From the operator console a DAG is composed; Pipeline Workflow (NestJS) orchestrates it over pgmq events, and a CSC 1–9 interface chain processes each level.",
+    },
     stages: [
       {
         kind: "endpoint",
         tone: "actor",
         icon: "🖥",
         label: { ko: "운영 콘솔", en: "Operator console" },
-        sublabel: { ko: "DAG 구성·실행", en: "DAG authoring & run" },
+        sublabel: { ko: "DAG 구성·실행", en: "Compose & run DAG" },
       },
       {
         kind: "layer",
-        cat: 3,
-        icon: "🧩",
-        label: { ko: "Pipeline Workflow", en: "Pipeline Workflow" },
-        sublabel: { ko: "NestJS · pgmq 오케스트레이션", en: "NestJS · pgmq orchestration" },
-        desc: {
-          ko: "DAG를 pgmq 이벤트로 L0→L3 단계 오케스트레이션",
-          en: "Orchestrates the L0→L3 stages over pgmq events",
-        },
+        cat: 2,
+        icon: "📡",
+        badge: "L0",
+        label: { ko: "데이터 수집", en: "Data collection" },
+        sublabel: { ko: "원시 SAR 수집", en: "Raw SAR ingest" },
       },
       {
         kind: "layer",
-        cat: 1,
-        icon: "🧮",
-        label: { ko: "CSC 1~9 처리 체인", en: "CSC 1–9 chain" },
-        sublabel: { ko: "L0→L1→L2→L3 · Python 알고리즘", en: "L0→L1→L2→L3 · Python algos" },
-        desc: {
-          ko: "수집·SAR 처리·후처리를 CSC 인터페이스 체인으로 (csc03 등)",
-          en: "Collection, SAR processing, post — as a CSC interface chain (csc03 etc.)",
-        },
+        cat: 6,
+        icon: "⚙",
+        badge: "L1·L2",
+        label: { ko: "SAR 처리", en: "SAR processing" },
+        sublabel: { ko: "간섭·보정", en: "Interferometry · correction" },
       },
       {
         kind: "layer",
-        cat: 5,
-        icon: "📦",
-        label: { ko: "데이터 제공", en: "Data Service" },
-        sublabel: { ko: "L3 산출물 서빙", en: "Serve L3 products" },
-        desc: {
-          ko: "L3 산출물 + 카탈로그 메타 제공",
-          en: "Serves L3 products + catalog metadata",
-        },
+        cat: 4,
+        icon: "🛠",
+        badge: "L3",
+        label: { ko: "후처리", en: "Post-processing" },
+        sublabel: { ko: "L3 산출물 생성", en: "L3 product generation" },
       },
       {
         kind: "endpoint",
         tone: "external",
         icon: "🐘",
-        label: { ko: "PostgreSQL", en: "PostgreSQL" },
-        sublabel: { ko: "@sdpe/database 카탈로그", en: "@sdpe/database catalog" },
+        label: { ko: "산출물 카탈로그", en: "Product catalog" },
+        sublabel: { ko: "PostgreSQL · @sdpe/database", en: "PostgreSQL · @sdpe/database" },
       },
     ],
     edges: [
-      { label: { ko: "DAG 실행", en: "run DAG" } },
-      { label: { ko: "pgmq 이벤트", en: "pgmq events" } },
-      { label: { ko: "L0→L3 처리", en: "L0→L3" } },
-      { label: { ko: "카탈로그 적재", en: "catalog" } },
+      { label: { ko: "실행", en: "run" } },
+      { label: { ko: "수집", en: "ingest" } },
+      { label: { ko: "처리", en: "process" } },
+      { label: { ko: "적재", en: "catalog" } },
     ],
     returnNote: {
       ko: "작업·산출물 상태는 운영 콘솔에서 모니터링됩니다",
@@ -188,11 +194,12 @@ export const pipelines: Pipeline[] = [
     },
   },
 
-  // ── 집비치기 (him) — 개인 풀스택 사이드 ──────────────────────────────────
+  // ── 집비치기 (him) — 개인 풀스택 사이드 · 세로 컴팩트 스택 ────────────────
   {
     id: "him",
     projectSlug: "him",
     icon: "📦",
+    variant: "stack",
     title: { ko: "집비치기 (him) — 개인 풀스택", en: "him — personal full-stack" },
     stages: [
       {

@@ -5,14 +5,14 @@
  *
  * 프로젝트 상세의 React Flow 다이어그램과 같은 시각 언어(카테고리 색 카드, amber 흐름선
  * + glow, SMIL 흐름 점, 점선 환류)를 순수 SVG/DOM으로 그려 메인 번들에 @xyflow를 싣지 않는다.
- * 정밀한 호출 관계는 각 프로젝트 상세의 다이어그램이 담당하고, 여기는 *데이터가 거치는 단계*의 요약.
  *
- * 여러 프로젝트 파이프라인(SAR · SDPE · 집비치기)을 세로로 쌓아 보여준다.
- * 강조 비대칭이 곧 메시지: 본인 소유 레이어는 큰 카드, 외부 끝점(위성·사용자·DB)은 작은 pill.
- * lg 미만에서는 세로 스파인으로 전환. 카드 클릭 시 해당 프로젝트(또는 레이어)로 딥링크.
+ * 파이프라인마다 성격이 달라 표현(variant)을 다르게 둔다 — '복붙' 인상 회피:
+ *  - spine  (SAR)  : 가로 스파인 (끝점 pill + 레이어 카드 + amber 흐름 + 점선 환류).
+ *  - levels (SDPE) : L0→L1·L2→L3 처리 레벨 트랙 (운영 콘솔 트리거 + 레벨 배지 카드 + 카탈로그).
+ *  - stack  (him)  : 세로 컴팩트 스택 (사이드 프로젝트답게 좁고 작게).
  */
 
-import { useMemo, type ReactNode } from "react";
+import { Fragment, useMemo, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 const chipCls =
   "whitespace-nowrap rounded-md border border-[var(--border)] bg-[var(--card)] px-1.5 py-0.5 font-mono text-[10px] leading-tight text-[var(--foreground)]";
 
-/** amber 정방향 흐름선 — glow 밑줄 + 본선 + 화살촉 + SMIL 흐름 점 (diagram-flow 에코) */
+/** amber 정방향 흐름선 — glow 밑줄 + 본선 + 화살촉 + SMIL 흐름 점 (spine 전용) */
 function FlowLine({
   vertical = false,
   phase = 0,
@@ -56,24 +56,13 @@ function FlowLine({
       />
       <path d={path} fill="none" stroke="var(--accent)" strokeWidth={2} />
       <path d={arrow} fill="var(--accent)" />
-      {/* 흐름 점 1개 — 짧은 커넥터라 점 2개는 과밀. 커넥터별 phase로 desync 유지 */}
       {!reduce && (
         <g>
           <circle r={4.5} fill="var(--foreground)" opacity={0.12}>
-            <animateMotion
-              dur={`${dur}s`}
-              begin={`-${phase.toFixed(2)}s`}
-              repeatCount="indefinite"
-              path={path}
-            />
+            <animateMotion dur={`${dur}s`} begin={`-${phase.toFixed(2)}s`} repeatCount="indefinite" path={path} />
           </circle>
           <circle r={2.2} fill="var(--foreground)" opacity={0.85}>
-            <animateMotion
-              dur={`${dur}s`}
-              begin={`-${phase.toFixed(2)}s`}
-              repeatCount="indefinite"
-              path={path}
-            />
+            <animateMotion dur={`${dur}s`} begin={`-${phase.toFixed(2)}s`} repeatCount="indefinite" path={path} />
           </circle>
         </g>
       )}
@@ -81,30 +70,14 @@ function FlowLine({
   );
 }
 
-/** 단계 사이 커넥터 — lg+: 라벨 칩 위 + 가로선, lg 미만: 세로선 + 옆 칩 */
-function Connector({
-  label,
-  phase,
-  reduce,
-}: {
-  label: string;
-  phase: number;
-  reduce: boolean;
-}) {
+/** spine 커넥터 — lg+: 라벨 칩 위 + 가로선, lg 미만: 세로선 + 옆 칩 */
+function Connector({ label, phase, reduce }: { label: string; phase: number; reduce: boolean }) {
   return (
     <>
       <div className="relative flex justify-center py-1 lg:hidden">
         <FlowLine vertical phase={phase} reduce={reduce} />
-        <span
-          className={cn(
-            chipCls,
-            "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2"
-          )}
-        >
-          {label}
-        </span>
+        <span className={cn(chipCls, "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2")}>{label}</span>
       </div>
-      {/* -translate-y: 칩+선 블록을 칩 높이의 절반만큼 올려 *선*이 카드 중앙선에 오도록 */}
       <div className="hidden flex-col items-center gap-1.5 px-1 lg:flex lg:-translate-y-3">
         <span className={chipCls}>{label}</span>
         <FlowLine phase={phase} reduce={reduce} />
@@ -113,17 +86,32 @@ function Connector({
   );
 }
 
+/** 간단한 화살표 — levels/stack 트랙용 (가로 → / 세로 ↓) + 라벨 */
+function Arrow({ vertical = false, label }: { vertical?: boolean; label?: string }) {
+  return (
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center gap-1.5 text-[var(--accent)]",
+        vertical ? "flex-col py-0.5" : "flex-col px-0.5"
+      )}
+    >
+      {label && (
+        <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--muted)]">
+          {label}
+        </span>
+      )}
+      <span aria-hidden className="text-base leading-none">
+        {vertical ? "↓" : "→"}
+      </span>
+    </div>
+  );
+}
+
 /** 외부 끝점 pill — external=점선(외부 시스템), actor=반전(사람) */
-function StagePill({
-  stage,
-  locale,
-}: {
-  stage: PipelineStage;
-  locale: Locale;
-}) {
+function StagePill({ stage, locale }: { stage: PipelineStage; locale: Locale }) {
   const actor = stage.tone === "actor";
   return (
-    <div className="flex w-28 flex-col items-center gap-1.5 px-1 text-center">
+    <div className="flex w-28 shrink-0 flex-col items-center gap-1.5 px-1 text-center">
       <div
         className={cn(
           "flex size-12 items-center justify-center rounded-full text-xl leading-none",
@@ -134,9 +122,7 @@ function StagePill({
       >
         {stage.icon}
       </div>
-      <div className="font-mono text-[11px] font-semibold leading-tight">
-        {pick(stage.label, locale)}
-      </div>
+      <div className="font-mono text-[11px] font-semibold leading-tight">{pick(stage.label, locale)}</div>
       <div className="font-mono text-[9px] uppercase tracking-wider leading-tight text-[var(--muted)]">
         {pick(stage.sublabel, locale)}
       </div>
@@ -144,19 +130,21 @@ function StagePill({
   );
 }
 
-/** 레이어 카드 — DiagramCard 시각 언어. slug 있으면 해당 레이어 #anchor, 없으면 프로젝트 상세로 */
+/** 레이어 카드 — DiagramCard 시각 언어. badge 있으면 레벨 칩(L0/L1·L2/L3) 표시 */
 function StageCard({
   stage,
   label,
   icon,
   locale,
   projectSlug,
+  compact = false,
 }: {
   stage: PipelineStage;
   label: string;
   icon: string;
   locale: Locale;
   projectSlug: string;
+  compact?: boolean;
 }) {
   const catColor = stage.cat ? `var(--cat-${stage.cat})` : "var(--accent)";
   return (
@@ -169,20 +157,27 @@ function StageCard({
       className="group/card relative flex h-full min-w-0 flex-col rounded-xl border transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
     >
       <div className="flex items-center gap-2 px-4 py-3">
-        <span
-          className="size-1.5 shrink-0 rounded-full"
-          style={{ background: catColor }}
-        />
+        {stage.badge ? (
+          <span
+            className="shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[11px] font-bold leading-none"
+            style={{
+              backgroundColor: `color-mix(in oklch, ${catColor} 22%, var(--card))`,
+              color: `color-mix(in oklch, ${catColor} 70%, var(--foreground))`,
+            }}
+          >
+            {stage.badge}
+          </span>
+        ) : (
+          <span className="size-1.5 shrink-0 rounded-full" style={{ background: catColor }} />
+        )}
         <span className="text-base leading-none">{icon}</span>
-        <span className="min-w-0 flex-1 text-[15px] font-semibold leading-tight">
-          {label}
-        </span>
+        <span className="min-w-0 flex-1 text-[15px] font-semibold leading-tight">{label}</span>
         <ArrowUpRight className="size-3.5 shrink-0 -translate-x-0.5 translate-y-0.5 text-[var(--accent)] opacity-0 transition-all group-hover/card:translate-x-0 group-hover/card:translate-y-0 group-hover/card:opacity-100" />
       </div>
       <div className="border-t border-[var(--border)]/60 px-4 py-2 font-mono text-[10px] leading-snug text-[var(--muted)]">
         {pick(stage.sublabel, locale)}
       </div>
-      {stage.desc && (
+      {!compact && stage.desc && (
         <p className="flex-1 px-4 py-2.5 text-xs leading-relaxed text-[var(--card-foreground)]">
           {pick(stage.desc, locale)}
         </p>
@@ -191,137 +186,200 @@ function StageCard({
   );
 }
 
-/** 한 프로젝트의 파이프라인 — 소제목(프로젝트 링크) + 스파인 + 점선 환류 노트 */
-function PipelineRow({
-  pipeline,
-  locale,
-  reduce,
-}: {
-  pipeline: Pipeline;
-  locale: Locale;
-  reduce: boolean;
-}) {
-  const project = projects.find((p) => p.slug === pipeline.projectSlug);
-  const subBySlug = useMemo(
-    () => new Map((project?.subProjects ?? []).map((s) => [s.slug, s])),
-    [project]
+/** 소제목 — 프로젝트 상세로 링크 + (옵션) 보조 설명 */
+function RowHeader({ pipeline, locale }: { pipeline: Pipeline; locale: Locale }) {
+  return (
+    <div className="mb-6">
+      <Link
+        href={`/projects/${pipeline.projectSlug}`}
+        className="group/h inline-flex items-center gap-2 text-[var(--foreground)]"
+      >
+        <span className="text-lg leading-none">{pipeline.icon}</span>
+        <span className="text-base font-semibold tracking-tight">{pick(pipeline.title, locale)}</span>
+        <ArrowUpRight className="size-4 text-[var(--accent)] opacity-0 transition-all group-hover/h:translate-x-0.5 group-hover/h:opacity-100" />
+      </Link>
+      {pipeline.note && (
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">{pick(pipeline.note, locale)}</p>
+      )}
+    </div>
   );
+}
 
-  // 등장 모션 — 좌→우 순차 라이즈 (reduced-motion 시 즉시 표시)
-  const rise = (i: number) =>
-    ({
-      initial: reduce ? false : ({ opacity: 0, y: 16 } as const),
-      whileInView: { opacity: 1, y: 0 } as const,
-      viewport: { once: true, margin: "-60px" } as const,
-      transition: { duration: 0.45, delay: i * 0.05 },
-    }) as const;
+/** 점선 환류 노트 (모든 variant 공용, 본문 아래) */
+function ReturnNote({ note }: { note: string }) {
+  return (
+    <div className="mt-6 flex items-center justify-center gap-2.5 px-2">
+      <span className="hidden h-px w-10 shrink-0 border-t border-dashed border-[var(--muted)]/60 sm:inline-block" />
+      <span className="text-center font-mono text-[10px] leading-relaxed text-[var(--muted)]">{note}</span>
+      <span className="hidden h-px w-10 shrink-0 border-t border-dashed border-[var(--muted)]/60 sm:inline-block" />
+    </div>
+  );
+}
 
-  // 스파인 자식 — pill / connector / card
+const rise = (reduce: boolean, i: number) =>
+  ({
+    initial: reduce ? false : ({ opacity: 0, y: 16 } as const),
+    whileInView: { opacity: 1, y: 0 } as const,
+    viewport: { once: true, margin: "-60px" } as const,
+    transition: { duration: 0.45, delay: i * 0.05 },
+  }) as const;
+
+/** variant: spine — 가로 스파인 (SAR) */
+function SpineRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
+  const subBySlug = useMemo(
+    () =>
+      new Map(
+        (
+          projects.find((p) => p.slug === pipeline.projectSlug)?.subProjects ?? []
+        ).map((s) => [s.slug, s])
+      ),
+    [pipeline]
+  );
+  const gridCols = pipeline.stages.map((s) => (s.kind === "layer" ? "minmax(0,1fr)" : "auto")).join(" auto ");
+
   const items: ReactNode[] = [];
   pipeline.stages.forEach((stage, i) => {
     if (i > 0) {
       items.push(
-        <motion.div
-          key={`conn-${i}`}
-          {...rise(i * 2 - 1)}
-          className="flex justify-center lg:self-center"
-        >
-          <Connector
-            label={pick(pipeline.edges[i - 1].label, locale)}
-            phase={(i - 1) * 0.45}
-            reduce={reduce}
-          />
+        <motion.div key={`c-${i}`} {...rise(reduce, i * 2 - 1)} className="flex justify-center lg:self-center">
+          <Connector label={pick(pipeline.edges[i - 1].label, locale)} phase={(i - 1) * 0.45} reduce={reduce} />
         </motion.div>
       );
     }
     if (stage.kind === "layer") {
       const sub = stage.slug ? subBySlug.get(stage.slug) : undefined;
+      const label = sub?.layerLabel ? pick(sub.layerLabel, locale) : pick(stage.label, locale);
+      const icon = sub?.layerIcon ?? stage.icon;
       items.push(
-        <motion.div key={`stage-${i}`} {...rise(i * 2)} className="min-w-0">
-          <StageCard
-            stage={stage}
-            label={
-              sub?.layerLabel ? pick(sub.layerLabel, locale) : pick(stage.label, locale)
-            }
-            icon={sub?.layerIcon ?? stage.icon}
-            locale={locale}
-            projectSlug={pipeline.projectSlug}
-          />
+        <motion.div key={`s-${i}`} {...rise(reduce, i * 2)} className="min-w-0">
+          <StageCard stage={stage} label={label} icon={icon} locale={locale} projectSlug={pipeline.projectSlug} />
         </motion.div>
       );
     } else {
       items.push(
-        <motion.div
-          key={`stage-${i}`}
-          {...rise(i * 2)}
-          className="flex justify-center lg:self-center"
-        >
+        <motion.div key={`s-${i}`} {...rise(reduce, i * 2)} className="flex justify-center lg:self-center">
           <StagePill stage={stage} locale={locale} />
         </motion.div>
       );
     }
   });
 
-  // 가변 stage 수 → grid-template-columns 동적 구성. layer=1fr, endpoint=auto, 사이는 커넥터(auto).
-  // flex flex-col lg:grid 라 mobile(flex)에선 이 인라인 템플릿이 무시되고 lg+(grid)에서만 적용.
-  const gridCols = pipeline.stages
-    .map((s) => (s.kind === "layer" ? "minmax(0,1fr)" : "auto"))
-    .join(" auto ");
-
   return (
-    <motion.div {...rise(0)}>
-      {/* 소제목 — 프로젝트 상세로 링크 */}
-      <Link
-        href={`/projects/${pipeline.projectSlug}`}
-        className="group/h mb-6 inline-flex items-center gap-2 text-[var(--foreground)]"
-      >
-        <span className="text-lg leading-none">{pipeline.icon}</span>
-        <span className="text-base font-semibold tracking-tight">
-          {pick(pipeline.title, locale)}
-        </span>
-        <ArrowUpRight className="size-4 text-[var(--accent)] opacity-0 transition-all group-hover/h:translate-x-0.5 group-hover/h:opacity-100" />
-      </Link>
-
-      {/* 스파인 */}
-      <div
-        className="flex flex-col lg:grid lg:items-stretch"
-        style={{ gridTemplateColumns: gridCols }}
-      >
+    <div>
+      <RowHeader pipeline={pipeline} locale={locale} />
+      <div className="flex flex-col lg:grid lg:items-stretch" style={{ gridTemplateColumns: gridCols }}>
         {items}
-
         {pipeline.returnNote && (
           <>
-            {/* 환류 레인 (lg+) — 점선 = 역방향, CSS 흐름 점 */}
             <div className="col-span-full mt-7 hidden px-10 lg:block">
               <div className="relative border-t border-dashed border-[var(--muted)]/50">
-                <svg
-                  viewBox="0 0 8 10"
-                  className="absolute -left-1 top-1/2 h-2.5 w-2 -translate-y-1/2 fill-[var(--muted)]"
-                  aria-hidden="true"
-                >
+                <svg viewBox="0 0 8 10" className="absolute -left-1 top-1/2 h-2.5 w-2 -translate-y-1/2 fill-[var(--muted)]" aria-hidden="true">
                   <path d="M8 0 L0 5 L8 10 Z" />
                 </svg>
                 <span className="pipeline-return-dot" />
               </div>
               <div className="mt-2.5 flex justify-center">
-                <span className="font-mono text-[10px] text-[var(--muted)]">
-                  {pick(pipeline.returnNote, locale)}
-                </span>
+                <span className="font-mono text-[10px] text-[var(--muted)]">{pick(pipeline.returnNote, locale)}</span>
               </div>
             </div>
-
-            {/* 환류 노트 (lg 미만) */}
-            <div className="mt-5 flex items-center justify-center gap-2 px-2 lg:hidden">
-              <span className="inline-block w-6 shrink-0 border-t border-dashed border-[var(--muted)]" />
-              <span className="text-center font-mono text-[10px] leading-relaxed text-[var(--muted)]">
-                {pick(pipeline.returnNote, locale)}
-              </span>
+            <div className="lg:hidden">
+              <ReturnNote note={pick(pipeline.returnNote, locale)} />
             </div>
           </>
         )}
       </div>
-    </motion.div>
+    </div>
   );
+}
+
+/** variant: levels — L0→L1·L2→L3 처리 레벨 트랙 (SDPE) */
+function LevelsRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
+  const start = pipeline.stages.find((s) => s.kind === "endpoint" && s.tone === "actor");
+  const end = [...pipeline.stages].reverse().find((s) => s.kind === "endpoint" && s.tone !== "actor");
+  const levels = pipeline.stages.filter((s) => s.kind === "layer");
+
+  return (
+    <div>
+      <RowHeader pipeline={pipeline} locale={locale} />
+      <motion.div
+        {...rise(reduce, 0)}
+        className="flex flex-col items-stretch gap-3 md:flex-row md:items-center"
+      >
+        {start && <StagePill stage={start} locale={locale} />}
+        {start && <Arrow label={pick(pipeline.edges[0]?.label ?? { ko: "", en: "" }, locale)} />}
+
+        {/* 레벨 트랙 — 레벨 카드들이 한 묶음(track)으로 */}
+        <div className="flex flex-1 flex-col gap-2 rounded-2xl border border-[var(--border)] bg-[var(--subtle)]/40 p-2.5 md:flex-row md:items-stretch">
+          {levels.map((lv, i) => (
+            <Fragment key={`lv-${i}`}>
+              {i > 0 && <Arrow />}
+              <div className="min-w-0 flex-1">
+                <StageCard
+                  stage={lv}
+                  label={pick(lv.label, locale)}
+                  icon={lv.icon}
+                  locale={locale}
+                  projectSlug={pipeline.projectSlug}
+                  compact
+                />
+              </div>
+            </Fragment>
+          ))}
+        </div>
+
+        {end && <Arrow label={pick(pipeline.edges[pipeline.edges.length - 1]?.label ?? { ko: "", en: "" }, locale)} />}
+        {end && <StagePill stage={end} locale={locale} />}
+      </motion.div>
+      {pipeline.returnNote && <ReturnNote note={pick(pipeline.returnNote, locale)} />}
+    </div>
+  );
+}
+
+/** variant: stack — 세로 컴팩트 스택 (him) */
+function StackRow({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
+  return (
+    <div>
+      <RowHeader pipeline={pipeline} locale={locale} />
+      <motion.div {...rise(reduce, 0)} className="flex flex-col items-stretch gap-1.5 sm:max-w-md">
+        {pipeline.stages.map((stage, i) => (
+          <Fragment key={`st-${i}`}>
+            {i > 0 && (
+              <div className="flex items-center justify-center">
+                <Arrow vertical label={pick(pipeline.edges[i - 1]?.label ?? { ko: "", en: "" }, locale)} />
+              </div>
+            )}
+            {stage.kind === "layer" ? (
+              <StageCard
+                stage={stage}
+                label={pick(stage.label, locale)}
+                icon={stage.icon}
+                locale={locale}
+                projectSlug={pipeline.projectSlug}
+                compact
+              />
+            ) : (
+              <div className="flex items-center gap-3 rounded-xl border border-dashed border-[var(--border)] bg-[var(--subtle)]/60 px-4 py-2.5">
+                <span className="text-lg leading-none">{stage.icon}</span>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold leading-tight">{pick(stage.label, locale)}</div>
+                  <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">
+                    {pick(stage.sublabel, locale)}
+                  </div>
+                </div>
+              </div>
+            )}
+          </Fragment>
+        ))}
+      </motion.div>
+      {pipeline.returnNote && <ReturnNote note={pick(pipeline.returnNote, locale)} />}
+    </div>
+  );
+}
+
+function PipelineBlock({ pipeline, locale, reduce }: { pipeline: Pipeline; locale: Locale; reduce: boolean }) {
+  if (pipeline.variant === "levels") return <LevelsRow pipeline={pipeline} locale={locale} reduce={reduce} />;
+  if (pipeline.variant === "stack") return <StackRow pipeline={pipeline} locale={locale} reduce={reduce} />;
+  return <SpineRow pipeline={pipeline} locale={locale} reduce={reduce} />;
 }
 
 export function PipelineSection() {
@@ -330,23 +388,14 @@ export function PipelineSection() {
   const reduce = useReducedMotion() ?? false;
 
   return (
-    <section
-      id="pipeline"
-      className="relative overflow-hidden border-t border-[var(--border)]"
-    >
-      {/* 도트 배경 — 프로젝트 페이지 React Flow Background(gap 22) 에코 */}
+    <section id="pipeline" className="relative overflow-hidden border-t border-[var(--border)]">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-36 top-24 opacity-60 [mask-image:radial-gradient(ellipse_75%_80%_at_50%_42%,black,transparent)]"
-        style={{
-          backgroundImage:
-            "radial-gradient(var(--border) 1px, transparent 1px)",
-          backgroundSize: "22px 22px",
-        }}
+        style={{ backgroundImage: "radial-gradient(var(--border) 1px, transparent 1px)", backgroundSize: "22px 22px" }}
       />
 
       <div className="relative mx-auto w-full max-w-7xl px-6 py-24 md:px-10 lg:px-12">
-        {/* Header */}
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -354,24 +403,14 @@ export function PipelineSection() {
           transition={{ duration: 0.45 }}
           className="mb-16 max-w-2xl"
         >
-          <div className="mb-3 text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
-            {t("eyebrow")}
-          </div>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">
-            {t("title")}
-          </h2>
+          <div className="mb-3 text-xs font-mono uppercase tracking-widest text-[var(--accent)]">{t("eyebrow")}</div>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-5xl">{t("title")}</h2>
           <p className="leading-relaxed text-[var(--muted)]">{t("lede")}</p>
         </motion.div>
 
-        {/* 파이프라인들 — 세로 스택 */}
         <div className="space-y-16">
           {pipelines.map((p) => (
-            <PipelineRow
-              key={p.id}
-              pipeline={p}
-              locale={locale}
-              reduce={reduce}
-            />
+            <PipelineBlock key={p.id} pipeline={p} locale={locale} reduce={reduce} />
           ))}
         </div>
       </div>
