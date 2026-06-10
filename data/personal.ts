@@ -42,8 +42,8 @@ export const personal = {
       en: "Role expansion + systemization, with early signals of stage-5 side-project validation",
     } satisfies L,
   },
-  // 루미르 입사 2023-12 → 연차는 lib/tenure.ts tenureLabel()로 현재 날짜 기준 자동 계산 (하드코딩 금지)
-  joinDate: "2023-12",
+  // 루미르 입사 2023-11 (11/13) → 연차는 lib/tenure.ts tenureLabel()로 현재 날짜 기준 자동 계산 (하드코딩 금지)
+  joinDate: "2023-11",
   identity: {
     ko: "프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다루며, 회사에서 만난 SAR/위성 도메인까지 확장해 적용하고 있습니다.",
     en: "I cover frontend + backend + infra/CI-CD + AI end-to-end as one full-stack developer, and have extended that reach into the SAR / satellite domain I first met at work.",

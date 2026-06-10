@@ -71,8 +71,8 @@ export const resumeExperience: ResumeRole[] = [
   {
     company: { ko: "루미르 (Lumir)", en: "Lumir" },
     period: {
-      ko: "2023-12 ~ 현재",
-      en: "Dec 2023 – present",
+      ko: "2023-11 ~ 현재",
+      en: "Nov 2023 – present",
     },
     position: {
       ko: "웹 개발자 (풀스택 — 프론트·백·인프라·AI 확장)",
