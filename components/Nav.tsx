@@ -11,6 +11,7 @@ export function Nav() {
   const t = useTranslations("nav");
   const locale = useLocale() as Locale;
   const pathname = usePathname();
+  const isHome = pathname === "/";
 
   const links = [
     { href: "/#coordinates", id: "coordinates", label: t("location") },
@@ -73,10 +74,33 @@ export function Nav() {
           <div className="relative flex items-center gap-1 md:gap-2">
             {links.map((l) => {
               const isActive = activeId === l.id;
+              // 섹션 링크(/#id)는 홈에서 순수 해시(#id)로 → 새로고침 없이 현재 위치에서 스무스 스크롤.
+              // 다른 라우트(/resume 등)에서는 홈+앵커(/ko/#id)로 이동. 페이지 링크(/resume)는 그대로.
+              const href = !l.href.startsWith("/#")
+                ? `/${locale}${l.href}`
+                : isHome
+                  ? l.href.slice(1)
+                  : `/${locale}${l.href}`;
               return (
                 <a
                   key={l.href}
-                  href={`/${locale}${l.href === "/" ? "" : l.href}`}
+                  href={href}
+                  onClick={(e) => {
+                    // 홈에서 섹션 탭 → 새로고침 없이 현재 위치에서 스무스 스크롤 (reduced-motion 존중).
+                    // cross-page·페이지 링크(/resume)는 기본 내비게이션에 맡긴다.
+                    if (!isHome || !l.href.startsWith("/#")) return;
+                    const el = document.getElementById(l.id);
+                    if (!el) return;
+                    e.preventDefault();
+                    el.scrollIntoView({
+                      behavior: window.matchMedia(
+                        "(prefers-reduced-motion: reduce)"
+                      ).matches
+                        ? "auto"
+                        : "smooth",
+                    });
+                    history.pushState(null, "", `#${l.id}`);
+                  }}
                   className={cn(
                     "relative px-3 py-1.5 text-sm transition-colors rounded-full whitespace-nowrap",
                     isActive
