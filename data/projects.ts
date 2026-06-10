@@ -1390,8 +1390,8 @@ export const projects: Project[] = [
       en: "NestJS + CQRS + TypeORM + PostgreSQL + a frontend + Docker Compose + S3 + Terraform IaC + backup metrics → Grafana. Architecture patterns are lifted directly from work-validated ones. 100% AI-native: AI writes code; the three human nodes are (1) UI planning, (2) code-connection review, and (3) e2e tests. Building self-hosted infra so DB-level user isolation works.",
     },
     impact: {
-      ko: "개인 + 거점 공유자 1인 베타 운영 + 13+ 위키 자산 환류 (2단계 설계 프로세스·테스트 5-layer·정합성 31건 간극 정비·백업 메트릭 자동화·S3+Terraform 양쪽 레시피)를 달성했습니다. 회사로 역전이도 일어났습니다 — 집비치기 UI + current e2e 테스트 패턴이 회사 프론트엔드 강화에 도입 중이고, 4-Layer 패턴이 sar-search-and-analyzer 백엔드 설계에 적용됩니다.",
-      en: "Personal use + 1 beta user (a shared hub), 13+ wiki assets fed back (the 2-stage design process, the 5-layer testing setup, 31 consistency-gap repairs, automated backup metrics, and recipes for both sides of S3 + Terraform). Back-transfer into work happened too — the him UI + current e2e test pattern is being adopted to strengthen the company frontend, and the 4-layer pattern is being applied to the sar-search-and-analyzer backend design.",
+      ko: "개인 + 거점 공유자 1인 베타 운영 + 13+ 위키 자산 환류 (2단계 설계 프로세스·테스트 5-layer·정합성 31건 간극 정비·백업 메트릭 자동화·S3+Terraform 양쪽 레시피)를 달성했습니다. 회사로 역전이도 일어났습니다 — 집비치기 UI + current e2e 테스트 패턴이 회사 프론트엔드 강화에 도입 중입니다.",
+      en: "Personal use + 1 beta user (a shared hub), 13+ wiki assets fed back (the 2-stage design process, the 5-layer testing setup, 31 consistency-gap repairs, automated backup metrics, and recipes for both sides of S3 + Terraform). Back-transfer into work happened too — the him UI + current e2e test pattern is being adopted to strengthen the company frontend.",
     },
     keywords: [
       { ko: "AI native 100%", en: "100% AI native" },
@@ -1402,10 +1402,6 @@ export const projects: Project[] = [
       {
         ko: "e2e 회사 역전이",
         en: "e2e back-transfer to work",
-      },
-      {
-        ko: "4-Layer 회사 역전이",
-        en: "4-layer back-transfer to work",
       },
       {
         ko: "자체 인프라 (DB 격리)",
