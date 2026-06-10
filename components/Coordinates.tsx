@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { stages, singleLever } from "@/data/levels";
 import { personal } from "@/data/personal";
 import { pick } from "@/data/i18n";
+import { tenureLabel } from "@/lib/tenure";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -58,7 +59,7 @@ export function Coordinates() {
               </div>
               {idx === 0 && (
                 <div className="mt-3 pt-3 border-t border-[var(--border)] text-xs font-mono text-[var(--muted)]">
-                  {pick(personal.mainDomain.note, locale)}
+                  {tenureLabel(personal.joinDate, locale)} · {pick(personal.mainDomain.note, locale)}
                 </div>
               )}
             </motion.div>

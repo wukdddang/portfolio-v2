@@ -32,15 +32,18 @@ export const personal = {
   } satisfies L,
   currentStage: {
     range: { ko: "3+4 진행", en: "Stage 3+4 in progress" } satisfies L,
+    // 맥락 없이 처음 보는 사람용 평이한 표현 (Hero 등). 정밀한 "3+4"는 5단계 설명이 있는 Coordinates 섹션 전용.
+    plain: {
+      ko: "직군 확장 + 시스템화",
+      en: "Role expansion + systemization",
+    } satisfies L,
     detail: {
       ko: "직군 확장 + 시스템화 혼합 + 5단계 사이드 검증 신호",
       en: "Role expansion + systemization, with early signals of stage-5 side-project validation",
     } satisfies L,
   },
-  yearsExperience: {
-    ko: "2년 5개월차",
-    en: "2 yrs 5 mos",
-  } satisfies L,
+  // 루미르 입사 2023-12 → 연차는 lib/tenure.ts tenureLabel()로 현재 날짜 기준 자동 계산 (하드코딩 금지)
+  joinDate: "2023-12",
   identity: {
     ko: "프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다루며, 회사에서 만난 SAR/위성 도메인까지 확장해 적용하고 있습니다.",
     en: "I cover frontend + backend + infra/CI-CD + AI end-to-end as one full-stack developer, and have extended that reach into the SAR / satellite domain I first met at work.",
@@ -53,8 +56,8 @@ export const personal = {
       en: "Frontend + backend + infra/CI-CD + AI",
     } satisfies L,
     note: {
-      ko: "2년 5개월차, 전천후 풀스택으로 확장 중입니다.",
-      en: "2 yrs 5 mos in, expanding into a generalist full-stack profile.",
+      ko: "전천후 풀스택으로 확장 중입니다.",
+      en: "Expanding into a generalist full-stack profile.",
     } satisfies L,
   },
   academicBackground: {

@@ -6,6 +6,7 @@ import { ArrowDown, FileText, Briefcase } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
 import { pick, pickArr } from "@/data/i18n";
+import { tenureLabel } from "@/lib/tenure";
 import type { Locale } from "@/i18n/routing";
 import { Typewriter } from "./Typewriter";
 
@@ -35,7 +36,7 @@ export function Hero() {
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border)] text-xs font-mono text-[var(--muted)] mb-8"
         >
           <span className="size-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-          {t("stageLabel")} · {pick(personal.currentStage.range, locale)}
+          {t("stageLabel")} · {pick(personal.currentStage.plain, locale)}
         </motion.div>
 
         <motion.h1
@@ -119,13 +120,13 @@ export function Hero() {
             <div className="text-[10px] uppercase tracking-widest mb-1">
               {t("meta.aiStage")}
             </div>
-            <div className="text-[var(--foreground)]">{pick(personal.currentStage.range, locale)}</div>
+            <div className="text-[var(--foreground)]">{pick(personal.currentStage.plain, locale)}</div>
           </div>
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">
               {t("meta.yearsLabel")}
             </div>
-            <div className="text-[var(--foreground)]">{pick(personal.yearsExperience, locale)}</div>
+            <div className="text-[var(--foreground)]">{tenureLabel(personal.joinDate, locale)}</div>
           </div>
         </motion.div>
       </div>

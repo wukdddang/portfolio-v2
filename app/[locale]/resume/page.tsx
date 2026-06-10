@@ -2,6 +2,7 @@ import { ArrowLeft, Mail, Sparkles, CheckCircle2 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
+import { tenureLabel } from "@/lib/tenure";
 import {
   resumeSummary,
   resumeExperience,
@@ -107,7 +108,7 @@ export default async function ResumePage({
             <span>
               <span className="text-[var(--muted)]/60">{t("meta.yearsLabel")}</span>{" "}
               <span className="text-[var(--foreground)]">
-                {pick(personal.yearsExperience, locale)}
+                {tenureLabel(personal.joinDate, locale)}
               </span>
             </span>
           </div>
