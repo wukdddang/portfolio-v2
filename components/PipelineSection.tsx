@@ -62,30 +62,27 @@ function FlowLine({
       />
       <path d={path} fill="none" stroke="var(--accent)" strokeWidth={2} />
       <path d={arrow} fill="var(--accent)" />
-      {!reduce &&
-        Array.from({ length: 2 }).map((_, k) => {
-          const begin = `-${(dur * (k / 2) + phase).toFixed(2)}s`;
-          return (
-            <g key={k}>
-              <circle r={4.5} fill="var(--foreground)" opacity={0.12}>
-                <animateMotion
-                  dur={`${dur}s`}
-                  begin={begin}
-                  repeatCount="indefinite"
-                  path={path}
-                />
-              </circle>
-              <circle r={2.2} fill="var(--foreground)" opacity={0.85}>
-                <animateMotion
-                  dur={`${dur}s`}
-                  begin={begin}
-                  repeatCount="indefinite"
-                  path={path}
-                />
-              </circle>
-            </g>
-          );
-        })}
+      {/* 흐름 점 1개 — 짧은 커넥터라 점 2개는 과밀. 커넥터별 phase로 desync 유지 */}
+      {!reduce && (
+        <g>
+          <circle r={4.5} fill="var(--foreground)" opacity={0.12}>
+            <animateMotion
+              dur={`${dur}s`}
+              begin={`-${phase.toFixed(2)}s`}
+              repeatCount="indefinite"
+              path={path}
+            />
+          </circle>
+          <circle r={2.2} fill="var(--foreground)" opacity={0.85}>
+            <animateMotion
+              dur={`${dur}s`}
+              begin={`-${phase.toFixed(2)}s`}
+              repeatCount="indefinite"
+              path={path}
+            />
+          </circle>
+        </g>
+      )}
     </svg>
   );
 }
