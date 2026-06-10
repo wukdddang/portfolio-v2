@@ -29,6 +29,14 @@
       "yearsLabel": "Experience"
     }
   },
+  "pipeline": {
+    "eyebrow": "Pipeline preview",
+    "title": "From orbit to answer — a one-person pipeline",
+    "lede": "Sentinel-1 · LumirX observations travel through collection & storage → InSAR analysis → a map service, all the way to the user. One person designs and builds all three layers, AI-native. Below is the data journey in brief — the precise call graph lives in the unified diagram.",
+    "returnNote": "Location / AOI requests flow the other way (dashed) — fresh analysis runs only on a cache miss",
+    "cardHint": "Click a card for that layer's detail",
+    "ctaDiagram": "Explore the unified diagram"
+  },
   "coordinates": {
     "eyebrow": "Where I am",
     "title": "Stage diagnosis starts from your main role",
@@ -69,6 +77,7 @@
     "imagesGallery": "Screens · artifacts",
     "architecture": "Architecture · data flow",
     "diagramHint": "Drag to pan · zoom with the controls",
+    "layerDiagramExpand": "🔍 click to expand",
     "legendForward": "Forward request",
     "legendReturn": "Response · write-back",
     "legendExternal": "External system",

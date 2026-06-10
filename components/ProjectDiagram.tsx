@@ -31,6 +31,7 @@ import {
   buildFlowEdges,
   type CardData,
 } from "@/components/diagram-flow";
+import { cn } from "@/lib/utils";
 
 const nodeTypes = { card: DiagramCard };
 const edgeTypes = { flow: FlowEdge };
@@ -56,7 +57,14 @@ function buildGraph(diagram: ProjectDiagramData, locale: Locale) {
   return { nodes, edges };
 }
 
-export function ProjectDiagram({ diagram }: { diagram: ProjectDiagramData }) {
+export function ProjectDiagram({
+  diagram,
+  headerless = false,
+}: {
+  diagram: ProjectDiagramData;
+  /** 헤더 행 생략 — 바깥 컨테이너(예: LayerDiagramDisclosure 토글 행)가 헤더를 대신할 때 */
+  headerless?: boolean;
+}) {
   const locale = useLocale() as Locale;
   const t = useTranslations("projectDetail");
   // colorMode="system"는 서버(light)/클라(dark) 하이드레이션 불일치를 유발.
@@ -74,16 +82,18 @@ export function ProjectDiagram({ diagram }: { diagram: ProjectDiagramData }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.5 }}
-      className="mb-12 space-y-3"
+      className={cn("space-y-3", !headerless && "mb-12")}
     >
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
-          {t("architecture")}
+      {!headerless && (
+        <div className="flex items-center justify-between gap-3">
+          <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
+            {t("architecture")}
+          </div>
+          <div className="hidden text-[10px] font-mono text-[var(--muted)] sm:block">
+            {t("diagramHint")}
+          </div>
         </div>
-        <div className="hidden text-[10px] font-mono text-[var(--muted)] sm:block">
-          {t("diagramHint")}
-        </div>
-      </div>
+      )}
 
       <div className="h-[520px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] md:h-[640px]">
         {mounted ? (
