@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Hero } from "@/components/Hero";
+import { PipelineSection } from "@/components/PipelineSection";
 import { Coordinates } from "@/components/Coordinates";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { TechStack } from "@/components/TechStack";
@@ -20,6 +21,7 @@ export default async function HomePage({
     <>
       <JsonLd data={homeGraph(locale, t("homeTitle"), t("homeDescription"))} />
       <Hero />
+      <PipelineSection />
       <Coordinates />
       <ProjectsGrid />
       <TechStack />
