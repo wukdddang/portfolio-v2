@@ -77,6 +77,7 @@
     "imagesGallery": "Screens · artifacts",
     "architecture": "Architecture · data flow",
     "diagramHint": "Drag to pan · zoom with the controls",
+    "layerDiagramExpand": "🔍 click to expand",
     "legendForward": "Forward request",
     "legendReturn": "Response · write-back",
     "legendExternal": "External system",

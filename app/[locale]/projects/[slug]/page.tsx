@@ -8,6 +8,7 @@ import { projects, type Project } from "@/data/projects";
 import { pick } from "@/data/i18n";
 import { ProjectDiagram } from "@/components/ProjectDiagram";
 import { PlatformDiagram } from "@/components/PlatformDiagram";
+import { LayerDiagramDisclosure } from "@/components/LayerDiagramDisclosure";
 import { JsonLd } from "@/components/JsonLd";
 import { projectGraph } from "@/lib/jsonld";
 import { Md } from "@/lib/markdown";
@@ -457,8 +458,14 @@ function SubProjectSection({
         </div>
       )}
 
-      {/* Architecture diagram (React Flow) — 통합 캔버스 사용 시 개별 렌더 생략 */}
-      {showDiagram && sub.diagram && <ProjectDiagram diagram={sub.diagram} />}
+      {/* Architecture diagram (React Flow) — 통합 캔버스 페이지에선 접힌 개별 다이어그램
+          (딥링크 #slug 도착 시 자동 펼침), 그 외엔 기존처럼 항상 렌더 */}
+      {sub.diagram &&
+        (showDiagram ? (
+          <ProjectDiagram diagram={sub.diagram} />
+        ) : (
+          <LayerDiagramDisclosure slug={sub.slug} diagram={sub.diagram} />
+        ))}
 
       {/* Problem · System · Impact */}
       <div className="space-y-6 mb-8">
