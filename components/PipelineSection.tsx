@@ -1,33 +1,27 @@
 "use client";
 
 /**
- * PipelineSection — 메인 페이지의 "위성에서 사용자까지" 데이터 여정 스파인.
+ * PipelineSection — 메인 페이지 "프로젝트별 데이터 파이프라인" 섹션.
  *
- * 프로젝트 상세의 React Flow 다이어그램과 같은 시각 언어(카테고리 색 카드,
- * amber 흐름선 + glow, SMIL 흐름 점, 점선 환류)를 쓰되, 순수 SVG/DOM으로 그려
- * 메인 번들에 @xyflow를 싣지 않는다. 정밀한 호출 관계는 통합 다이어그램이 담당하고
- * 여기는 *데이터가 거치는 단계*의 요약 — 카드 클릭 시 해당 레이어 상세로 딥링크.
+ * 프로젝트 상세의 React Flow 다이어그램과 같은 시각 언어(카테고리 색 카드, amber 흐름선
+ * + glow, SMIL 흐름 점, 점선 환류)를 순수 SVG/DOM으로 그려 메인 번들에 @xyflow를 싣지 않는다.
+ * 정밀한 호출 관계는 각 프로젝트 상세의 다이어그램이 담당하고, 여기는 *데이터가 거치는 단계*의 요약.
  *
- * 강조 비대칭이 곧 메시지: 본인 소유 3 레이어는 큰 카드, 외부 끝점(위성·사용자)은
- * 작은 pill. lg 미만에서는 세로 스파인으로 전환.
+ * 여러 프로젝트 파이프라인(SAR · SDPE · 집비치기)을 세로로 쌓아 보여준다.
+ * 강조 비대칭이 곧 메시지: 본인 소유 레이어는 큰 카드, 외부 끝점(위성·사용자·DB)은 작은 pill.
+ * lg 미만에서는 세로 스파인으로 전환. 카드 클릭 시 해당 프로젝트(또는 레이어)로 딥링크.
  */
 
 import { useMemo, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Workflow } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { projects } from "@/data/projects";
-import {
-  pipelineStages,
-  pipelineEdges,
-  type PipelineStage,
-} from "@/data/pipeline";
+import { pipelines, type Pipeline, type PipelineStage } from "@/data/pipeline";
 import { pick } from "@/data/i18n";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-
-const PLATFORM_SLUG = "lumir-sar-platform";
 
 const chipCls =
   "whitespace-nowrap rounded-md border border-[var(--border)] bg-[var(--card)] px-1.5 py-0.5 font-mono text-[10px] leading-tight text-[var(--foreground)]";
@@ -150,22 +144,24 @@ function StagePill({
   );
 }
 
-/** 레이어 카드 — DiagramCard 시각 언어(카테고리 색 보더·틴트, 상태 점, mono 디테일) */
+/** 레이어 카드 — DiagramCard 시각 언어. slug 있으면 해당 레이어 #anchor, 없으면 프로젝트 상세로 */
 function StageCard({
   stage,
   label,
   icon,
   locale,
+  projectSlug,
 }: {
   stage: PipelineStage;
   label: string;
   icon: string;
   locale: Locale;
+  projectSlug: string;
 }) {
   const catColor = stage.cat ? `var(--cat-${stage.cat})` : "var(--accent)";
   return (
     <Link
-      href={`/projects/${PLATFORM_SLUG}#${stage.slug}`}
+      href={`/projects/${projectSlug}${stage.slug ? `#${stage.slug}` : ""}`}
       style={{
         borderColor: `color-mix(in oklch, ${catColor} 55%, var(--border))`,
         backgroundColor: `color-mix(in oklch, ${catColor} 7%, var(--card))`,
@@ -195,15 +191,20 @@ function StageCard({
   );
 }
 
-export function PipelineSection() {
-  const t = useTranslations("pipeline");
-  const locale = useLocale() as Locale;
-  const reduce = useReducedMotion() ?? false;
-
-  const platform = projects.find((p) => p.slug === PLATFORM_SLUG);
+/** 한 프로젝트의 파이프라인 — 소제목(프로젝트 링크) + 스파인 + 점선 환류 노트 */
+function PipelineRow({
+  pipeline,
+  locale,
+  reduce,
+}: {
+  pipeline: Pipeline;
+  locale: Locale;
+  reduce: boolean;
+}) {
+  const project = projects.find((p) => p.slug === pipeline.projectSlug);
   const subBySlug = useMemo(
-    () => new Map((platform?.subProjects ?? []).map((s) => [s.slug, s])),
-    [platform]
+    () => new Map((project?.subProjects ?? []).map((s) => [s.slug, s])),
+    [project]
   );
 
   // 등장 모션 — 좌→우 순차 라이즈 (reduced-motion 시 즉시 표시)
@@ -212,12 +213,12 @@ export function PipelineSection() {
       initial: reduce ? false : ({ opacity: 0, y: 16 } as const),
       whileInView: { opacity: 1, y: 0 } as const,
       viewport: { once: true, margin: "-60px" } as const,
-      transition: { duration: 0.45, delay: i * 0.06 },
+      transition: { duration: 0.45, delay: i * 0.05 },
     }) as const;
 
-  // 스파인 구성 — pill / connector / card 를 grid(lg+) 또는 column(미만) 자식으로
+  // 스파인 자식 — pill / connector / card
   const items: ReactNode[] = [];
-  pipelineStages.forEach((stage, i) => {
+  pipeline.stages.forEach((stage, i) => {
     if (i > 0) {
       items.push(
         <motion.div
@@ -226,7 +227,7 @@ export function PipelineSection() {
           className="flex justify-center lg:self-center"
         >
           <Connector
-            label={pick(pipelineEdges[i - 1].label, locale)}
+            label={pick(pipeline.edges[i - 1].label, locale)}
             phase={(i - 1) * 0.45}
             reduce={reduce}
           />
@@ -236,23 +237,22 @@ export function PipelineSection() {
     if (stage.kind === "layer") {
       const sub = stage.slug ? subBySlug.get(stage.slug) : undefined;
       items.push(
-        <motion.div key={stage.slug} {...rise(i * 2)} className="min-w-0">
+        <motion.div key={`stage-${i}`} {...rise(i * 2)} className="min-w-0">
           <StageCard
             stage={stage}
             label={
-              sub?.layerLabel
-                ? pick(sub.layerLabel, locale)
-                : pick(stage.label, locale)
+              sub?.layerLabel ? pick(sub.layerLabel, locale) : pick(stage.label, locale)
             }
             icon={sub?.layerIcon ?? stage.icon}
             locale={locale}
+            projectSlug={pipeline.projectSlug}
           />
         </motion.div>
       );
     } else {
       items.push(
         <motion.div
-          key={`end-${i}`}
+          key={`stage-${i}`}
           {...rise(i * 2)}
           className="flex justify-center lg:self-center"
         >
@@ -261,6 +261,73 @@ export function PipelineSection() {
       );
     }
   });
+
+  // 가변 stage 수 → grid-template-columns 동적 구성. layer=1fr, endpoint=auto, 사이는 커넥터(auto).
+  // flex flex-col lg:grid 라 mobile(flex)에선 이 인라인 템플릿이 무시되고 lg+(grid)에서만 적용.
+  const gridCols = pipeline.stages
+    .map((s) => (s.kind === "layer" ? "minmax(0,1fr)" : "auto"))
+    .join(" auto ");
+
+  return (
+    <motion.div {...rise(0)}>
+      {/* 소제목 — 프로젝트 상세로 링크 */}
+      <Link
+        href={`/projects/${pipeline.projectSlug}`}
+        className="group/h mb-6 inline-flex items-center gap-2 text-[var(--foreground)]"
+      >
+        <span className="text-lg leading-none">{pipeline.icon}</span>
+        <span className="text-base font-semibold tracking-tight">
+          {pick(pipeline.title, locale)}
+        </span>
+        <ArrowUpRight className="size-4 text-[var(--accent)] opacity-0 transition-all group-hover/h:translate-x-0.5 group-hover/h:opacity-100" />
+      </Link>
+
+      {/* 스파인 */}
+      <div
+        className="flex flex-col lg:grid lg:items-stretch"
+        style={{ gridTemplateColumns: gridCols }}
+      >
+        {items}
+
+        {pipeline.returnNote && (
+          <>
+            {/* 환류 레인 (lg+) — 점선 = 역방향, CSS 흐름 점 */}
+            <div className="col-span-full mt-7 hidden px-10 lg:block">
+              <div className="relative border-t border-dashed border-[var(--muted)]/50">
+                <svg
+                  viewBox="0 0 8 10"
+                  className="absolute -left-1 top-1/2 h-2.5 w-2 -translate-y-1/2 fill-[var(--muted)]"
+                  aria-hidden="true"
+                >
+                  <path d="M8 0 L0 5 L8 10 Z" />
+                </svg>
+                <span className="pipeline-return-dot" />
+              </div>
+              <div className="mt-2.5 flex justify-center">
+                <span className="font-mono text-[10px] text-[var(--muted)]">
+                  {pick(pipeline.returnNote, locale)}
+                </span>
+              </div>
+            </div>
+
+            {/* 환류 노트 (lg 미만) */}
+            <div className="mt-5 flex items-center justify-center gap-2 px-2 lg:hidden">
+              <span className="inline-block w-6 shrink-0 border-t border-dashed border-[var(--muted)]" />
+              <span className="text-center font-mono text-[10px] leading-relaxed text-[var(--muted)]">
+                {pick(pipeline.returnNote, locale)}
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+export function PipelineSection() {
+  const t = useTranslations("pipeline");
+  const locale = useLocale() as Locale;
+  const reduce = useReducedMotion() ?? false;
 
   return (
     <section
@@ -280,7 +347,13 @@ export function PipelineSection() {
 
       <div className="relative mx-auto w-full max-w-7xl px-6 py-24 md:px-10 lg:px-12">
         {/* Header */}
-        <motion.div {...rise(0)} className="mb-12 max-w-2xl">
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.45 }}
+          className="mb-16 max-w-2xl"
+        >
           <div className="mb-3 text-xs font-mono uppercase tracking-widest text-[var(--accent)]">
             {t("eyebrow")}
           </div>
@@ -290,81 +363,17 @@ export function PipelineSection() {
           <p className="leading-relaxed text-[var(--muted)]">{t("lede")}</p>
         </motion.div>
 
-        {/* Spine — lg+: [pill conn card conn card conn card conn pill] 가로, 미만: 세로 */}
-        <div className="flex flex-col lg:grid lg:grid-cols-[auto_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_auto] lg:items-stretch">
-          {items}
-
-          {/* 환류 레인 (lg+) — 점선 = 요청 방향(우→좌), CSS 흐름 점 */}
-          <motion.div
-            {...rise(10)}
-            className="col-span-full mt-7 hidden px-10 lg:block"
-          >
-            <div className="relative border-t border-dashed border-[var(--muted)]/50">
-              <svg
-                viewBox="0 0 8 10"
-                className="absolute -left-1 top-1/2 h-2.5 w-2 -translate-y-1/2 fill-[var(--muted)]"
-                aria-hidden="true"
-              >
-                <path d="M8 0 L0 5 L8 10 Z" />
-              </svg>
-              <span className="pipeline-return-dot" />
-              <span
-                className="pipeline-return-dot"
-                style={{ animationDelay: "-3.5s" }}
-              />
-            </div>
-            <div className="mt-2.5 flex justify-center">
-              <span className="font-mono text-[10px] text-[var(--muted)]">
-                {t("returnNote")}
-              </span>
-            </div>
-          </motion.div>
+        {/* 파이프라인들 — 세로 스택 */}
+        <div className="space-y-16">
+          {pipelines.map((p) => (
+            <PipelineRow
+              key={p.id}
+              pipeline={p}
+              locale={locale}
+              reduce={reduce}
+            />
+          ))}
         </div>
-
-        {/* 환류 노트 (lg 미만) */}
-        <div className="mt-5 flex items-center justify-center gap-2 px-2 lg:hidden">
-          <span className="inline-block w-6 shrink-0 border-t border-dashed border-[var(--muted)]" />
-          <span className="text-center font-mono text-[10px] leading-relaxed text-[var(--muted)]">
-            {t("returnNote")}
-          </span>
-        </div>
-
-        {/* CTA — 통합 다이어그램(드릴인 캔버스)으로 */}
-        <motion.div
-          {...rise(11)}
-          className="mt-10 flex flex-wrap items-center gap-4"
-        >
-          <Link
-            href={`/projects/${PLATFORM_SLUG}`}
-            className="group inline-flex items-center gap-2 rounded-full bg-[var(--foreground)] px-5 py-3 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90"
-          >
-            <Workflow className="size-4" />
-            {t("ctaDiagram")}
-            <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </Link>
-          <span className="font-mono text-xs text-[var(--muted)]">
-            {t("cardHint")}
-          </span>
-        </motion.div>
-
-        {/* 메트릭 스트립 — Hero meta strip 패턴 */}
-        {platform?.metrics && (
-          <motion.div
-            {...rise(12)}
-            className="mt-14 grid grid-cols-2 gap-x-8 gap-y-4 border-t border-[var(--border)] pt-6 font-mono text-xs text-[var(--muted)] md:grid-cols-4"
-          >
-            {platform.metrics.map((m, i) => (
-              <div key={i}>
-                <div className="mb-1 text-[10px] uppercase tracking-widest">
-                  {pick(m.label, locale)}
-                </div>
-                <div className="text-[var(--foreground)]">
-                  {pick(m.value, locale)}
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        )}
       </div>
     </section>
   );

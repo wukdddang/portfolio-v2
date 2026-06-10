@@ -31,8 +31,8 @@
   },
   "pipeline": {
     "eyebrow": "Pipeline preview",
-    "title": "From orbit to answer — a one-person pipeline",
-    "lede": "Sentinel-1 · LumirX observations travel through collection & storage → InSAR analysis → a map service, all the way to the user. One person designs and builds all three layers, AI-native. Below is the data journey in brief — the precise call graph lives in the unified diagram.",
+    "title": "The path data takes — pipelines by project",
+    "lede": "A quick look at how data travels — input → processing → user (or product) — across three projects: the SAR platform, SDPE, and him. The precise call graphs live in each project's detail diagram.",
     "returnNote": "Location / AOI requests flow the other way (dashed) — fresh analysis runs only on a cache miss",
     "cardHint": "Click a card for that layer's detail",
     "ctaDiagram": "Explore the unified diagram"
