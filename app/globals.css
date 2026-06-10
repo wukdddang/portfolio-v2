@@ -104,13 +104,20 @@
   }
 }
 
-/* Smooth anchor scrolling */
-html {
+/*
+ * Smooth anchor scrolling — 단, *초기 로드*의 앵커 이동은 즉시(auto).
+ * html에 smooth를 상시 걸면 #hash 딥링크 진입 시 브라우저가 앵커까지
+ * 애니메이션 스크롤을 하는데, 하이드레이션(React Flow fitView 등) 부하가
+ * 이를 중간에 끊어 목표보다 한참 위에서 멈춘다(실측 ~750px 못 미침).
+ * :focus-within 게이트 = 사용자가 페이지 내 링크를 클릭(포커스)했을 때만 smooth.
+ */
+html:focus-within {
   scroll-behavior: smooth;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
+  html,
+  html:focus-within {
     scroll-behavior: auto;
   }
 }
