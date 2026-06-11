@@ -25,6 +25,7 @@ export interface PipelineStage {
   label: L;
   sublabel: L;
   desc?: L; // 이 단계에서 일어나는 일 (layer 카드 전용)
+  tags?: L[]; // 카드 하단 칩 — 기술·하위 항목 (flex-wrap, layer 카드 전용)
   cat?: number; // 카테고리 색 — 통합 다이어그램의 cat 인덱스와 동일
   badge?: string; // levels 변형의 레벨 칩 (L0 / L1·L2 / L3)
 }
@@ -79,6 +80,11 @@ export const pipelines: Pipeline[] = [
           ko: "CDSE 검색·다운로드, NAS 저장, 분석 오케스트레이션",
           en: "CDSE search & download, NAS storage, analysis orchestration",
         },
+        tags: [
+          { ko: "CDSE", en: "CDSE" },
+          { ko: "NAS · SMB2", en: "NAS · SMB2" },
+          { ko: "DDD 5-layer", en: "DDD 5-layer" },
+        ],
       },
       {
         kind: "layer",
@@ -94,6 +100,12 @@ export const pipelines: Pipeline[] = [
           ko: "PSI·DInSAR 처리 — 결과는 데이터 플랫폼으로 환류",
           en: "PSI · DInSAR processing — results feed back to the data platform",
         },
+        tags: [
+          { ko: "SNAP", en: "SNAP" },
+          { ko: "ISCE2", en: "ISCE2" },
+          { ko: "MintPy", en: "MintPy" },
+          { ko: "5종 스택", en: "5-tool stack" },
+        ],
       },
       {
         kind: "layer",
@@ -109,6 +121,11 @@ export const pipelines: Pipeline[] = [
           ko: "지도에서 검색·AOI·분석 요청, 변위 시계열 시각화",
           en: "Map search, AOI, analysis requests, displacement time-series view",
         },
+        tags: [
+          { ko: "Next.js", en: "Next.js" },
+          { ko: "지도 + AOI", en: "Map + AOI" },
+          { ko: "Route Handler BFF", en: "Route Handler BFF" },
+        ],
       },
       {
         kind: "endpoint",
@@ -155,6 +172,14 @@ export const pipelines: Pipeline[] = [
         badge: "L0",
         label: { ko: "데이터 수집", en: "Data collection" },
         sublabel: { ko: "원시 SAR 수집", en: "Raw SAR ingest" },
+        desc: {
+          ko: "위성 다운링크 원시 신호(L0)를 pgmq 구독으로 수집·정렬",
+          en: "Subscribes over pgmq to collect & order raw downlink signals (L0)",
+        },
+        tags: [
+          { ko: "원시 SAR", en: "Raw SAR" },
+          { ko: "pgmq 구독", en: "pgmq subscribe" },
+        ],
       },
       {
         kind: "layer",
@@ -163,6 +188,15 @@ export const pipelines: Pipeline[] = [
         badge: "L1·L2",
         label: { ko: "SAR 처리", en: "SAR processing" },
         sublabel: { ko: "간섭·보정", en: "Interferometry · correction" },
+        desc: {
+          ko: "CSC 1~6 인터페이스 체인이 range·azimuth compression 등 레벨별 처리",
+          en: "The CSC 1–6 interface chain runs per-level processing (range/azimuth compression, …)",
+        },
+        tags: [
+          { ko: "csc-1~6", en: "csc-1–6" },
+          { ko: "range compression", en: "range compression" },
+          { ko: "Python 3.11", en: "Python 3.11" },
+        ],
       },
       {
         kind: "layer",
@@ -171,6 +205,15 @@ export const pipelines: Pipeline[] = [
         badge: "L3",
         label: { ko: "후처리", en: "Post-processing" },
         sublabel: { ko: "L3 산출물 생성", en: "L3 product generation" },
+        desc: {
+          ko: "csc-7~9가 지오코딩으로 GEC·MAP L3 산출물 생성",
+          en: "csc-7–9 geocode the result into GEC · MAP L3 products",
+        },
+        tags: [
+          { ko: "csc-7~9", en: "csc-7–9" },
+          { ko: "GEC · MAP", en: "GEC · MAP" },
+          { ko: "지오코딩", en: "geocoding" },
+        ],
       },
       {
         kind: "endpoint",
@@ -213,13 +256,19 @@ export const pipelines: Pipeline[] = [
         icon: "📊",
         label: { ko: "페이지", en: "Pages" },
         sublabel: {
-          ko: "대시보드·구매·이력·가전",
-          en: "Dashboard · Purchases · History · Appliances",
+          ko: "모바일 재고 UI",
+          en: "Mobile inventory UI",
         },
         desc: {
-          ko: "재고 흐름을 페이지 단위로",
-          en: "Inventory flow at the page level",
+          ko: "재고 흐름을 페이지 단위로 구성 — 직접 기획·구현",
+          en: "Inventory flow organized page by page — self-planned & built",
         },
+        tags: [
+          { ko: "대시보드", en: "Dashboard" },
+          { ko: "구매", en: "Purchases" },
+          { ko: "이력", en: "History" },
+          { ko: "가전", en: "Appliances" },
+        ],
       },
       {
         kind: "layer",
@@ -228,9 +277,16 @@ export const pipelines: Pipeline[] = [
         label: { ko: "CQRS 도메인 모듈", en: "CQRS domain modules" },
         sublabel: { ko: "NestJS · 23개 모듈", en: "NestJS · 23 modules" },
         desc: {
-          ko: "inventory-item · purchase · log · appliance …",
-          en: "inventory-item · purchase · log · appliance …",
+          ko: "도메인별 CQRS 모듈 — 커맨드·쿼리 책임 분리",
+          en: "Per-domain CQRS modules — command/query responsibility split",
         },
+        tags: [
+          { ko: "inventory-item", en: "inventory-item" },
+          { ko: "purchase", en: "purchase" },
+          { ko: "inventory-log", en: "inventory-log" },
+          { ko: "appliance", en: "appliance" },
+          { ko: "+19 모듈", en: "+19 more" },
+        ],
       },
       {
         kind: "endpoint",

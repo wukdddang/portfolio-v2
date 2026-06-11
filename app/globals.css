@@ -1,28 +1,14 @@
 @import "tailwindcss";
 
 /*
- * Pretendard는 app/layout.tsx의 <link> 태그로 로드한다.
- * Tailwind v4의 @import 전개가 PostCSS에서 다른 룰을 만들어 내기 때문에,
- * @import url(...)을 여기에 두면 CSS 규약 위반 (rules before @import)이 된다.
+ * 폰트는 Pretendard로 통일한다.
+ * Pretendard Variable은 app/layout.tsx의 <link>(pretendardvariable.min.css)로 로드.
+ * (Tailwind v4의 @import 전개가 PostCSS에서 rules-before-@import 위반을 만들기 때문에
+ *  여기에 @import url(...)을 두지 않고 <link>로 로드한다.)
+ *
+ * 한글·라틴 모두 Pretendard를 1순위로 둔다. 이로써 과거의 한글→Geist 폴백 버그와
+ * 그 우회책이던 unicode-range 강제 매핑 @font-face(깨진 woff2 URL)를 함께 제거했다.
  */
-
-/*
- * unicode-range로 한글 글리프를 명시적으로 Pretendard에 강제 매핑.
- * 핵심: src를 local()이 아니라 CDN URL 직접 지정해야 한다.
- * (local()은 시스템 설치된 폰트만 매치 — 브라우저가 CDN으로 동적 로드한
- *  Pretendard Variable은 local()로 안 잡힘 → 한글이 fallback chain의
- *  Geist Mono로 가버리는 버그가 있었음. CDN URL 직접 지정으로 해결.)
- */
-@font-face {
-  font-family: "PretendardKoreanOverride";
-  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2")
-    format("woff2-variations");
-  /* Hangul Jamo + Compatibility Jamo + Jamo Extended-A + Syllables + Jamo Extended-B */
-  unicode-range: U+1100-11FF, U+3130-318F, U+A960-A97F, U+AC00-D7AF, U+D7B0-D7FF;
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   /*
@@ -70,20 +56,17 @@
   --color-cat-5: var(--cat-5);
   --color-cat-6: var(--cat-6);
   /*
-   * 한영 자동 매칭 (폰트 단위):
-   * 1) PretendardKoreanOverride — CDN woff2 직접 + unicode-range로 한글 영역에만 매치
-   * 2) var(--font-geist-sans/mono) — 라틴 영역 매치 → 영어는 Geist
-   * 3) "Pretendard Variable" / Pretendard — 다운로드 실패 시 fallback
-   * 즉 한글 = Pretendard 100% 보장, 영어/숫자 = Geist 유지
+   * 한·영 모두 Pretendard로 통일 (Pretendard Variable = layout.tsx의 <link>).
+   * sans: 본문·UI 전부 Pretendard.
+   * mono: 기술 칩·배지의 라틴 monospace 룩은 시스템 monospace로 유지하되,
+   *       monospace 폰트엔 한글 글리프가 없으므로 한글은 Pretendard로 폴백된다.
    */
-  --font-sans: "PretendardKoreanOverride", var(--font-geist-sans),
-    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
-    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
-    "Noto Sans KR", sans-serif;
-  /* font-mono도 한글은 Pretendard로 강제 (unicode-range 매핑) */
-  --font-mono: "PretendardKoreanOverride", var(--font-geist-mono),
-    "Pretendard Variable", Pretendard, ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", "Pretendard Variable", Pretendard,
+    monospace;
 }
 
 @media (prefers-color-scheme: dark) {
