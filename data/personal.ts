@@ -44,6 +44,17 @@ export const personal = {
   },
   // 루미르 입사 2023-11 (11/13) → 연차는 lib/tenure.ts tenureLabel()로 현재 날짜 기준 자동 계산 (하드코딩 금지)
   joinDate: "2023-11",
+  // Hero 메타 스트립 — 직군/학습 도메인 값 세그먼트. href가 있으면 학습 로그(/studies/*) 페이지로 링크
+  heroDomains: {
+    main: [
+      { label: { ko: "웹 개발 · 풀스택", en: "Web Dev · Full-stack" } satisfies L },
+      { label: { ko: "InSAR 처리", en: "InSAR processing" } satisfies L, href: "/studies/sar" },
+    ],
+    learned: [
+      { label: { ko: "SAR · 위성영상", en: "SAR · Satellite imagery" } satisfies L, href: "/studies/sar" },
+      { label: { ko: "임베디드", en: "Embedded" } satisfies L, href: "/studies/embedded" },
+    ],
+  } satisfies Record<string, { label: L; href?: string }[]>,
   identity: {
     ko: "프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다루며, 회사에서 만난 SAR/위성 도메인까지 확장해 적용하고 있습니다.",
     en: "I cover frontend + backend + infra/CI-CD + AI end-to-end as one full-stack developer, and have extended that reach into the SAR / satellite domain I first met at work.",

@@ -1,14 +1,44 @@
 "use client";
 
+import { Fragment } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowDown, FileText, Briefcase } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
-import { pick, pickArr } from "@/data/i18n";
+import { pick, pickArr, type L } from "@/data/i18n";
 import { tenureLabel } from "@/lib/tenure";
 import type { Locale } from "@/i18n/routing";
 import { Typewriter } from "./Typewriter";
+
+/** 메타 스트립 도메인 값 — href 있는 세그먼트는 학습 로그 페이지로 링크 */
+function DomainValue({
+  segments,
+  locale,
+}: {
+  segments: { label: L; href?: string }[];
+  locale: Locale;
+}) {
+  return (
+    <div className="text-[var(--foreground)]">
+      {segments.map((seg, i) => (
+        <Fragment key={i}>
+          {i > 0 && <span className="text-[var(--muted)]"> · </span>}
+          {seg.href ? (
+            <Link
+              href={seg.href}
+              className="underline decoration-[var(--border)] underline-offset-4 transition-colors hover:text-[var(--accent)] hover:decoration-[var(--accent)]"
+            >
+              {pick(seg.label, locale)}
+            </Link>
+          ) : (
+            pick(seg.label, locale)
+          )}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
 
 export function Hero() {
   const t = useTranslations("hero");
@@ -108,13 +138,13 @@ export function Hero() {
             <div className="text-[10px] uppercase tracking-widest mb-1">
               {t("meta.mainDomain")}
             </div>
-            <div className="text-[var(--foreground)]">{t("meta.mainDomainValue")}</div>
+            <DomainValue segments={personal.heroDomains.main} locale={locale} />
           </div>
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">
               {t("meta.learnedDomain")}
             </div>
-            <div className="text-[var(--foreground)]">{t("meta.learnedDomainValue")}</div>
+            <DomainValue segments={personal.heroDomains.learned} locale={locale} />
           </div>
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-1">

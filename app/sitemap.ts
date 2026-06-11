@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/data/projects";
+import { studies } from "@/data/studies";
 import { routing } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
 
@@ -23,7 +24,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((p) => !REDIRECTED_SLUGS.has(p.slug))
     .map((p) => ({ path: `/projects/${p.slug}`, priority: 0.7 }));
 
-  const allPaths = [...staticPaths, ...projectPaths];
+  const studyPaths: Array<{ path: string; priority: number }> = studies.flatMap((s) => [
+    { path: `/studies/${s.slug}`, priority: 0.6 },
+    ...s.blocks.flatMap((b) =>
+      b.topics
+        .filter((tp) => tp.slug && tp.detail)
+        .map((tp) => ({ path: `/studies/${s.slug}/${tp.slug}`, priority: 0.4 }))
+    ),
+  ]);
+
+  const allPaths = [...staticPaths, ...projectPaths, ...studyPaths];
 
   // 각 path에 대해 locale별 entry를 만들고, alternates.languages로 hreflang 묶음
   return allPaths.flatMap(({ path, priority }) => {

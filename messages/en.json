@@ -22,9 +22,7 @@
     "ctaResume": "See resume",
     "meta": {
       "mainDomain": "Main role",
-      "mainDomainValue": "Web Dev · Full-stack",
       "learnedDomain": "Learned domain",
-      "learnedDomainValue": "SAR · Satellite imagery",
       "aiStage": "AI usage stage",
       "yearsLabel": "Experience"
     }
@@ -122,9 +120,9 @@
     "header": "Resume · 2026-05 · Base version",
     "meta": {
       "mainDomain": "Main role",
-      "mainDomainValue": "Web Dev · Full-stack",
+      "mainDomainValue": "Web Dev · Full-stack · InSAR processing",
       "learnedDomain": "Learned domain",
-      "learnedDomainValue": "SAR · Satellite imagery",
+      "learnedDomainValue": "SAR · Satellite imagery · Embedded",
       "aiStage": "AI usage stage",
       "yearsLabel": "Experience"
     },
@@ -163,5 +161,30 @@
       "impactLabel": "Impact",
       "viewDetail": "View project details →"
     }
+  },
+  "studies": {
+    "eyebrow": "Study log",
+    "backHome": "Back to portfolio",
+    "metaSuffix": "Study log · Changuk Woo",
+    "motive": "Why I started",
+    "method": "How it accumulates",
+    "timeline": "Timeline",
+    "statusDone": "Compiled to wiki",
+    "statusDoing": "In progress",
+    "statusTodo": "On the roadmap",
+    "wikiBadge": "wiki",
+    "wikiNote": "The topic cards on this page are compiled from the Brain Trinity wiki. The original wiki can be demoed live in an interview.",
+    "otherStudy": "Other study log",
+    "calendar": "Study calendar",
+    "calendarLede": "When I studied what — dated by when each wiki page was created or each lecture recorded. Tap an active day to see that day's topics.",
+    "viewDetail": "View detail",
+    "tldr": "TL;DR",
+    "pitfall": "Pitfalls & gotchas",
+    "backToStudy": "Back to study log",
+    "kindLecture": "Lecture recording",
+    "kindWiki": "Wiki compile",
+    "kindConversation": "AI dialog",
+    "kindWork": "Production",
+    "kindPlan": "Plan"
   }
 }

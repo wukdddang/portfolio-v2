@@ -22,9 +22,7 @@
     "ctaResume": "이력서 보기",
     "meta": {
       "mainDomain": "메인 직군",
-      "mainDomainValue": "웹 개발 · 풀스택",
       "learnedDomain": "학습 도메인",
-      "learnedDomainValue": "SAR · 위성영상",
       "aiStage": "AI 활용 단계",
       "yearsLabel": "연차"
     }
@@ -122,9 +120,9 @@
     "header": "Resume · 2026-05 · Base 버전",
     "meta": {
       "mainDomain": "메인 직군",
-      "mainDomainValue": "웹 개발 · 풀스택",
+      "mainDomainValue": "웹 개발 · 풀스택 · InSAR 처리",
       "learnedDomain": "학습 도메인",
-      "learnedDomainValue": "SAR · 위성영상",
+      "learnedDomainValue": "SAR · 위성영상 · 임베디드",
       "aiStage": "AI 활용 단계",
       "yearsLabel": "연차"
     },
@@ -163,5 +161,30 @@
       "impactLabel": "임팩트",
       "viewDetail": "프로젝트 상세 보기 →"
     }
+  },
+  "studies": {
+    "eyebrow": "학습 로그",
+    "backHome": "포트폴리오로",
+    "metaSuffix": "학습 로그 · 우창욱 포트폴리오",
+    "motive": "왜 시작했나",
+    "method": "어떻게 쌓는가",
+    "timeline": "타임라인",
+    "statusDone": "위키 컴파일 완료",
+    "statusDoing": "진행 중",
+    "statusTodo": "로드맵 대기",
+    "wikiBadge": "wiki",
+    "wikiNote": "이 페이지의 토픽 카드는 Brain Trinity 위키에서 컴파일됐습니다. 원본 위키는 면접에서 직접 시연 가능합니다.",
+    "otherStudy": "다른 학습 로그",
+    "calendar": "학습 캘린더",
+    "calendarLede": "위키 페이지가 만들어진 날짜·강의 녹음일 기준으로 언제 무엇을 공부했는지. 활동이 있는 날을 누르면 그날의 토픽이 보입니다.",
+    "viewDetail": "상세 보기",
+    "tldr": "한 줄 요약",
+    "pitfall": "주의점 · 함정",
+    "backToStudy": "학습 로그로 돌아가기",
+    "kindLecture": "강의 녹음",
+    "kindWiki": "위키 컴파일",
+    "kindConversation": "AI 대화",
+    "kindWork": "실무",
+    "kindPlan": "계획"
   }
 }

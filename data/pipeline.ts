@@ -6,10 +6,12 @@ import type { L } from "@/data/i18n";
  * 시스템 간 정밀한 호출 관계가 아니라 *데이터 여정*의 요약이다. 정확한 토폴로지는
  * 각 프로젝트 상세의 다이어그램(PlatformDiagram·ProjectDiagram)이 담당한다.
  *
- * 셋 다 가로 스파인(흐르는 amber·끝점 pill + 레이어 카드)이되, 디테일로 차별한다:
- *  - SAR  : 일반 크기 카드 (간판).
- *  - SDPE : L0/L1·L2/L3 레벨 배지를 단 카드 + 오케스트레이션 note.
- *  - him  : compact(작은 카드) — 사이드 프로젝트.
+ * 프로젝트 성격이 다이어그램 *모양*으로 드러나도록 변형(variant)을 나눈다:
+ *  - SAR  (spine·기본)   : 가로 스파인 — 시스템을 가로지르는 데이터 여정. 간판.
+ *  - SDPE (orchestration): 제어 플레인(콘솔→워크플로) + pgmq 이벤트 버스 레일이
+ *                          L0/L1·L2/L3 레벨 카드로 디스패치하는 2-플레인 보드.
+ *  - him  (stack)        : 모바일 디바이스 프레임 속 세로 스택 — 커맨드/쿼리 트윈
+ *                          레인(CQRS)과 프레임 밖 FCM 푸시 환류 레인.
  *
  * layer 단계의 label·icon은 같은 slug의 subProject가 있으면 그 layerLabel·layerIcon을
  * 런타임 조회해 rename에 동기화한다(여기 값은 fallback). 단일 프로젝트는 여기 값을 그대로 쓴다.
@@ -32,6 +34,8 @@ export interface PipelineStage {
 
 export interface PipelineEdge {
   label: L;
+  /** stack 변형 — 이 구간을 두 레인으로 분리 렌더 (CQRS 커맨드/쿼리). cat은 레인 색 */
+  twin?: { label: L; cat: number }[];
 }
 
 export interface Pipeline {
@@ -40,11 +44,39 @@ export interface Pipeline {
   projectSlug: string;
   title: L;
   icon: string;
+  /** 다이어그램 변형 — 미지정: 가로 스파인 / orchestration: 이벤트 버스 보드 / stack: 세로 디바이스 스택 */
+  variant?: "orchestration" | "stack";
   /** 컴팩트(작은 카드) 렌더 — 사이드 프로젝트(him)용. 미지정 시 일반 크기 */
   compact?: boolean;
-  /** 좌→우 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
+  /** 좌→우(stack은 위→아래) 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
   stages: PipelineStage[];
   edges: PipelineEdge[];
+  /** orchestration 변형 — 제어 플레인: 콘솔 →run→ 워크플로 ⇒ 이벤트 버스 ⇒ 레벨 디스패치 */
+  control?: {
+    console: PipelineStage;
+    runLabel: L;
+    workflow: { icon: string; label: L; sublabel: L };
+    busLabel: L;
+  };
+  /** stack 변형 — 두 번째 디바이스: 푸시 수신 잠금화면 목업. laneLabel은 본체→이 기기 점선 레인 */
+  pushDevice?: {
+    laneLabel: L;
+    clock: string;
+    date: L;
+    notifications: { icon: string; app: L; time: L; title: L; body: L }[];
+    hint: L;
+    caption: L;
+  };
+  /** stack 변형 — 세 번째 디바이스: 알림 탭 후 앱 대시보드 목업 */
+  appScreen?: {
+    laneLabel: L;
+    clock: string;
+    title: L;
+    stats: { value: string; label: L; tone: "ok" | "warn" | "danger" }[];
+    rows: { icon: string; name: L; meta: L; badge: L; tone: "ok" | "warn" | "danger" }[];
+    tabs: { icon: string; label: L }[];
+    caption: L;
+  };
   /** 역방향/부가 흐름 한 줄 (점선 환류) */
   returnNote?: L;
   /** 보조 설명 한 줄 (levels 변형의 오케스트레이션 설명 등) */
@@ -147,24 +179,34 @@ export const pipelines: Pipeline[] = [
     },
   },
 
-  // ── SDPE — LumirX 처리 파이프라인 · L0→L3 레벨 트랙 ───────────────────────
+  // ── SDPE — LumirX 처리 파이프라인 · 오케스트레이션 보드 (제어/데이터 2-플레인) ──
   {
     id: "sdpe",
     projectSlug: "sdpe",
     icon: "🛰",
+    variant: "orchestration",
     title: { ko: "SDPE — LumirX 처리 파이프라인", en: "SDPE — LumirX processing pipeline" },
     note: {
       ko: "운영 콘솔에서 DAG를 구성하면 Pipeline Workflow(NestJS)가 pgmq 이벤트로 오케스트레이션하고, CSC 1~9 인터페이스 체인이 각 레벨을 처리합니다.",
       en: "From the operator console a DAG is composed; Pipeline Workflow (NestJS) orchestrates it over pgmq events, and a CSC 1–9 interface chain processes each level.",
     },
-    stages: [
-      {
+    control: {
+      console: {
         kind: "endpoint",
         tone: "actor",
         icon: "🖥",
         label: { ko: "운영 콘솔", en: "Operator console" },
         sublabel: { ko: "DAG 구성·실행", en: "Compose & run DAG" },
       },
+      runLabel: { ko: "DAG 실행", en: "run DAG" },
+      workflow: {
+        icon: "⚡",
+        label: { ko: "Pipeline Workflow", en: "Pipeline Workflow" },
+        sublabel: { ko: "NestJS · 이벤트 오케스트레이션", en: "NestJS · event orchestration" },
+      },
+      busLabel: { ko: "pgmq 이벤트 버스", en: "pgmq event bus" },
+    },
+    stages: [
       {
         kind: "layer",
         cat: 2,
@@ -224,24 +266,98 @@ export const pipelines: Pipeline[] = [
       },
     ],
     edges: [
-      { label: { ko: "실행", en: "run" } },
-      { label: { ko: "수집", en: "ingest" } },
-      { label: { ko: "처리", en: "process" } },
+      { label: { ko: "원시 신호", en: "raw signal" } },
+      { label: { ko: "처리 결과", en: "processed" } },
       { label: { ko: "적재", en: "catalog" } },
     ],
     returnNote: {
-      ko: "작업·산출물 상태는 운영 콘솔에서 모니터링됩니다",
-      en: "Jobs and products are monitored from the operator console",
+      ko: "작업·산출물 상태는 이벤트 버스를 거쳐 운영 콘솔에서 모니터링됩니다",
+      en: "Job and product status flows back over the event bus to the operator console",
     },
   },
 
-  // ── 집비치기 (him) — 개인 풀스택 사이드 · 세로 컴팩트 스택 ────────────────
+  // ── 집비치기 (him) — 개인 풀스택 사이드 · 모바일 디바이스 스택 ────────────
   {
     id: "him",
     projectSlug: "him",
     icon: "📦",
+    variant: "stack",
     compact: true,
     title: { ko: "집비치기 (him) — 개인 풀스택", en: "him — personal full-stack" },
+    note: {
+      ko: "모바일 재고 앱 한 대를 위에서 아래로 — 페이지에서 갈라지는 커맨드(쓰기)·쿼리(읽기) 두 레인이 CQRS 구조 그대로입니다. 옆의 두 기기는 그 흐름의 끝: FCM 푸시가 도착한 잠금화면, 그리고 알림을 탭하면 열리는 앱 대시보드입니다.",
+      en: "One mobile inventory app, top to bottom — the command (write) and query (read) lanes splitting under the pages are the CQRS structure itself. The two devices beside it are the end of that flow: a lock screen with the FCM push delivered, and the app dashboard that opens when you tap it.",
+    },
+    pushDevice: {
+      laneLabel: { ko: "🔔 FCM 푸시", en: "🔔 FCM push" },
+      clock: "07:30",
+      date: { ko: "6월 11일 수요일", en: "Wednesday, June 11" },
+      notifications: [
+        {
+          icon: "🥛",
+          app: { ko: "집비치기", en: "him" },
+          time: { ko: "지금", en: "now" },
+          title: { ko: "우유 유통기한 D-2", en: "Milk expires in 2 days" },
+          body: { ko: "냉장고 재고 2건이 임박했어요", en: "2 fridge items are expiring soon" },
+        },
+        {
+          icon: "🔋",
+          app: { ko: "집비치기", en: "him" },
+          time: { ko: "1시간 전", en: "1h ago" },
+          title: { ko: "건전지 재고 1개", en: "Batteries: 1 left" },
+          body: { ko: "최소 수량 아래로 내려갔어요", en: "Dropped below minimum stock" },
+        },
+      ],
+      hint: { ko: "밀어서 열기", en: "Swipe to open" },
+      caption: { ko: "푸시 도착 — 잠금화면", en: "Push lands on the lock screen" },
+    },
+    appScreen: {
+      laneLabel: { ko: "👆 알림 탭", en: "👆 Tap" },
+      clock: "07:31",
+      title: { ko: "집비치기", en: "him" },
+      stats: [
+        { value: "24", label: { ko: "전체 재고", en: "Items" }, tone: "ok" },
+        { value: "2", label: { ko: "임박", en: "Expiring" }, tone: "warn" },
+        { value: "1", label: { ko: "부족", en: "Low" }, tone: "danger" },
+      ],
+      rows: [
+        {
+          icon: "🥛",
+          name: { ko: "우유", en: "Milk" },
+          meta: { ko: "냉장 · 2개", en: "Fridge · 2" },
+          badge: { ko: "D-2", en: "D-2" },
+          tone: "danger",
+        },
+        {
+          icon: "🥚",
+          name: { ko: "계란", en: "Eggs" },
+          meta: { ko: "냉장 · 6개", en: "Fridge · 6" },
+          badge: { ko: "D-5", en: "D-5" },
+          tone: "warn",
+        },
+        {
+          icon: "🔋",
+          name: { ko: "건전지 AA", en: "AA batteries" },
+          meta: { ko: "서랍 · 1개", en: "Drawer · 1" },
+          badge: { ko: "부족", en: "Low" },
+          tone: "danger",
+        },
+        {
+          icon: "🧻",
+          name: { ko: "키친타월", en: "Paper towels" },
+          meta: { ko: "창고 · 4롤", en: "Pantry · 4" },
+          badge: { ko: "여유", en: "OK" },
+          tone: "ok",
+        },
+      ],
+      tabs: [
+        { icon: "🏠", label: { ko: "홈", en: "Home" } },
+        { icon: "📦", label: { ko: "재고", en: "Items" } },
+        { icon: "🧾", label: { ko: "구매", en: "Buy" } },
+        { icon: "⚙", label: { ko: "설정", en: "Set" } },
+      ],
+      caption: { ko: "알림 탭 → 앱 대시보드", en: "Tap → app dashboard" },
+    },
     stages: [
       {
         kind: "endpoint",
@@ -298,7 +414,13 @@ export const pipelines: Pipeline[] = [
     ],
     edges: [
       { label: { ko: "페이지 요청", en: "page request" } },
-      { label: { ko: "커맨드·쿼리", en: "command / query" } },
+      {
+        label: { ko: "커맨드·쿼리", en: "command / query" },
+        twin: [
+          { label: { ko: "커맨드", en: "command" }, cat: 1 },
+          { label: { ko: "쿼리", en: "query" }, cat: 3 },
+        ],
+      },
       { label: { ko: "영속화", en: "persist" } },
     ],
     returnNote: {

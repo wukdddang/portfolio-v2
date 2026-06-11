@@ -236,8 +236,43 @@ body {
   opacity: 0;
   animation: pipeline-return 7s linear infinite;
 }
+
+/* SDPE 오케스트레이션 보드 — pgmq 이벤트 버스 레일의 정방향(좌→우) 흐름 점 */
+@keyframes pipeline-bus {
+  0% {
+    left: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.8;
+  }
+  92% {
+    opacity: 0.8;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+.pipeline-bus-dot {
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  margin-left: -2.5px;
+  border-radius: 9999px;
+  background: var(--cat-2);
+  opacity: 0;
+  animation: pipeline-bus 5s linear infinite;
+}
+.pipeline-bus-dot--late {
+  animation-delay: 2.5s;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .pipeline-return-dot {
+  .pipeline-return-dot,
+  .pipeline-bus-dot {
     display: none;
   }
 }
@@ -277,4 +312,15 @@ body {
   article {
     page-break-inside: avoid;
   }
+}
+
+/* 학습 토픽 문서의 논문식 수식(KaTeX) — display는 크게, 인라인(legend)은 본문 크기 */
+.topic-eq .katex-display {
+  margin: 0;
+}
+.topic-eq .katex {
+  font-size: 1.35em;
+}
+.topic-eq-inline .katex {
+  font-size: 1em;
 }
