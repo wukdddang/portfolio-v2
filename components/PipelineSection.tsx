@@ -174,10 +174,36 @@ function StageCard({
       >
         {pick(stage.sublabel, locale)}
       </div>
-      {!compact && stage.desc && (
-        <p className="flex-1 px-4 py-2.5 text-xs leading-relaxed text-[var(--card-foreground)]">
+      {stage.desc && (
+        <p
+          className={cn(
+            "flex-1 leading-relaxed text-[var(--card-foreground)]",
+            compact ? "px-3 py-2 text-[11px]" : "px-4 py-2.5 text-xs"
+          )}
+        >
           {pick(stage.desc, locale)}
         </p>
+      )}
+      {stage.tags && stage.tags.length > 0 && (
+        <div
+          className={cn(
+            "mt-auto flex flex-wrap gap-1.5 border-t border-[var(--border)]/50",
+            compact ? "px-3 py-2" : "px-4 py-2.5"
+          )}
+        >
+          {stage.tags.map((tag, ti) => (
+            <span
+              key={ti}
+              className="rounded-md border px-1.5 py-0.5 font-mono text-[10px] leading-none text-[var(--muted)]"
+              style={{
+                borderColor: `color-mix(in oklch, ${catColor} 28%, var(--border))`,
+                backgroundColor: `color-mix(in oklch, ${catColor} 8%, var(--card))`,
+              }}
+            >
+              {pick(tag, locale)}
+            </span>
+          ))}
+        </div>
       )}
     </Link>
   );
