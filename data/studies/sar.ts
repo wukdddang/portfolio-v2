@@ -141,6 +141,45 @@ export const sar: Study = {
             slug: "swath-tops",
             detail: swathTops,
           },
+          {
+            icon: "📶",
+            title: { ko: "레이더 기초 — 마이크로파·밴드·후방산란", en: "Radar fundamentals — microwave · bands · backscatter" },
+            summary: {
+              ko: "능동 센서가 마이크로파를 쏘고 되돌아온 후방산란을 재는 원리, X/C/L 밴드별 파장·투과 특성 — 모든 SAR 이론의 출발점.",
+              en: "How an active sensor transmits microwaves and measures returning backscatter, and how X/C/L bands differ in wavelength and penetration — the starting point of all SAR theory.",
+            },
+            tags: [
+              { ko: "C/L-band", en: "C/L-band" },
+              { ko: "후방산란", en: "Backscatter" },
+            ],
+            status: "todo",
+          },
+          {
+            icon: "⛰",
+            title: { ko: "기하 왜곡 — Foreshortening·Layover·Shadow", en: "Geometric distortion — foreshortening · layover · shadow" },
+            summary: {
+              ko: "측면 조사(side-looking) 탓에 산악 지형이 압축·전도·음영으로 왜곡되는 세 메커니즘 — 지오코딩과 AOI 적합성 판단의 전제.",
+              en: "Three ways side-looking geometry distorts mountainous terrain — compressed, laid over, shadowed — the premise behind geocoding and AOI suitability.",
+            },
+            tags: [
+              { ko: "Layover", en: "Layover" },
+              { ko: "Shadow", en: "Shadow" },
+            ],
+            status: "todo",
+          },
+          {
+            icon: "🔁",
+            title: { ko: "편파 (Polarization) — HH·VV·HV", en: "Polarization — HH · VV · HV" },
+            summary: {
+              ko: "송수신 편파 조합이 지표 산란(표면·이중반사·체적)을 다르게 잡아내는 원리 — 작물·구조물·식생 분류의 토대.",
+              en: "How transmit/receive polarization combinations capture different surface scattering — surface, double-bounce, volume — the basis for classifying crops, structures and vegetation.",
+            },
+            tags: [
+              { ko: "HH/VV", en: "HH/VV" },
+              { ko: "이중반사", en: "Double-bounce" },
+            ],
+            status: "todo",
+          },
         ],
       },
       {
@@ -167,6 +206,19 @@ export const sar: Study = {
             wikiSlug: "sentinel1-product-levels-slc-grd",
             slug: "slc-grd",
             detail: slcGrd,
+          },
+          {
+            icon: "🌐",
+            title: { ko: "운용 모드 — IW·EW·SM·WV", en: "Acquisition modes — IW · EW · SM · WV" },
+            summary: {
+              ko: "육지 기본 IW 외에 해양·해빙용 EW(400km), 고해상 SM, 해양파 WV까지 — 목적에 따라 폭과 해상도를 맞바꾸는 Sentinel-1 모드 체계. (IW는 기초 블록의 Swath·TOPSAR에서 다룸)",
+              en: "Beyond the land-default IW: EW (400 km) for ocean/sea-ice, high-res SM, and WV for ocean waves — Sentinel-1's modes trading swath against resolution by purpose. (IW is covered under Swath · TOPSAR in the foundations block.)",
+            },
+            tags: [
+              { ko: "EW/SM/WV", en: "EW/SM/WV" },
+              { ko: "폭↔해상도", en: "Swath↔res" },
+            ],
+            status: "todo",
           },
         ],
       },
@@ -243,6 +295,59 @@ export const sar: Study = {
             wikiSlug: "ds-insar-squeesar-nisar-roadmap",
             slug: "ds-squeesar",
             detail: dsSqueesar,
+          },
+          {
+            icon: "🛰",
+            title: { ko: "궤도 보정·지오코딩 — POD·Range-Doppler", en: "Orbit correction & geocoding — POD · Range-Doppler" },
+            summary: {
+              ko: "정밀궤도력(POD)으로 기선 오차를 줄이고, Range-Doppler 지형보정으로 SAR 좌표를 지리좌표에 정합 — 결과를 지도에 올리는 마지막 처리 관문.",
+              en: "Precise orbit data (POD) shrinks baseline error, and Range-Doppler terrain correction registers SAR coordinates to geographic ones — the last processing gate before results land on a map.",
+            },
+            tags: [
+              { ko: "POD", en: "POD" },
+              { ko: "Terrain Correction", en: "Terrain correction" },
+            ],
+            status: "todo",
+          },
+        ],
+      },
+      {
+        title: { ko: "심화 기법 — 로드맵", en: "Advanced techniques — roadmap" },
+        desc: {
+          ko: "변위·3D·편파를 더 멀리 — 아직 학습 전인 다음 지도.",
+          en: "Pushing displacement, 3D and polarimetry further — the next map, not yet studied.",
+        },
+        cat: 5,
+        topics: [
+          {
+            icon: "➡",
+            title: { ko: "Offset Tracking — 대변위 추적", en: "Offset tracking — large displacement" },
+            summary: {
+              ko: "위상이 깨질 만큼 큰 변위(빙하·사태)를 진폭 상관으로 픽셀 이동량을 직접 재는 기법 — InSAR가 무력한 영역의 보완.",
+              en: "Measures pixel shifts by amplitude correlation for displacements too large for phase to track (glaciers, landslides) — a complement where InSAR breaks down.",
+            },
+            tags: [{ ko: "Amplitude", en: "Amplitude" }],
+            status: "todo",
+          },
+          {
+            icon: "🧩",
+            title: { ko: "PolInSAR — 편파간섭", en: "PolInSAR — polarimetric InSAR" },
+            summary: {
+              ko: "편파와 간섭을 결합해 산란 위상중심의 높이를 분리 — 식생 높이·구조 추정으로 가는 길.",
+              en: "Combines polarimetry with interferometry to separate scattering phase-centre heights — the path toward vegetation height and structure.",
+            },
+            tags: [{ ko: "Coherence", en: "Coherence" }],
+            status: "todo",
+          },
+          {
+            icon: "🧊",
+            title: { ko: "SAR Tomography — 3D 재구성", en: "SAR tomography — 3D reconstruction" },
+            summary: {
+              ko: "여러 궤도 스택을 고도축으로 합성해 한 픽셀 안 다중 산란체를 3D로 분해 — 도심 고층·식생 수직구조 분석.",
+              en: "Synthesises a multi-orbit stack along elevation to resolve multiple scatterers within one pixel in 3D — for urban high-rises and vertical vegetation structure.",
+            },
+            tags: [{ ko: "3D", en: "3D" }],
+            status: "todo",
           },
         ],
       },
