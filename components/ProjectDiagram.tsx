@@ -7,13 +7,16 @@
  * 공용 프리미티브는 components/diagram-flow.tsx 에서 가져온다.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
   BackgroundVariant,
   Controls,
+  Panel,
+  type Edge,
   type Node,
+  type ReactFlowInstance,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { motion } from "framer-motion";
@@ -30,7 +33,13 @@ import {
   FlowEdge,
   buildFlowEdges,
   type CardData,
+  type FlowEdgeData,
 } from "@/components/diagram-flow";
+import {
+  useDiagramFullscreen,
+  DiagramFullscreenButton,
+  FS_EXPANDED_STYLE,
+} from "@/components/diagram-fullscreen";
 import { cn } from "@/lib/utils";
 
 const nodeTypes = { card: DiagramCard };
@@ -76,6 +85,18 @@ export function ProjectDiagram({
     [diagram, locale]
   );
 
+  const fs = useDiagramFullscreen();
+  const rfRef = useRef<ReactFlowInstance<Node<CardData>, Edge<FlowEdgeData>> | null>(null);
+  // 전체화면 진입·이탈로 캔버스 크기가 바뀌면 새 크기에 맞춰 재-fit
+  useEffect(() => {
+    const inst = rfRef.current;
+    if (!inst) return;
+    const id = requestAnimationFrame(() =>
+      requestAnimationFrame(() => inst.fitView({ padding: 0.16, duration: 300 }))
+    );
+    return () => cancelAnimationFrame(id);
+  }, [fs.expanded]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -95,7 +116,11 @@ export function ProjectDiagram({
         </div>
       )}
 
-      <div className="h-[520px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] md:h-[640px]">
+      <div
+        ref={fs.ref}
+        style={fs.expanded ? FS_EXPANDED_STYLE : undefined}
+        className="h-[520px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] md:h-[640px]"
+      >
         {mounted ? (
           <ReactFlow
             nodes={nodes}
@@ -106,6 +131,7 @@ export function ProjectDiagram({
             fitView
             fitViewOptions={{ padding: 0.16 }}
             onInit={(instance) => {
+              rfRef.current = instance;
               // 커스텀 노드 측정 완료 후 재-fit (초기 fitView 타이밍 보정)
               requestAnimationFrame(() =>
                 requestAnimationFrame(() =>
@@ -125,6 +151,13 @@ export function ProjectDiagram({
           >
             <Background variant={BackgroundVariant.Dots} gap={22} size={1} />
             <Controls showInteractive={false} position="bottom-right" />
+            <Panel position="top-right">
+              <DiagramFullscreenButton
+                expanded={fs.expanded}
+                onToggle={fs.toggle}
+                locale={locale}
+              />
+            </Panel>
           </ReactFlow>
         ) : (
           <div className="flex h-full items-center justify-center text-[10px] font-mono uppercase tracking-widest text-[var(--muted)]">
