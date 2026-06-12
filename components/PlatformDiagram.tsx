@@ -46,6 +46,11 @@ import {
   buildFlowEdges,
   type CardData,
 } from "@/components/diagram-flow";
+import {
+  useDiagramFullscreen,
+  DiagramFullscreenButton,
+  FS_EXPANDED_STYLE,
+} from "@/components/diagram-fullscreen";
 import { cn } from "@/lib/utils";
 
 // 레이어 배치 순서 (요청 흐름: 프론트 → 저장 → 분석), 좌→우
@@ -293,6 +298,8 @@ export function PlatformDiagram({ project }: { project: Project }) {
   const [activeBox, setActiveBox] = useState<string | null>(null);
   const [focused, setFocused] = useState<string | null>(null);
   const rfRef = useRef<ReactFlowInstance | null>(null);
+  const fs = useDiagramFullscreen();
+  const prevExpanded = useRef(false);
   useEffect(() => setMounted(true), []);
 
   // 레이어 메타 (breadcrumb·이전/다음 이동용)
@@ -315,6 +322,28 @@ export function PlatformDiagram({ project }: { project: Project }) {
     () => buildPlatformGraph(project, locale),
     [project, locale]
   );
+
+  // 전체화면 토글 시에만 재-fit — 드릴인 중이면 그 레이어에, 아니면 전체에 맞춤.
+  // (activeBox 변경 시의 fit은 enter/reset이 이미 처리하므로 expanded 전이에서만 발화)
+  useEffect(() => {
+    if (prevExpanded.current === fs.expanded) return;
+    prevExpanded.current = fs.expanded;
+    const inst = rfRef.current;
+    if (!inst) return;
+    const id = window.setTimeout(() => {
+      if (activeBox) {
+        const ids = [activeBox, ...(base.boxChildren[activeBox] ?? [])];
+        inst.fitView({
+          nodes: ids.map((nid) => ({ id: nid })),
+          padding: 0.12,
+          duration: 300,
+        });
+      } else {
+        inst.fitView({ padding: 0.14, duration: 300 });
+      }
+    }, 80);
+    return () => window.clearTimeout(id);
+  }, [fs.expanded, activeBox, base.boxChildren]);
 
   // 클릭 포커스 트레이싱 — 선택한 카드 + 직접 연결된 카드만 강조
   const connected = useMemo(() => {
@@ -440,7 +469,11 @@ export function PlatformDiagram({ project }: { project: Project }) {
       </div>
 
       {/* 가로 스파인이라 넓다 — 본문 컬럼(max-w-6xl)을 벗어나 더 넓게 (xl+, 화면 중앙, 스크롤바 안전) */}
-      <div className="h-[560px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] md:h-[680px] xl:relative xl:left-1/2 xl:w-[min(100vw-3rem,96rem)] xl:-translate-x-1/2">
+      <div
+        ref={fs.ref}
+        style={fs.expanded ? FS_EXPANDED_STYLE : undefined}
+        className="h-[560px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] md:h-[680px] xl:relative xl:left-1/2 xl:w-[min(100vw-3rem,96rem)] xl:-translate-x-1/2"
+      >
         {mounted ? (
           <ReactFlow
             nodes={displayNodes}
@@ -520,6 +553,15 @@ export function PlatformDiagram({ project }: { project: Project }) {
                   {pick(STR.reset, locale)}
                 </button>
               )}
+            </Panel>
+
+            {/* 우상단 — 전체화면 토글 (좌상단 네비·우하단 컨트롤과 겹치지 않음) */}
+            <Panel position="top-right">
+              <DiagramFullscreenButton
+                expanded={fs.expanded}
+                onToggle={fs.toggle}
+                locale={locale}
+              />
             </Panel>
           </ReactFlow>
         ) : (
