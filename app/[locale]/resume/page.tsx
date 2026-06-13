@@ -13,6 +13,7 @@ import { mainStack, learnedDomain } from "@/data/stack";
 import { PrintButton } from "@/components/PrintButton";
 import { pick } from "@/data/i18n";
 import { Md } from "@/lib/markdown";
+import { VisionText } from "@/components/VisionText";
 import { JsonLd } from "@/components/JsonLd";
 import { resumeGraph } from "@/lib/jsonld";
 import type { Locale } from "@/i18n/routing";
@@ -285,7 +286,7 @@ export default async function ResumePage({
               <li key={i} className="flex items-start gap-2.5 text-base">
                 <span className="text-[var(--accent)] font-mono">→</span>
                 <span>
-                  <Md>{pick(v, locale)}</Md>
+                  <VisionText item={v} locale={locale} />
                 </span>
               </li>
             ))}

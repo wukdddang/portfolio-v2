@@ -96,21 +96,33 @@ function VerticalEdge({
   return (
     <div className="relative flex justify-center py-1">
       <FlowLine vertical phase={phase} reduce={reduce} color={color} />
-      <span className={cn(chipCls, "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2")}>{label}</span>
+      <span className={cn(chipCls, "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2")} style={tintedChipStyle(color)}>
+        {label}
+      </span>
     </div>
   );
 }
 
-/** 단계 사이 커넥터 — lg+: 라벨 칩 위 + 가로선, lg 미만: 세로선 + 옆 칩 */
-function Connector({ label, phase, reduce }: { label: string; phase: number; reduce: boolean }) {
+/** color 지정 시 칩 테두리·글자를 그 색으로 틴트 (제어 플레인 teal 등). 미지정이면 기본 칩 */
+function tintedChipStyle(color?: string) {
+  return color
+    ? ({
+        borderColor: `color-mix(in oklch, ${color} 45%, var(--border))`,
+        color: `color-mix(in oklch, ${color} 60%, var(--foreground))`,
+      } as const)
+    : undefined;
+}
+
+/** 단계 사이 커넥터 — lg+: 라벨 칩 위 + 가로선, lg 미만: 세로선 + 옆 칩. color 지정 시 흐름선·칩 틴트 */
+function Connector({ label, phase, reduce, color }: { label: string; phase: number; reduce: boolean; color?: string }) {
   return (
     <>
       <div className="lg:hidden">
-        <VerticalEdge label={label} phase={phase} reduce={reduce} />
+        <VerticalEdge label={label} phase={phase} reduce={reduce} color={color} />
       </div>
       <div className="hidden flex-col items-center gap-1.5 px-1 lg:flex lg:-translate-y-3">
-        <span className={chipCls}>{label}</span>
-        <FlowLine phase={phase} reduce={reduce} />
+        <span className={chipCls} style={tintedChipStyle(color)}>{label}</span>
+        <FlowLine phase={phase} reduce={reduce} color={color} />
       </div>
     </>
   );
@@ -168,47 +180,114 @@ function BusRail({ label, reduce }: { label: string; reduce: boolean }) {
   );
 }
 
-/** 제어 플레인 워크플로 노드 — teal 카드. tapped면 아래 버스로 내려가는 탭 라인 */
-function WorkflowNode({
-  pipeline,
-  locale,
-  tapped = false,
-}: {
-  pipeline: Pipeline;
-  locale: Locale;
-  tapped?: boolean;
-}) {
+/** 제어 플레인 워크플로 노드 — teal 카드. 아래로 BusTap이 버스에 접속한다 */
+function WorkflowNode({ pipeline, locale }: { pipeline: Pipeline; locale: Locale }) {
   const wf = pipeline.control!.workflow;
   return (
-    <div className="relative">
-      <Link
-        href={`/projects/${pipeline.projectSlug}`}
-        style={{
-          borderColor: "color-mix(in oklch, var(--cat-2) 55%, var(--border))",
-          backgroundColor: "color-mix(in oklch, var(--cat-2) 10%, var(--card))",
-        }}
-        className="group/wf flex items-center gap-2.5 rounded-xl border px-4 py-2.5 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
+    <Link
+      href={`/projects/${pipeline.projectSlug}`}
+      style={{
+        borderColor: "color-mix(in oklch, var(--cat-2) 55%, var(--border))",
+        backgroundColor: "color-mix(in oklch, var(--cat-2) 10%, var(--card))",
+      }}
+      className="group/wf flex items-center gap-2.5 rounded-xl border px-4 py-2.5 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
+    >
+      <span
+        className="flex size-7 shrink-0 items-center justify-center rounded-lg text-sm leading-none"
+        style={{ backgroundColor: "color-mix(in oklch, var(--cat-2) 22%, var(--card))" }}
       >
-        <span
-          className="flex size-7 shrink-0 items-center justify-center rounded-lg text-sm leading-none"
-          style={{ backgroundColor: "color-mix(in oklch, var(--cat-2) 22%, var(--card))" }}
-        >
-          {wf.icon}
+        {wf.icon}
+      </span>
+      <span className="flex min-w-0 flex-col">
+        <span className="text-sm font-semibold leading-tight">{pick(wf.label, locale)}</span>
+        <span className="font-mono text-[10px] leading-tight text-[var(--muted)]">{pick(wf.sublabel, locale)}</span>
+      </span>
+      <ArrowUpRight className="size-3.5 shrink-0 text-[var(--accent)] opacity-0 transition-all group-hover/wf:opacity-100" />
+    </Link>
+  );
+}
+
+/**
+ * DAG 프론트엔드 노드 — SDPE 운영 콘솔(Next.js·React Flow)의 n8n 스타일 DAG 빌더를
+ * 미니 캔버스로 압축. 윈도우 크롬 헤더 + 점 배경 위 노드 스트립(진입→CSC×2→카탈로그).
+ * 제어 플레인 색(teal·--cat-2)으로 워크플로·버스와 한 묶음. 탭하면 프로젝트 상세로.
+ */
+function DagFrontendNode({ pipeline, locale }: { pipeline: Pipeline; locale: Locale }) {
+  const c = pipeline.control!.console;
+  // 미니 DAG 노드 — 진입(trigger) → CSC 처리 ×2 → 카탈로그. 실제 React Flow DAG 빌더의 축약.
+  const miniNodes = ["⚡", "⚙", "⚙", "🗄"];
+  return (
+    <Link
+      href={`/projects/${pipeline.projectSlug}`}
+      style={{
+        borderColor: "color-mix(in oklch, var(--cat-2) 50%, var(--border))",
+        backgroundColor: "color-mix(in oklch, var(--cat-2) 8%, var(--card))",
+      }}
+      className="group/dag flex w-full flex-col gap-2 rounded-xl border px-3 py-2.5 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40 lg:w-auto"
+    >
+      <div className="flex items-center gap-2">
+        <span className="flex items-center gap-1" aria-hidden>
+          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-5) 70%, transparent)" }} />
+          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--accent) 70%, transparent)" }} />
+          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-6) 70%, transparent)" }} />
         </span>
+        <span className="text-sm leading-none">{c.icon}</span>
         <span className="flex min-w-0 flex-col">
-          <span className="text-sm font-semibold leading-tight">{pick(wf.label, locale)}</span>
-          <span className="font-mono text-[10px] leading-tight text-[var(--muted)]">{pick(wf.sublabel, locale)}</span>
+          <span className="text-[13px] font-semibold leading-tight">{pick(c.label, locale)}</span>
+          <span className="font-mono text-[9px] leading-tight text-[var(--muted)]">{pick(c.sublabel, locale)}</span>
         </span>
-        <ArrowUpRight className="size-3.5 shrink-0 text-[var(--accent)] opacity-0 transition-all group-hover/wf:opacity-100" />
-      </Link>
-      {tapped && (
-        <span
-          aria-hidden
-          className="absolute left-1/2 top-full h-9 w-[2px] -translate-x-1/2"
-          style={{ background: "color-mix(in oklch, var(--cat-2) 75%, transparent)" }}
-        />
-      )}
-    </div>
+        <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-[var(--accent)] opacity-0 transition-all group-hover/dag:opacity-100" />
+      </div>
+      <div
+        className="flex items-center justify-center rounded-lg border border-[var(--border)]/60 px-2 py-2.5"
+        style={{
+          backgroundColor: "color-mix(in oklch, var(--cat-2) 5%, var(--background))",
+          backgroundImage: "radial-gradient(color-mix(in oklch, var(--cat-2) 22%, transparent) 0.5px, transparent 0.5px)",
+          backgroundSize: "9px 9px",
+        }}
+      >
+        {miniNodes.map((icon, i) => (
+          <Fragment key={i}>
+            {i > 0 && (
+              <span
+                aria-hidden
+                className="h-[1.5px] w-3.5 shrink-0"
+                style={{ background: "color-mix(in oklch, var(--cat-2) 55%, transparent)" }}
+              />
+            )}
+            <span
+              className="flex size-6 shrink-0 items-center justify-center rounded-md border text-[11px] leading-none"
+              style={{
+                borderColor: "color-mix(in oklch, var(--cat-2) 55%, var(--border))",
+                background: "color-mix(in oklch, var(--cat-2) 14%, var(--card))",
+              }}
+            >
+              {icon}
+            </span>
+          </Fragment>
+        ))}
+      </div>
+    </Link>
+  );
+}
+
+/** 워크플로 → 버스 탭다운 — 제어 플레인 solid teal 세로선 + 화살촉. flex-1로 버스까지 채운다 */
+function BusTap() {
+  return (
+    <span className="relative flex w-4 flex-1 justify-center" style={{ minHeight: "3rem" }} aria-hidden>
+      <span
+        className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 rounded-full"
+        style={{ background: "color-mix(in oklch, var(--cat-2) 75%, transparent)" }}
+      />
+      <svg
+        viewBox="0 0 12 8"
+        className="absolute -bottom-[3px] left-1/2 h-2 w-3 -translate-x-1/2"
+        style={{ fill: "var(--cat-2)" }}
+        aria-hidden="true"
+      >
+        <path d="M0 0 L6 8 L12 0 Z" />
+      </svg>
+    </span>
   );
 }
 
@@ -328,8 +407,8 @@ function LockDevice({
   locale: Locale;
 }) {
   return (
-    <figure className="flex w-full flex-col items-center gap-2.5">
-      <div className="relative w-full max-w-[16.5rem] overflow-hidden rounded-[2rem] border-2 border-[var(--border)] bg-[var(--card)]/50 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.9)]">
+    <figure className="flex h-full w-full flex-col items-center gap-2.5">
+      <div className="relative flex w-full max-w-[17.5rem] flex-1 flex-col overflow-hidden rounded-[2rem] border-2 border-[var(--border)] bg-[var(--card)]/50 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.9)]">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
@@ -338,7 +417,7 @@ function LockDevice({
               "radial-gradient(130% 70% at 50% -5%, color-mix(in oklch, var(--accent) 13%, transparent), transparent 62%), radial-gradient(90% 50% at 85% 105%, color-mix(in oklch, var(--cat-3) 11%, transparent), transparent)",
           }}
         />
-        <div className="relative">
+        <div className="relative flex flex-1 flex-col">
           <DeviceStatusBar />
           <div className="mt-3 flex flex-col items-center">
             <svg viewBox="0 0 12 14" className="h-3 w-3 fill-[var(--muted)]" aria-hidden="true">
@@ -381,7 +460,7 @@ function LockDevice({
               </div>
             ))}
           </div>
-          <div className="mt-5 pb-2.5 text-center">
+          <div className="mt-auto pb-2.5 pt-5 text-center">
             <div className="text-[9px] text-[var(--muted)]/80">{pick(device.hint, locale)}</div>
             <span aria-hidden className="mx-auto mt-2 block h-1 w-14 rounded-full bg-[var(--foreground)]/30" />
           </div>
@@ -409,8 +488,8 @@ function AppDevice({
   locale: Locale;
 }) {
   return (
-    <figure className="flex w-full flex-col items-center gap-2.5">
-      <div className="relative w-full max-w-[16.5rem] overflow-hidden rounded-[2rem] border-2 border-[var(--border)] bg-[var(--card)]/50 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.9)]">
+    <figure className="flex h-full w-full flex-col items-center gap-2.5">
+      <div className="relative flex w-full max-w-[17.5rem] flex-1 flex-col overflow-hidden rounded-[2rem] border-2 border-[var(--border)] bg-[var(--card)]/50 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.9)]">
         <DeviceStatusBar time={screen.clock} />
         <div className="flex items-center justify-between px-3 pt-2">
           <span className="text-[13px] font-bold tracking-tight">{pick(screen.title, locale)}</span>
@@ -432,7 +511,7 @@ function AppDevice({
             </div>
           ))}
         </div>
-        <div className="mt-2.5 flex flex-col gap-1 px-3 pb-3">
+        <div className="mt-2.5 flex flex-1 flex-col gap-1 px-3 pb-3">
           {screen.rows.map((r, i) => {
             const c = TONE_COLOR[r.tone];
             return (
@@ -769,12 +848,24 @@ function OrchestrationRow({ pipeline, locale, reduce }: RowProps) {
 
       {/* ── lg+: 2-플레인 보드 — 제어행 / 버스 레일 / 드롭+데이터 트랙 ── */}
       <div className="hidden lg:block">
-        <motion.div {...rise(reduce, 0)} className="flex items-center">
-          <StagePill stage={control.console} locale={locale} />
-          <Connector label={pick(control.runLabel, locale)} phase={0} reduce={reduce} />
-          <WorkflowNode pipeline={pipeline} locale={locale} tapped />
-        </motion.div>
-        <motion.div {...rise(reduce, 1)} className="mt-9">
+        {/* 제어 플레인 — DAG 프론트엔드 →배포→ Pipeline Workflow. 워크플로 컬럼이 늘어나
+            BusTap(flex-1)이 항상 버스 레일까지 닿는다 (높이 가변에도 연결 보장). */}
+        <div className="flex items-stretch">
+          <motion.div {...rise(reduce, 0)} className="flex max-w-sm items-center self-center">
+            <DagFrontendNode pipeline={pipeline} locale={locale} />
+          </motion.div>
+          <motion.div {...rise(reduce, 1)} className="flex items-center self-center">
+            <Connector label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
+          </motion.div>
+          {/* 워크플로 컬럼 — 상·하 스페이서 min-h 로 컬럼을 콘솔 카드보다 높게 만들어
+              콘솔(self-center)이 버스와 떨어지고, 워크플로만 BusTap 으로 버스에 접속한다 */}
+          <motion.div {...rise(reduce, 2)} className="flex flex-col items-center">
+            <span className="flex-1" style={{ minHeight: "3rem" }} aria-hidden />
+            <WorkflowNode pipeline={pipeline} locale={locale} />
+            <BusTap />
+          </motion.div>
+        </div>
+        <motion.div {...rise(reduce, 3)}>
           <BusRail label={pick(control.busLabel, locale)} reduce={reduce} />
         </motion.div>
         <div className="grid items-stretch" style={{ gridTemplateColumns: gridCols }}>
@@ -783,13 +874,13 @@ function OrchestrationRow({ pipeline, locale, reduce }: RowProps) {
         </div>
       </div>
 
-      {/* ── lg 미만: 세로 폴백 — 콘솔 → 워크플로 → (버스 홉) → 레벨 카드들 ── */}
+      {/* ── lg 미만: 세로 폴백 — DAG 프론트엔드 → 워크플로 → (버스 홉) → 레벨 카드들 ── */}
       <div className="flex flex-col lg:hidden">
-        <motion.div {...rise(reduce, 0)} className="flex justify-center">
-          <StagePill stage={control.console} locale={locale} />
+        <motion.div {...rise(reduce, 0)}>
+          <DagFrontendNode pipeline={pipeline} locale={locale} />
         </motion.div>
         <motion.div {...rise(reduce, 1)}>
-          <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} />
+          <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
         </motion.div>
         <motion.div {...rise(reduce, 2)} className="flex justify-center">
           <WorkflowNode pipeline={pipeline} locale={locale} />
@@ -883,16 +974,23 @@ function StackRow({ pipeline, locale, reduce }: RowProps) {
         </div>
       )}
 
-      {/* 디바이스 여정 — xl+: 가로(파이프라인 →FCM→ 잠금화면 →탭→ 앱), 미만: 세로 */}
-      <div className="flex flex-col items-center xl:flex-row xl:items-center xl:justify-center">
-        {/* 본체 프레임 — 데이터 파이프라인 */}
-        <motion.div
-          {...rise(reduce, 0)}
-          className="relative w-full max-w-[16.5rem] rounded-[2.25rem] border-2 border-[var(--border)] bg-[var(--card)]/40 px-4 pb-4 pt-9"
-        >
-          <span aria-hidden className="absolute left-1/2 top-3.5 h-1.5 w-14 -translate-x-1/2 rounded-full bg-[var(--border)]" />
-          <div className="flex flex-col">{items}</div>
-          <span aria-hidden className="mx-auto mt-4 block h-1 w-16 rounded-full bg-[var(--border)]" />
+      {/* 디바이스 여정 — xl+: 가로(파이프라인 →FCM→ 잠금화면 →탭→ 앱), 미만: 세로.
+          xl+ 에서 items-stretch 로 세 기기 베젤 높이를 본체(가장 큼)에 맞춰 통일한다. */}
+      <div className="flex flex-col items-center xl:flex-row xl:items-stretch xl:justify-center">
+        {/* 본체 프레임 — 데이터 파이프라인. figure+caption 으로 옆 기기와 높이·라벨 대칭 */}
+        <motion.div {...rise(reduce, 0)} className="w-full max-w-[17.5rem]">
+          <figure className="flex h-full w-full flex-col items-center gap-2.5">
+            <div className="relative flex w-full flex-1 flex-col rounded-[2.25rem] border-2 border-[var(--border)] bg-[var(--card)]/40 px-4 pb-4 pt-9">
+              <span aria-hidden className="absolute left-1/2 top-3.5 h-1.5 w-14 -translate-x-1/2 rounded-full bg-[var(--border)]" />
+              <div className="flex flex-col">{items}</div>
+              <span aria-hidden className="mx-auto mt-4 block h-1 w-16 rounded-full bg-[var(--border)]" />
+            </div>
+            {pipeline.deviceCaption && (
+              <figcaption className="text-center font-mono text-[10px] text-[var(--muted)]">
+                {pick(pipeline.deviceCaption, locale)}
+              </figcaption>
+            )}
+          </figure>
         </motion.div>
 
         {/* 잠금화면 — 푸시 도착 */}
@@ -904,7 +1002,7 @@ function StackRow({ pipeline, locale, reduce }: RowProps) {
             <motion.div {...rise(reduce, 2)} className="w-full xl:hidden">
               <PushLane label={pick(pipeline.pushDevice.laneLabel, locale)} vertical reduce={reduce} />
             </motion.div>
-            <motion.div {...rise(reduce, 3)} className="w-full max-w-[16.5rem] xl:self-center">
+            <motion.div {...rise(reduce, 3)} className="w-full max-w-[17.5rem]">
               <LockDevice device={pipeline.pushDevice} locale={locale} />
             </motion.div>
           </>
@@ -919,7 +1017,7 @@ function StackRow({ pipeline, locale, reduce }: RowProps) {
             <motion.div {...rise(reduce, 4)} className="w-full xl:hidden">
               <PushLane label={pick(pipeline.appScreen.laneLabel, locale)} vertical reduce={reduce} />
             </motion.div>
-            <motion.div {...rise(reduce, 5)} className="w-full max-w-[16.5rem] xl:self-center">
+            <motion.div {...rise(reduce, 5)} className="w-full max-w-[17.5rem]">
               <AppDevice screen={pipeline.appScreen} locale={locale} />
             </motion.div>
           </>

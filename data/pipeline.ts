@@ -58,6 +58,8 @@ export interface Pipeline {
     workflow: { icon: string; label: L; sublabel: L };
     busLabel: L;
   };
+  /** stack 변형 — 본체(데이터 파이프라인) 디바이스 하단 캡션. 잠금화면·앱 기기와 높이·라벨 대칭용 */
+  deviceCaption?: L;
   /** stack 변형 — 두 번째 디바이스: 푸시 수신 잠금화면 목업. laneLabel은 본체→이 기기 점선 레인 */
   pushDevice?: {
     laneLabel: L;
@@ -196,7 +198,7 @@ export const pipelines: Pipeline[] = [
         tone: "actor",
         icon: "🖥",
         label: { ko: "운영 콘솔", en: "Operator console" },
-        sublabel: { ko: "DAG 구성·실행", en: "Compose & run DAG" },
+        sublabel: { ko: "Next.js · React Flow DAG 빌더", en: "Next.js · React Flow DAG builder" },
       },
       runLabel: { ko: "DAG 실행", en: "run DAG" },
       workflow: {
@@ -288,6 +290,7 @@ export const pipelines: Pipeline[] = [
       ko: "모바일 재고 앱 한 대를 위에서 아래로 — 페이지에서 갈라지는 커맨드(쓰기)·쿼리(읽기) 두 레인이 CQRS 구조 그대로입니다. 옆의 두 기기는 그 흐름의 끝: FCM 푸시가 도착한 잠금화면, 그리고 알림을 탭하면 열리는 앱 대시보드입니다.",
       en: "One mobile inventory app, top to bottom — the command (write) and query (read) lanes splitting under the pages are the CQRS structure itself. The two devices beside it are the end of that flow: a lock screen with the FCM push delivered, and the app dashboard that opens when you tap it.",
     },
+    deviceCaption: { ko: "앱 본체 — CQRS 파이프라인", en: "App core — CQRS pipeline" },
     pushDevice: {
       laneLabel: { ko: "🔔 FCM 푸시", en: "🔔 FCM push" },
       clock: "07:30",
