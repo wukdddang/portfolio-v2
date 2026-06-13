@@ -6,6 +6,9 @@
 
 import type { L } from "./i18n";
 
+/** 미래 비전 항목 — 평문 + 선택적 인라인 링크. link.ko/en 단어를 link.href 로 이동하는 링크로 렌더 */
+export type VisionItem = L & { link?: L & { href: string } };
+
 export const personal = {
   name: { ko: "우창욱", en: "Changuk Woo" } satisfies L,
   tagline: {
@@ -56,15 +59,15 @@ export const personal = {
     ],
   } satisfies Record<string, { label: L; href?: string }[]>,
   identity: {
-    ko: "프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다루며, 회사에서 만난 SAR/위성 도메인까지 확장해 적용하고 있습니다.",
-    en: "I cover frontend + backend + infra/CI-CD + AI end-to-end as one full-stack developer, and have extended that reach into the SAR / satellite domain I first met at work.",
+    ko: "기획·설계 + 프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다루며, 회사에서 만난 SAR/위성 도메인까지 확장해 적용하고 있습니다.",
+    en: "I cover planning & design + frontend + backend + infra/CI-CD + AI end-to-end as one full-stack developer, and have extended that reach into the SAR / satellite domain I first met at work.",
   } satisfies L,
   mainDomain: {
     label: { ko: "메인 직군", en: "Main role" } satisfies L,
     value: { ko: "웹 개발", en: "Web Development" } satisfies L,
     detail: {
-      ko: "프론트엔드 + 백엔드 + 인프라/CI-CD + AI",
-      en: "Frontend + backend + infra/CI-CD + AI",
+      ko: "기획·설계 + 프론트엔드 + 백엔드 + 인프라/CI-CD + AI",
+      en: "Planning & design + frontend + backend + infra/CI-CD + AI",
     } satisfies L,
     note: {
       ko: "전천후 풀스택으로 확장 중입니다.",
@@ -114,6 +117,7 @@ export const personal = {
     {
       ko: "임베디드 확장을 진행하고 있습니다",
       en: "Currently extending into embedded systems",
+      link: { ko: "임베디드", en: "embedded", href: "/studies/embedded" },
     },
     {
       ko: "하드웨어·로보틱스로의 자연 확장을 예상하고 있습니다",
@@ -123,7 +127,7 @@ export const personal = {
       ko: "Brain Trinity를 본인 완전체 시스템으로 키울 계획입니다 (음성·일기·회의록·PDF 통합)",
       en: "Plan to grow Brain Trinity into a complete personal system (voice + journal + meeting notes + PDFs unified)",
     },
-  ] satisfies L[],
+  ] satisfies VisionItem[],
   invitations: [
     {
       ko: "도메인을 빠르게 흡수해야 하는 새로운 산업을 시작하시나요?",

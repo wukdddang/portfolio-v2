@@ -6,6 +6,7 @@ import { Mail, Sparkles, CheckCircle2 } from "lucide-react";
 import { personal } from "@/data/personal";
 import { pick } from "@/data/i18n";
 import type { Locale } from "@/i18n/routing";
+import { VisionText } from "@/components/VisionText";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -102,7 +103,7 @@ export function About() {
                 className="flex items-start gap-2 text-base text-[var(--card-foreground)]"
               >
                 <span className="text-[var(--accent)] font-mono">→</span>
-                <span>{pick(v, locale)}</span>
+                <span><VisionText item={v} locale={locale} /></span>
               </li>
             ))}
           </ul>
