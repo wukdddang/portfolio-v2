@@ -14,6 +14,13 @@ export interface ProjectImage {
   caption?: L;
 }
 
+/** 그리드 카드 상단 대표 이미지 — position 으로 크롭 기준 조정(세로 스크린샷은 "top" 권장, 기본 center) */
+export interface ProjectCardImage {
+  src: string;
+  alt: L;
+  position?: "top" | "center";
+}
+
 export interface ProjectVideo {
   src: string; // mp4 권장 (브라우저 호환). gif는 별도 export용.
   poster?: string; // 정지 미리보기 (mp4 prefetch 전 표시).
@@ -80,6 +87,12 @@ export interface Project {
   title: L;
   subtitle: L;
   badge: L;
+  /** 카드 대표 이미지 (그리드, 가로 스크린샷 1장 — object-cover). 없으면 icon 그라데이션 폴백 */
+  cardImage?: ProjectCardImage;
+  /** 카드 대표 이미지 2장 이상 (세로 스크린샷 갤러리 — 비율 유지 object-contain, 나란히). cardImage 보다 우선 */
+  cardImages?: ProjectCardImage[];
+  /** 카드 이미지 폴백 시 그라데이션 위에 띄울 대표 이모지 */
+  icon?: string;
   problem: L;
   system: L;
   impact: L;
@@ -730,6 +743,13 @@ const sarSearchAndAnalyzerLayer: Project = {
 // 통합 박스 — sub-projects 3개를 묶는 wrapper
 const lumirSarPlatform: Project = {
   slug: "lumir-sar-platform",
+  cardImage: {
+    src: "/projects/sar-search-and-analyzer/aoi.png",
+    alt: {
+      ko: "SAR 검색·분석 프론트 — 지도에서 AOI 지정",
+      en: "SAR search & analysis frontend — AOI selection on the map",
+    },
+  },
   title: {
     ko: "루미르 SAR 데이터 플랫폼",
     en: "Lumir SAR Data Platform",
@@ -989,6 +1009,13 @@ export const projects: Project[] = [
   lumirSarPlatform,
   {
     slug: "sdpe",
+    cardImage: {
+      src: "/projects/sdpe/dashboard.png",
+      alt: {
+        ko: "SDPE 운영 콘솔 — L0→L3 DAG 파이프라인 대시보드",
+        en: "SDPE operator console — L0→L3 DAG pipeline dashboard",
+      },
+    },
     diagram: {
       caption: {
         ko: "운영자가 콘솔에서 DAG를 구성·실행하면 Pipeline Workflow가 L0→L3 처리를 pgmq 이벤트로 오케스트레이션합니다. CSC 1~9 인터페이스 체인(Python 알고리즘, 예: csc03 range compression)이 단계별 처리를 수행하고, 결과 카탈로그는 PostgreSQL에. 새 위성·알고리즘은 기획→DAG 매핑→프로파일 추가만으로 확장(코드 변경 최소). 가운데 주황 = 정방향 흐름.",
@@ -1118,6 +1145,24 @@ export const projects: Project[] = [
       en: "Lumir LumirX multi-stage SAR pipeline · NestJS with 5 subsystems + DAG",
     },
     badge: { ko: "3+4 혼합", en: "Stage 3+4 blend" },
+    metrics: [
+      {
+        label: { ko: "처리 레벨", en: "Processing levels" },
+        value: { ko: "L0 → L3", en: "L0 → L3" },
+      },
+      {
+        label: { ko: "인터페이스 체인", en: "Interface chain" },
+        value: { ko: "CSC 1~9", en: "CSC 1–9" },
+      },
+      {
+        label: { ko: "GitLab CI/CD", en: "GitLab CI/CD" },
+        value: { ko: "0→구축", en: "From scratch" },
+      },
+      {
+        label: { ko: "NestJS 서브시스템", en: "NestJS subsystems" },
+        value: { ko: "5개", en: "5" },
+      },
+    ],
     problem: {
       ko: "LumirX 위성 원시 SAR 데이터(L0~L3) 다단계 파이프라인을 운영자가 구성·실행·추적·복구할 시스템이 부재했고, 새 위성·새 알고리즘 추가 시 코드 변경 최소화가 필요했습니다. 본인 입장에서 파이프라인 도메인은 백지 상태로 투입됐습니다.",
       en: "There was no system letting an operator configure, run, trace, and recover the L0–L3 LumirX raw-SAR pipeline, and adding new satellites or algorithms needed to cost as little code change as possible. From my side, I was dropped into the pipeline domain blank-slate.",
@@ -1241,6 +1286,22 @@ export const projects: Project[] = [
   },
   {
     slug: "him",
+    cardImages: [
+      {
+        src: "/projects/him/home.png",
+        alt: {
+          ko: "집비치기 모바일 앱 홈 — 위치별 재고 + 통계",
+          en: "him mobile app home — stock by location + stats",
+        },
+      },
+      {
+        src: "/projects/him/m-history.png",
+        alt: {
+          ko: "집비치기 재고 이력 — 입고·소비·폐기 타임라인",
+          en: "him inventory history — stock-in / use / disposal timeline",
+        },
+      },
+    ],
     diagram: {
       caption: {
         ko: "AI native 100% 풀스택 사이드 — NestJS CQRS 도메인 모듈 23개·페이지 다수. 핵심 재고 흐름을 페이지 단위로 봅니다: 대시보드·구매·이력·가전 페이지 → 각 CQRS 도메인 모듈 → PostgreSQL. 유통기한 임박은 알림 모듈이 FCM 푸시로 전달. (회계·자산·관리자 등 별도 도메인은 생략)",
@@ -1481,6 +1542,14 @@ export const projects: Project[] = [
   },
   {
     slug: "lumir-erp",
+    cardImage: {
+      src: "/projects/lumir-erp/cms.png",
+      alt: {
+        ko: "Lumir-ERP CMS — 공지 콘텐츠 관리 (카테고리·목록·공개 토글)",
+        en: "Lumir-ERP CMS — announcement content management (categories, list, publish toggles)",
+      },
+    },
+    icon: "🏢",
     diagram: {
       caption: {
         ko: "사내 전 사원 + 외부 입사지원자까지 4 도메인 백오피스. 프론트는 외부 API(AMS·CMS·LRIM)와 UAM용 MongoDB를 호출하는 오케스트레이터이고, CMS만 풀스택 단독(기획·BE·테스트)입니다. Plan(mock)/Current(실제 API) 환경 분리 패턴(파트장 인계)을 4 도메인에 일관 적용 — 핵심 자산은 4 도메인 동시 적응력.",
@@ -1732,6 +1801,7 @@ export const projects: Project[] = [
   },
   {
     slug: "brain-trinity",
+    icon: "🧠",
     title: { ko: "Brain Trinity", en: "Brain Trinity" },
     subtitle: {
       ko: "인지 부하 분산 + 도메인 적응 메커니즘의 시스템화",
