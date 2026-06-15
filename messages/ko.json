@@ -10,11 +10,17 @@
     "location": "위치",
     "projects": "프로젝트",
     "stack": "스택",
+    "faq": "FAQ",
     "about": "About",
     "resume": "이력서",
     "ariaLocale": "언어 선택",
     "ariaKo": "한국어",
     "ariaEn": "English"
+  },
+  "faq": {
+    "eyebrow": "자주 묻는 질문",
+    "title": "궁금한 점이 있나요?",
+    "subtitle": "채용 담당자와 AI 검색이 자주 던지는 질문을 한곳에 정리했습니다. 답변에서 더 깊은 페이지로 바로 이동할 수 있습니다."
   },
   "hero": {
     "stageLabel": "AI 사고 파트너",
@@ -45,6 +51,7 @@
     "signalBadge": "진입 신호",
     "ownFeel": "본인 체감:",
     "resultLabel": "결과물 =",
+    "stageWord": "단계",
     "singleLeverEyebrow": "단일 레버"
   },
   "projects": {
@@ -86,6 +93,7 @@
     "inheritedScope": "인계받은 영역",
     "honestyNote": "솔직성 메모 (면접용)",
     "qaTitle": "면접 Q&A 준비",
+    "relatedStudiesEyebrow": "이 도메인의 학습 로그",
     "keywords": "키워드",
     "measurementPending": "📊 정량 측정 권장 (현재 미측정)",
     "subProjectsEyebrow": "레이어별 깊이",
@@ -185,6 +193,11 @@
     "kindWiki": "위키 컴파일",
     "kindConversation": "AI 대화",
     "kindWork": "실무",
-    "kindPlan": "계획"
+    "kindPlan": "계획",
+    "search": "학습 내용 검색",
+    "searchPlaceholder": "토픽·태그·내용 검색 (예: 위상, coherence, RTOS)",
+    "searchHint": "esc 로 지우기",
+    "searchCount": "{n}개 결과",
+    "searchEmpty": "일치하는 학습 내용이 없습니다. 다른 키워드로 검색해 보세요."
   }
 }

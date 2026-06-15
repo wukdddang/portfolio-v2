@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ArrowLeft, CheckCircle2, AlertCircle, Sparkles, Download } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CheckCircle2, AlertCircle, Sparkles, Download } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { projects, type Project } from "@/data/projects";
+import { studies } from "@/data/studies";
 import { pick } from "@/data/i18n";
+import { CountUp } from "@/components/CountUp";
 import { ProjectDiagram } from "@/components/ProjectDiagram";
 import { PlatformDiagram } from "@/components/PlatformDiagram";
 import { LayerDiagramDisclosure } from "@/components/LayerDiagramDisclosure";
@@ -81,6 +83,11 @@ export default async function ProjectDetailPage({
     { label: t("impact"), body: pick(project.impact, locale), accent: true },
   ];
 
+  // 연관 학습 로그 — 도메인 이론을 정리한 학습 로그로 상호 링크 (studies → projects는 practice 섹션에 존재)
+  const related = (project.relatedStudies ?? [])
+    .map((s) => studies.find((st) => st.slug === s))
+    .filter((st): st is NonNullable<typeof st> => Boolean(st));
+
   return (
     <article className="min-h-screen">
       <JsonLd
@@ -131,7 +138,7 @@ export default async function ProjectDetailPage({
                   {pick(m.label, locale)}
                 </div>
                 <div className="text-lg font-bold tracking-tight">
-                  {pick(m.value, locale)}
+                  <CountUp value={pick(m.value, locale)} />
                 </div>
               </div>
             ))}
@@ -337,6 +344,35 @@ export default async function ProjectDetailPage({
           </div>
         </div>
 
+        {/* 연관 학습 로그 — 프로젝트 → 도메인 학습 로그 상호 링크 */}
+        {related.length > 0 && (
+          <div className="mb-12">
+            <div className="text-xs font-mono uppercase tracking-widest text-[var(--accent)] mb-3">
+              {t("relatedStudiesEyebrow")}
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {related.map((st) => (
+                <Link
+                  key={st.slug}
+                  href={`/studies/${st.slug}`}
+                  className="group flex items-start gap-3 p-5 rounded-xl border border-[var(--border)] bg-[var(--card)] transition-all hover:border-[var(--accent)]/40 hover:ring-2 hover:ring-[var(--accent)]/20"
+                >
+                  <span className="text-2xl leading-none">{st.icon}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="font-semibold leading-snug">{pick(st.title, locale)}</span>
+                      <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-[var(--accent)] opacity-0 transition-opacity group-hover:opacity-100" />
+                    </div>
+                    <p className="mt-1 text-sm leading-relaxed text-[var(--muted)] line-clamp-2">
+                      {pick(st.tagline, locale)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Measurement pending */}
         {project.measurementPending && project.measurementPending.length > 0 && (
           <div className="p-5 rounded-xl border border-dashed border-[var(--border)]">
@@ -451,7 +487,7 @@ function SubProjectSection({
                 {pick(m.label, locale)}
               </div>
               <div className="text-base font-bold tracking-tight">
-                {pick(m.value, locale)}
+                <CountUp value={pick(m.value, locale)} />
               </div>
             </div>
           ))}

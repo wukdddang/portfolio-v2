@@ -3,6 +3,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Nav } from "@/components/Nav";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { routing, type Locale } from "@/i18n/routing";
 import { siteUrl } from "@/lib/site";
 import "../globals.css";
@@ -92,6 +93,7 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
+          <ScrollProgress />
           <Nav />
           <main className="flex-1">{children}</main>
         </NextIntlClientProvider>

@@ -2,12 +2,13 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { stages, singleLever } from "@/data/levels";
+import { singleLever } from "@/data/levels";
 import { personal } from "@/data/personal";
 import { pick } from "@/data/i18n";
 import { tenureLabel } from "@/lib/tenure";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
+import { StageScrollytelling } from "@/components/StageScrollytelling";
 
 export function Coordinates() {
   const t = useTranslations("coordinates");
@@ -66,82 +67,8 @@ export function Coordinates() {
           ))}
         </div>
 
-        {/* 5단계 모델 + 본인 위치 */}
-        <div className="mb-8">
-          <div className="flex items-baseline justify-between mb-6">
-            <h3 className="text-2xl font-bold">{t("stagesTitle")}</h3>
-            <div className="text-xs font-mono text-[var(--muted)]">
-              {t("currentLabel")} · {pick(personal.currentStage.range, locale)}
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            {stages.map((stage, idx) => {
-              const isActive = stage.id === 3 || stage.id === 4;
-              const isSignal = stage.id === 5;
-
-              return (
-                <motion.div
-                  key={stage.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.4, delay: idx * 0.05 }}
-                  className={cn(
-                    "relative grid grid-cols-[auto_1fr] gap-6 p-5 rounded-xl border transition-all",
-                    isActive &&
-                      "bg-[var(--accent)]/5 border-[var(--accent)]/40 ring-1 ring-[var(--accent)]/20",
-                    isSignal && "border-dashed border-[var(--accent)]/40",
-                    !isActive && !isSignal && "border-[var(--border)] opacity-60"
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={cn(
-                        "size-12 rounded-lg flex items-center justify-center text-lg font-bold font-mono",
-                        isActive
-                          ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                          : "bg-[var(--subtle)] text-[var(--muted)]"
-                      )}
-                    >
-                      {stage.id}
-                    </div>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-                      <div className="font-semibold text-base">{pick(stage.name, locale)}</div>
-                      <div className="text-xs font-mono text-[var(--muted)]">
-                        {pick(stage.short, locale)} · {t("resultLabel")} {pick(stage.resultOwner, locale)}
-                      </div>
-                      {isActive && (
-                        <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--accent-foreground)]">
-                          {t("currentBadge")}
-                        </span>
-                      )}
-                      {isSignal && (
-                        <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-[var(--accent)]/60 text-[var(--accent)]">
-                          {t("signalBadge")}
-                        </span>
-                      )}
-                    </div>
-                    {stage.ownDefinition ? (
-                      <div className="text-sm text-[var(--card-foreground)] leading-relaxed">
-                        <span className="text-[var(--muted)] font-mono text-xs mr-1">
-                          {t("ownFeel")}
-                        </span>
-                        {pick(stage.ownDefinition, locale)}
-                      </div>
-                    ) : (
-                      <div className="text-sm text-[var(--muted)] leading-relaxed">
-                        {pick(stage.seongPMDefinition, locale)}
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
+        {/* 5단계 모델 + 본인 위치 — sticky 스크롤 텔링 */}
+        <StageScrollytelling />
 
         {/* 단일 레버 */}
         <motion.div

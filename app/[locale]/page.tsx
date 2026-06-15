@@ -5,6 +5,7 @@ import { Coordinates } from "@/components/Coordinates";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { TechStack } from "@/components/TechStack";
 import { About } from "@/components/About";
+import { FaqSection } from "@/components/FaqSection";
 import { JsonLd } from "@/components/JsonLd";
 import { homeGraph } from "@/lib/jsonld";
 import type { Locale } from "@/i18n/routing";
@@ -25,6 +26,7 @@ export default async function HomePage({
       <Coordinates />
       <ProjectsGrid />
       <TechStack />
+      <FaqSection />
       <About />
     </>
   );
