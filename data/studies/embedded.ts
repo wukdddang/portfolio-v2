@@ -6,6 +6,9 @@ import { inductorTypes } from "./details/embedded/inductor-types";
 import { kvlKcl } from "./details/embedded/kvl-kcl";
 import { ohmsLaw } from "./details/embedded/ohms-law";
 import { voltageDrop } from "./details/embedded/voltage-drop";
+import { semiconductorBasics } from "./details/embedded/semiconductor-basics";
+import { diodeTypes } from "./details/embedded/diode-types";
+import { diodeCircuits } from "./details/embedded/diode-circuits";
 
 export const embedded: Study = {
     slug: "embedded",
@@ -25,7 +28,7 @@ export const embedded: Study = {
     },
     stats: [
       { label: { ko: "로드맵", en: "Roadmap" }, value: { ko: "18토픽 · 4블록", en: "18 topics · 4 blocks" } },
-      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "6페이지 (진행 중)", en: "6 pages (ongoing)" } },
+      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "9페이지 (진행 중)", en: "9 pages (ongoing)" } },
       { label: { ko: "본 강의", en: "Main course" }, value: { ko: "153강 · 16.5h", en: "153 lectures · 16.5 h" } },
     ],
     journal: embeddedJournal,
@@ -179,13 +182,68 @@ export const embedded: Study = {
           },
           {
             icon: "🔬",
-            title: { ko: "다이오드·BJT·MOSFET 심화", en: "Diode · BJT · MOSFET deep-dives" },
+            title: { ko: "반도체 기초 — PN 접합", en: "Semiconductor basics — PN junction" },
             summary: {
-              ko: "소자 지도에서 한 장씩 떼어 심화 — 다이오드 5종, BJT, 그리고 인버터 핵심 MOSFET의 스위칭 손실 같은 실전 수치 중심으로.",
-              en: "Peeling one component at a time off the map — five diode types, BJTs, and practical numbers like the switching losses of the MOSFETs at the heart of the inverter.",
+              ko: "다이오드·BJT·MOSFET이 깔고 가는 토대 — 도핑(N/P)·PN 접합 공핍층이 만드는 ~0.7V 문턱, 순방향 도통/역방향 차단의 원리. 강의가 건너뛰는 '왜 한 방향, 왜 0.7V'를 메우는 선수 개념입니다.",
+              en: "The floor under diodes/BJTs/MOSFETs — doping (N/P), the depletion region's ~0.7 V threshold, and why forward conducts while reverse blocks. The prerequisite the lectures skip.",
             },
-            tags: [{ ko: "#9–11", en: "#9–11" }],
-            status: "todo",
+            tags: [
+              { ko: "PN 접합", en: "PN junction" },
+              { ko: "도핑", en: "Doping" },
+              { ko: "문턱 전압", en: "Threshold" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-semiconductor-basics",
+            slug: "semiconductor-basics",
+            detail: semiconductorBasics,
+          },
+          {
+            icon: "▷",
+            title: { ko: "다이오드 특성 및 종류", en: "Diode characteristics & types" },
+            summary: {
+              ko: "한 방향 도통·순방향 강하 VF(~0.7V)·I-V 3영역, 끌 때의 역회복시간(trr) 손실, 그리고 효율·속도·보호로 갈리는 6종(범용·스위칭 1N4148·쇼트키·패스트리커버리·제너·TVS) 선정.",
+              en: "One-way conduction, the forward drop VF (~0.7 V), the three I-V regions, the reverse-recovery (trr) loss at turn-off, and choosing among six types split by efficiency / speed / protection.",
+            },
+            tags: [
+              { ko: "VF", en: "VF" },
+              { ko: "역회복 trr", en: "trr" },
+              { ko: "쇼트키", en: "Schottky" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-diode-types",
+            slug: "diode-types",
+            detail: diodeTypes,
+          },
+          {
+            icon: "🛡",
+            title: { ko: "다이오드 응용 회로 설계", en: "Diode circuit design" },
+            summary: {
+              ko: "삼상 전파 정류(6다이오드+평활 C)·스위칭/쇼트키 선정·제너 정전압(RS로 IZ 제한)·제너 클램핑(단/양방향)·TVS 보호(ESD·서지→GND). 정류는 순방향, 제너·TVS는 역방향 항복을 제어해 씁니다.",
+              en: "Three-phase rectify (6 diodes + smoothing C), switching/Schottky selection, a Zener regulator (RS limits IZ), Zener clamps (uni/bi), and TVS protection (ESD/surge → GND). Rectify uses forward; Zener/TVS use controlled reverse breakdown.",
+            },
+            tags: [
+              { ko: "정류·평활", en: "Rectify" },
+              { ko: "제너 정전압", en: "Zener reg" },
+              { ko: "TVS 보호", en: "TVS" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-diode-circuits",
+            slug: "diode-circuits",
+            detail: diodeCircuits,
+          },
+          {
+            icon: "📶",
+            title: { ko: "BJT · MOSFET", en: "BJT · MOSFET" },
+            summary: {
+              ko: "다음 차례 — BJT(전류 증폭·스위칭, 차단/선형/포화)는 강의 녹음 전사까지 마쳤고, 인버터 핵심 MOSFET(전압 제어·스위칭 손실)은 로드맵 대기 중입니다.",
+              en: "Up next — the BJT (current amplify/switch; cutoff/active/saturation) is transcribed and compiling; the inverter's MOSFET (voltage control, switching loss) is still on the roadmap.",
+            },
+            tags: [
+              { ko: "BJT", en: "BJT" },
+              { ko: "MOSFET", en: "MOSFET" },
+              { ko: "#10–11", en: "#10–11" },
+            ],
+            status: "doing",
           },
         ],
       },
