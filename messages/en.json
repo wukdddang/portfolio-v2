@@ -10,11 +10,17 @@
     "location": "Location",
     "projects": "Projects",
     "stack": "Stack",
+    "faq": "FAQ",
     "about": "About",
     "resume": "Resume",
     "ariaLocale": "Language",
     "ariaKo": "Korean",
     "ariaEn": "English"
+  },
+  "faq": {
+    "eyebrow": "Frequently asked",
+    "title": "Questions you might have",
+    "subtitle": "The questions recruiters and AI search tend to ask, gathered in one place. Each answer links straight to a deeper page."
   },
   "hero": {
     "stageLabel": "AI as thinking partner",
@@ -185,6 +191,11 @@
     "kindWiki": "Wiki compile",
     "kindConversation": "AI dialog",
     "kindWork": "Production",
-    "kindPlan": "Plan"
+    "kindPlan": "Plan",
+    "search": "Search the study log",
+    "searchPlaceholder": "Search topics, tags, content (e.g. phase, coherence, RTOS)",
+    "searchHint": "esc to clear",
+    "searchCount": "{n} results",
+    "searchEmpty": "No matching study content. Try a different keyword."
   }
 }

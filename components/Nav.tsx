@@ -17,6 +17,7 @@ export function Nav() {
     { href: "/#coordinates", id: "coordinates", label: t("location") },
     { href: "/#projects", id: "projects", label: t("projects") },
     { href: "/#stack", id: "stack", label: t("stack") },
+    { href: "/#faq", id: "faq", label: t("faq") },
     { href: "/#about", id: "about", label: t("about") },
     { href: "/resume", id: "resume", label: t("resume"), isPage: true },
   ];

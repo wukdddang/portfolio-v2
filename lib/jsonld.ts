@@ -9,7 +9,8 @@
 import { personal } from "@/data/personal";
 import { resumeContacts } from "@/data/resume";
 import { type Project } from "@/data/projects";
-import { pick } from "@/data/i18n";
+import { faq } from "@/data/faq";
+import { pick, type L } from "@/data/i18n";
 import { siteUrl } from "@/lib/site";
 import type { Locale } from "@/i18n/routing";
 
@@ -52,7 +53,26 @@ export function personNode(locale: Locale) {
   };
 }
 
-/** 홈: WebSite + Person 그래프. */
+/**
+ * FAQPage 노드 — q/a 쌍을 schema.org Question/acceptedAnswer로.
+ * AI 검색(LLM)·Google 리치결과가 "이 사람은 어떤 개발자인가" 같은 질의에 바로 답하도록 돕는다.
+ * answer.text는 평문이어야 하므로 data의 a(L)를 그대로 쓴다.
+ */
+function faqPage(items: { q: L; a: L }[], locale: Locale) {
+  return {
+    "@type": "FAQPage" as const,
+    mainEntity: items.map((item) => ({
+      "@type": "Question" as const,
+      name: pick(item.q, locale),
+      acceptedAnswer: {
+        "@type": "Answer" as const,
+        text: pick(item.a, locale),
+      },
+    })),
+  };
+}
+
+/** 홈: WebSite + Person + FAQPage 그래프. */
 export function homeGraph(locale: Locale, title: string, description: string) {
   return {
     "@context": "https://schema.org",
@@ -67,6 +87,7 @@ export function homeGraph(locale: Locale, title: string, description: string) {
         publisher: { "@id": PERSON_ID },
       },
       personNode(locale),
+      faqPage(faq, locale),
     ],
   };
 }
@@ -140,6 +161,8 @@ export function projectGraph(
         author: { "@id": PERSON_ID },
         creator: { "@id": PERSON_ID },
       },
+      // 프로젝트가 자체 Q&A를 가지면 FAQPage로도 노출 (AI 검색·리치결과)
+      ...(project.qa && project.qa.length > 0 ? [faqPage(project.qa, locale)] : []),
       personNode(locale),
     ],
   };

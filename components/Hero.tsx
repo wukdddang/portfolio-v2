@@ -1,8 +1,8 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ArrowDown, FileText, Briefcase } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { personal } from "@/data/personal";
@@ -43,11 +43,29 @@ function DomainValue({
 export function Hero() {
   const t = useTranslations("hero");
   const locale = useLocale() as Locale;
+  const reduce = useReducedMotion();
+
+  // 히어로를 지나칠 때의 스크롤 진행도(0=상단, 1=섹션 끝이 화면 위로). 스크롤에 *연동*되는 패럴랙스.
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  // 배경 격자는 콘텐츠보다 느리게(깊이감), 콘텐츠는 살짝 위로 빠지며 페이드아웃.
+  const gridY = useTransform(scrollYProgress, [0, 1], ["0%", "26%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -64]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
-      {/* Subtle background grid */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.04]">
+    <section
+      ref={ref}
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+    >
+      {/* Subtle background grid — 스크롤 연동 패럴랙스 */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={reduce ? undefined : { y: gridY }}
+      >
         <div
           className="absolute inset-0"
           style={{
@@ -56,9 +74,12 @@ export function Hero() {
             backgroundSize: "64px 64px",
           }}
         />
-      </div>
+      </motion.div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 pt-24 pb-12">
+      <motion.div
+        style={reduce ? undefined : { y: contentY, opacity: contentOpacity }}
+        className="relative mx-auto w-full max-w-7xl px-6 md:px-16 lg:px-24 pt-24 pb-12"
+      >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -159,7 +180,7 @@ export function Hero() {
             <div className="text-[var(--foreground)]">{tenureLabel(personal.joinDate, locale)}</div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
