@@ -199,6 +199,14 @@ export const pipelines: Pipeline[] = [
         icon: "🖥",
         label: { ko: "운영 콘솔", en: "Operator console" },
         sublabel: { ko: "Next.js · React Flow DAG 빌더", en: "Next.js · React Flow DAG builder" },
+        desc: {
+          ko: "React Flow 캔버스에서 처리 단계를 노드로 잇는 DAG를 구성하고, 실행·진행 상태를 모니터링",
+          en: "Compose a processing DAG by wiring stage nodes on a React Flow canvas, then launch & monitor its progress",
+        },
+        tags: [
+          { ko: "DAG 빌더", en: "DAG builder" },
+          { ko: "실행·모니터링", en: "Run · monitor" },
+        ],
       },
       runLabel: { ko: "DAG 실행", en: "run DAG" },
       workflow: {

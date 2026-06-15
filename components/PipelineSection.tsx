@@ -223,27 +223,27 @@ function DagFrontendNode({ pipeline, locale }: { pipeline: Pipeline; locale: Loc
         borderColor: "color-mix(in oklch, var(--cat-2) 50%, var(--border))",
         backgroundColor: "color-mix(in oklch, var(--cat-2) 8%, var(--card))",
       }}
-      className="group/dag flex w-full flex-col gap-2 rounded-xl border px-3 py-2.5 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40 lg:w-auto"
+      className="group/dag flex w-full flex-col gap-3 rounded-xl border px-4 py-3.5 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
     >
       <div className="flex items-center gap-2">
-        <span className="flex items-center gap-1" aria-hidden>
-          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-5) 70%, transparent)" }} />
-          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--accent) 70%, transparent)" }} />
-          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-6) 70%, transparent)" }} />
+        <span className="flex items-center gap-1.5" aria-hidden>
+          <span className="size-2 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-5) 70%, transparent)" }} />
+          <span className="size-2 rounded-full" style={{ background: "color-mix(in oklch, var(--accent) 70%, transparent)" }} />
+          <span className="size-2 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-6) 70%, transparent)" }} />
         </span>
-        <span className="text-sm leading-none">{c.icon}</span>
+        <span className="text-base leading-none">{c.icon}</span>
         <span className="flex min-w-0 flex-col">
-          <span className="text-[13px] font-semibold leading-tight">{pick(c.label, locale)}</span>
-          <span className="font-mono text-[9px] leading-tight text-[var(--muted)]">{pick(c.sublabel, locale)}</span>
+          <span className="text-[15px] font-semibold leading-tight">{pick(c.label, locale)}</span>
+          <span className="font-mono text-[10px] leading-tight text-[var(--muted)]">{pick(c.sublabel, locale)}</span>
         </span>
         <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-[var(--accent)] opacity-0 transition-all group-hover/dag:opacity-100" />
       </div>
       <div
-        className="flex items-center justify-center rounded-lg border border-[var(--border)]/60 px-2 py-2.5"
+        className="flex items-center justify-center rounded-lg border border-[var(--border)]/60 px-2 py-3.5"
         style={{
           backgroundColor: "color-mix(in oklch, var(--cat-2) 5%, var(--background))",
           backgroundImage: "radial-gradient(color-mix(in oklch, var(--cat-2) 22%, transparent) 0.5px, transparent 0.5px)",
-          backgroundSize: "9px 9px",
+          backgroundSize: "10px 10px",
         }}
       >
         {miniNodes.map((icon, i) => (
@@ -251,12 +251,12 @@ function DagFrontendNode({ pipeline, locale }: { pipeline: Pipeline; locale: Loc
             {i > 0 && (
               <span
                 aria-hidden
-                className="h-[1.5px] w-3.5 shrink-0"
+                className="h-[1.5px] w-4 shrink-0"
                 style={{ background: "color-mix(in oklch, var(--cat-2) 55%, transparent)" }}
               />
             )}
             <span
-              className="flex size-6 shrink-0 items-center justify-center rounded-md border text-[11px] leading-none"
+              className="flex size-7 shrink-0 items-center justify-center rounded-md border text-[13px] leading-none"
               style={{
                 borderColor: "color-mix(in oklch, var(--cat-2) 55%, var(--border))",
                 background: "color-mix(in oklch, var(--cat-2) 14%, var(--card))",
@@ -267,6 +267,25 @@ function DagFrontendNode({ pipeline, locale }: { pipeline: Pipeline; locale: Loc
           </Fragment>
         ))}
       </div>
+      {c.desc && (
+        <p className="text-xs leading-relaxed text-[var(--card-foreground)]">{pick(c.desc, locale)}</p>
+      )}
+      {c.tags && c.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {c.tags.map((tag, ti) => (
+            <span
+              key={ti}
+              className="rounded-md border px-1.5 py-0.5 font-mono text-[10px] leading-none text-[var(--muted)]"
+              style={{
+                borderColor: "color-mix(in oklch, var(--cat-2) 28%, var(--border))",
+                backgroundColor: "color-mix(in oklch, var(--cat-2) 8%, var(--card))",
+              }}
+            >
+              {pick(tag, locale)}
+            </span>
+          ))}
+        </div>
+      )}
     </Link>
   );
 }
@@ -831,32 +850,30 @@ function OrchestrationRow({ pipeline, locale, reduce }: RowProps) {
       {/* ── lg+: 오케스트레이션 보드 — 운영 콘솔(센터 진입) → Pipeline Workflow 경계가
           버스 레일 + 레벨 트랙을 감싼다 (워크플로 = 경계 제목, fieldset legend) ── */}
       <div className="hidden lg:block">
-        {/* 운영 콘솔 — 오케스트레이션 경계 밖의 센터 진입점 */}
-        <div className="mx-auto flex max-w-sm flex-col items-center">
+        {/* 운영 콘솔 → DAG 실행 → Pipeline Workflow — 경계 밖 센터 진입.
+            셋을 한 컬럼(z-10)에 흐름대로 두어 DAG 실행 선이 워크플로 노드에 가려지지 않는다. */}
+        <div className="relative z-10 mx-auto flex max-w-md flex-col items-center">
           <motion.div {...rise(reduce, 0)} className="w-full">
             <DagFrontendNode pipeline={pipeline} locale={locale} />
           </motion.div>
           <motion.div {...rise(reduce, 1)}>
             <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
           </motion.div>
+          <motion.div {...rise(reduce, 2)}>
+            <WorkflowNode pipeline={pipeline} locale={locale} />
+          </motion.div>
         </div>
 
         {/* Pipeline Workflow 경계 — pgmq 버스 + 레벨 카드를 orchestration envelope 로 감싼다.
-            워크플로 노드는 상단 중앙에서 경계 제목(legend)으로 테두리에 걸쳐 앉는다. */}
+            -mt 로 위로 끌어올려 워크플로 노드가 상단 테두리에 걸치게(legend) 한다. */}
         <motion.div
-          {...rise(reduce, 2)}
-          className="relative rounded-2xl border px-5 pb-5 pt-9"
+          {...rise(reduce, 3)}
+          className="relative -mt-6 rounded-2xl border px-5 pb-5 pt-10"
           style={{
             borderColor: "color-mix(in oklch, var(--cat-2) 38%, var(--border))",
             backgroundColor: "color-mix(in oklch, var(--cat-2) 4%, var(--card))",
           }}
         >
-          <div
-            className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 px-2"
-            style={{ backgroundColor: "var(--background)" }}
-          >
-            <WorkflowNode pipeline={pipeline} locale={locale} />
-          </div>
           <BusRail label={pick(control.busLabel, locale)} reduce={reduce} />
           <div className="grid items-stretch" style={{ gridTemplateColumns: gridCols }}>
             {dropCells}
@@ -867,26 +884,25 @@ function OrchestrationRow({ pipeline, locale, reduce }: RowProps) {
 
       {/* ── lg 미만: 세로 폴백 — 운영 콘솔 → Pipeline Workflow 경계(버스 홉 + 레벨 카드) ── */}
       <div className="flex flex-col lg:hidden">
-        <motion.div {...rise(reduce, 0)} className="mx-auto w-full max-w-sm">
-          <DagFrontendNode pipeline={pipeline} locale={locale} />
-        </motion.div>
-        <motion.div {...rise(reduce, 1)}>
-          <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
-        </motion.div>
+        <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center">
+          <motion.div {...rise(reduce, 0)} className="w-full">
+            <DagFrontendNode pipeline={pipeline} locale={locale} />
+          </motion.div>
+          <motion.div {...rise(reduce, 1)}>
+            <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
+          </motion.div>
+          <motion.div {...rise(reduce, 2)}>
+            <WorkflowNode pipeline={pipeline} locale={locale} />
+          </motion.div>
+        </div>
         <motion.div
-          {...rise(reduce, 2)}
-          className="relative rounded-2xl border px-3 pb-4 pt-9"
+          {...rise(reduce, 3)}
+          className="relative -mt-6 rounded-2xl border px-3 pb-4 pt-10"
           style={{
             borderColor: "color-mix(in oklch, var(--cat-2) 38%, var(--border))",
             backgroundColor: "color-mix(in oklch, var(--cat-2) 4%, var(--card))",
           }}
         >
-          <div
-            className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 px-2"
-            style={{ backgroundColor: "var(--background)" }}
-          >
-            <WorkflowNode pipeline={pipeline} locale={locale} />
-          </div>
           <div className="relative flex justify-center py-1">
             <EventDrop tall reduce={reduce} />
             <span className={cn(chipCls, "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2")} style={tealChipStyle}>
