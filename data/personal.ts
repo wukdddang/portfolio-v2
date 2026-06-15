@@ -26,8 +26,8 @@ export const personal = {
     { ko: "AI native 빌더", en: "AI-native Builder" },
   ] satisfies L[],
   subTagline: {
-    ko: "AI를 사고 파트너로 두고 직군을 확장하면서 시스템을 함께 만드는 개발자입니다",
-    en: "A developer who uses AI as a thinking partner — expanding role boundaries while building systems alongside it",
+    ko: "AI를 사고 파트너로, 직군을 확장하며 설계·구현·운영을 하나의 시스템으로 잇는 프로덕트 엔지니어입니다",
+    en: "A product engineer who uses AI as a thinking partner — expanding across roles to connect design, implementation, and operations into one system",
   } satisfies L,
   pitch: {
     ko: "회사가 풀어야 할 문제를 옆에서 빠르게 흡수해, 도메인 학습부터 풀스택 구현·운영까지 한 사이클로 매듭짓는 것을 좋아합니다.",
