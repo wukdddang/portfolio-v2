@@ -16,6 +16,7 @@ import {
   Panel,
   type Edge,
   type Node,
+  type NodeProps,
   type ReactFlowInstance,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -32,7 +33,6 @@ import {
   DiagramCard,
   FlowEdge,
   buildFlowEdges,
-  type CardData,
   type FlowEdgeData,
 } from "@/components/diagram-flow";
 import {
@@ -42,16 +42,56 @@ import {
 } from "@/components/diagram-fullscreen";
 import { cn } from "@/lib/utils";
 
-const nodeTypes = { card: DiagramCard };
+// 카드 크기 — 그룹 프레임 경계 계산용 (DiagramCard: w=224, 헤더+sublabel ≈ 76)
+const CARD_W = 224;
+const CARD_H = 76;
+
+type GroupData = { label: string; icon?: string; w: number; h: number; color: string };
+
+/**
+ * GroupFrame — node.group === id 인 노드들을 한 박스로 감싸는 배경 프레임.
+ * 예: SDPE 의 "Pipeline Workflow" — pgmq 버스 + L0~L3 처리 단계를 오케스트레이션 경계로 두른다
+ * (메인 미리보기의 envelope 와 동일 모델). cat 색으로 틴트, 좌상단에 제목.
+ */
+function GroupFrame({ data }: NodeProps<Node<GroupData>>) {
+  return (
+    <div
+      style={{
+        width: data.w,
+        height: data.h,
+        borderColor: `color-mix(in oklch, ${data.color} 45%, var(--border))`,
+        backgroundColor: `color-mix(in oklch, ${data.color} 6%, transparent)`,
+      }}
+      className="rounded-2xl border"
+    >
+      <div
+        className="inline-flex items-center gap-1.5 rounded-br-xl rounded-tl-2xl px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-widest"
+        style={{
+          color: `color-mix(in oklch, ${data.color} 70%, var(--foreground))`,
+          backgroundColor: `color-mix(in oklch, ${data.color} 12%, transparent)`,
+        }}
+      >
+        {data.icon && <span className="text-[13px] leading-none">{data.icon}</span>}
+        {data.label}
+      </div>
+    </div>
+  );
+}
+
+const nodeTypes = { card: DiagramCard, groupFrame: GroupFrame };
 const edgeTypes = { flow: FlowEdge };
 
 function buildGraph(diagram: ProjectDiagramData, locale: Locale) {
-  const nodes: Node<CardData>[] = diagram.nodes.map((n) => ({
+  const hasGroups = !!diagram.groups?.length;
+  const cards: Node[] = diagram.nodes.map((n) => ({
     id: n.id,
     type: "card",
     position: { x: n.col * COL_W, y: n.row * ROW_H },
     draggable: false,
     selectable: false,
+    // 그룹 프레임이 있을 때만 명시 z-순서: 프레임(0) < 엣지(5) < 카드(10).
+    // (그룹 없는 다이어그램은 기존 기본 z 유지 → 시각 변화 없음)
+    zIndex: hasGroups ? 10 : undefined,
     data: {
       label: pick(n.label, locale),
       sublabel: n.sublabel ? pick(n.sublabel, locale) : undefined,
@@ -61,9 +101,42 @@ function buildGraph(diagram: ProjectDiagramData, locale: Locale) {
     },
   }));
 
-  const edges = buildFlowEdges(diagram.edges, locale);
+  const edges = buildFlowEdges(diagram.edges, locale).map((e) =>
+    hasGroups ? { ...e, zIndex: 5 } : e
+  );
 
-  return { nodes, edges };
+  // 그룹 프레임 — 멤버 노드들의 경계 박스를 배경으로 깔고 좌상단에 제목.
+  const frames: Node[] = [];
+  for (const g of diagram.groups ?? []) {
+    const members = diagram.nodes.filter((n) => n.group === g.id);
+    if (members.length === 0) continue;
+    const xs = members.map((n) => n.col * COL_W);
+    const ys = members.map((n) => n.row * ROW_H);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs) + CARD_W;
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys) + CARD_H;
+    const GPAD = 26;
+    const GHEAD = 30; // 제목 높이만큼 프레임을 위로 더 키운다
+    frames.push({
+      id: `group__${g.id}`,
+      type: "groupFrame",
+      position: { x: minX - GPAD, y: minY - GPAD - GHEAD },
+      draggable: false,
+      selectable: false,
+      zIndex: 0,
+      data: {
+        label: pick(g.label, locale),
+        icon: g.icon,
+        color: g.cat ? `var(--cat-${g.cat})` : ACCENT,
+        w: maxX - minX + GPAD * 2,
+        h: maxY - minY + GPAD * 2 + GHEAD,
+      },
+    });
+  }
+
+  // 프레임을 앞쪽(배경)에 — 카드/엣지가 그 위에 그려진다.
+  return { nodes: [...frames, ...cards], edges };
 }
 
 export function ProjectDiagram({
@@ -86,7 +159,7 @@ export function ProjectDiagram({
   );
 
   const fs = useDiagramFullscreen();
-  const rfRef = useRef<ReactFlowInstance<Node<CardData>, Edge<FlowEdgeData>> | null>(null);
+  const rfRef = useRef<ReactFlowInstance<Node, Edge<FlowEdgeData>> | null>(null);
   // 전체화면 진입·이탈로 캔버스 크기가 바뀌면 새 크기에 맞춰 재-fit
   useEffect(() => {
     const inst = rfRef.current;

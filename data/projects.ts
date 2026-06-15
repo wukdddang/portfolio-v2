@@ -79,7 +79,8 @@ export interface ProjectDiagram {
   caption?: L;
   nodes: DiagramNode[];
   edges: DiagramEdge[];
-  groups?: { id: string; label: L }[]; // 노드 묶음 프레임 (node.group === id 인 노드들)
+  // 노드 묶음 프레임 (node.group === id 인 노드들). cat=프레임 색(var(--cat-N), 기본 accent), icon=라벨 앞 아이콘
+  groups?: { id: string; label: L; cat?: number; icon?: string }[];
 }
 
 export interface Project {
@@ -1021,9 +1022,12 @@ export const projects: Project[] = [
     },
     diagram: {
       caption: {
-        ko: "운영자가 콘솔에서 DAG를 구성·실행하면 Pipeline Workflow가 L0→L3 처리를 pgmq 이벤트로 오케스트레이션합니다. CSC 1~9 인터페이스 체인(Python 알고리즘, 예: csc03 range compression)이 단계별 처리를 수행하고, 결과 카탈로그는 PostgreSQL에. 새 위성·알고리즘은 기획→DAG 매핑→프로파일 추가만으로 확장(코드 변경 최소). 가운데 주황 = 정방향 흐름.",
-        en: "From the console an operator composes and runs a DAG; Pipeline Workflow orchestrates the L0→L3 stages over pgmq events. A CSC 1–9 interface chain (Python algorithms, e.g. csc03 range compression) runs the per-stage processing, and the product catalog lands in PostgreSQL. A new satellite or algorithm is added by planning → DAG mapping → a processing profile (near-zero code change). Amber = forward flow.",
+        ko: "운영자가 콘솔에서 DAG를 구성·실행하면, 이를 감싸는 Pipeline Workflow 경계가 내부 pgmq 이벤트 버스로 L0→L3 처리를 오케스트레이션합니다. CSC 1~9 인터페이스 체인(Python 알고리즘, 예: csc03 range compression)이 단계별 처리를 수행하고, 결과 카탈로그는 PostgreSQL에. 새 위성·알고리즘은 기획→DAG 매핑→프로파일 추가만으로 확장(코드 변경 최소). 가운데 주황 = 정방향 흐름.",
+        en: "From the console an operator composes and runs a DAG; the enclosing Pipeline Workflow boundary orchestrates the L0→L3 stages over its internal pgmq event bus. A CSC 1–9 interface chain (Python algorithms, e.g. csc03 range compression) runs the per-stage processing, and the product catalog lands in PostgreSQL. A new satellite or algorithm is added by planning → DAG mapping → a processing profile (near-zero code change). Amber = forward flow.",
       },
+      // Pipeline Workflow 는 더 이상 평면 노드가 아니라, pgmq 버스 + L0~L3 처리 단계를 감싸는
+      // group="workflow" 프레임의 *제목*이다 (메인 미리보기의 orchestration envelope 와 동일 모델).
+      // 운영 콘솔은 프레임 밖 진입점, CSC 체인·Python 은 아래 구현부, PostgreSQL 은 싱크.
       nodes: [
         {
           id: "console",
@@ -1031,16 +1035,6 @@ export const projects: Project[] = [
           icon: "🖥",
           label: { ko: "운영 콘솔", en: "Operator console" },
           sublabel: { ko: "Next.js · DAG 구성·자동 재배포", en: "Next.js · DAG authoring · auto-redeploy" },
-          col: 0,
-          row: 0,
-        },
-        {
-          id: "workflow",
-          kind: "layer",
-          cat: 3,
-          icon: "🧩",
-          label: { ko: "Pipeline Workflow", en: "Pipeline Workflow" },
-          sublabel: { ko: "NestJS DAG 오케스트레이션", en: "NestJS DAG orchestration" },
           col: 1,
           row: 0,
         },
@@ -1048,8 +1042,9 @@ export const projects: Project[] = [
           id: "pgmq",
           kind: "external",
           icon: "🔀",
-          label: { ko: "pgmq", en: "pgmq" },
+          label: { ko: "pgmq 이벤트 버스", en: "pgmq event bus" },
           sublabel: { ko: "이벤트 큐 · sdpe.*.events", en: "Event queue · sdpe.*.events" },
+          group: "workflow",
           col: 1,
           row: 1,
         },
@@ -1060,6 +1055,7 @@ export const projects: Project[] = [
           icon: "📡",
           label: { ko: "데이터 수집", en: "Data Collection" },
           sublabel: { ko: "L0 원시 수집", en: "L0 raw ingest" },
+          group: "workflow",
           col: 0,
           row: 2,
         },
@@ -1070,6 +1066,7 @@ export const projects: Project[] = [
           icon: "⚙",
           label: { ko: "SAR 처리", en: "SAR Processing" },
           sublabel: { ko: "L1 · L2", en: "L1 · L2" },
+          group: "workflow",
           col: 1,
           row: 2,
         },
@@ -1080,6 +1077,7 @@ export const projects: Project[] = [
           icon: "🛠",
           label: { ko: "후처리", en: "Post-Processing" },
           sublabel: { ko: "L3 산출", en: "L3 products" },
+          group: "workflow",
           col: 2,
           row: 2,
         },
@@ -1090,6 +1088,7 @@ export const projects: Project[] = [
           icon: "📦",
           label: { ko: "데이터 제공", en: "Data Service" },
           sublabel: { ko: "L3 산출물 서빙", en: "Serve L3 products" },
+          group: "workflow",
           col: 3,
           row: 2,
         },
@@ -1126,17 +1125,24 @@ export const projects: Project[] = [
         },
       ],
       edges: [
-        { from: "console", to: "workflow", kind: "primary", animated: true, fromSide: "right", toSide: "left", label: { ko: "① 구성·실행", en: "① compose & run" } },
-        { from: "workflow", to: "pgmq", kind: "primary", label: { ko: "② 이벤트 발행", en: "② publish" } },
-        { from: "pgmq", to: "collection", kind: "primary", label: { ko: "③ 구독·기동", en: "③ subscribe" } },
-        { from: "collection", to: "sarproc", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "④ L0", en: "④ L0" } },
-        { from: "sarproc", to: "post", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "⑤ L1·L2", en: "⑤ L1·L2" } },
-        { from: "post", to: "dataservice", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "⑥ L3", en: "⑥ L3" } },
+        { from: "console", to: "pgmq", kind: "primary", animated: true, fromSide: "bottom", toSide: "top", label: { ko: "① 구성·실행 (DAG)", en: "① compose & run (DAG)" } },
+        { from: "pgmq", to: "collection", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "② 구독·기동", en: "② subscribe" } },
+        { from: "collection", to: "sarproc", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "③ L0", en: "③ L0" } },
+        { from: "sarproc", to: "post", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "④ L1·L2", en: "④ L1·L2" } },
+        { from: "post", to: "dataservice", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "⑤ L3", en: "⑤ L3" } },
         { from: "cscChain", to: "sarproc", kind: "secondary", dashed: true, fromSide: "top", toSide: "bottom", label: { ko: "csc-1~6", en: "csc-1–6" } },
         { from: "cscChain", to: "post", kind: "secondary", dashed: true, fromSide: "right", toSide: "bottom", label: { ko: "csc-7~9", en: "csc-7–9" } },
         { from: "pyalgo", to: "cscChain", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "Python 구현", en: "impl" } },
-        { from: "dataservice", to: "db", kind: "secondary", label: { ko: "⑦ 카탈로그·메타", en: "⑦ catalog·meta" } },
-        { from: "db", to: "console", kind: "secondary", dashed: true, fromSide: "top", toSide: "top", label: { ko: "⑧ 작업·결과 모니터링", en: "⑧ monitor" } },
+        { from: "dataservice", to: "db", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "⑥ 카탈로그·메타", en: "⑥ catalog·meta" } },
+        { from: "db", to: "console", kind: "secondary", dashed: true, fromSide: "top", toSide: "top", label: { ko: "⑦ 작업·결과 모니터링", en: "⑦ monitor" } },
+      ],
+      groups: [
+        {
+          id: "workflow",
+          icon: "⚡",
+          cat: 2,
+          label: { ko: "Pipeline Workflow · NestJS 오케스트레이션", en: "Pipeline Workflow · NestJS orchestration" },
+        },
       ],
     },
     title: {
