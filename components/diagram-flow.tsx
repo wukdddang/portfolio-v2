@@ -33,6 +33,8 @@ export const ROW_H = 200;
 // 엣지 색 — SVG marker는 CSS 변수 해석이 불안정해 라이트/다크 양쪽에 읽히는 리터럴 사용
 export const ACCENT = "#f59e0b";
 export const MUTED = "#a8a29e";
+// 제어 평면(이벤트·오케스트레이션) 엣지 — SVG marker는 CSS 변수 해석이 불안정해 teal 리터럴 사용
+export const CONTROL = "#14b8a6";
 
 export type CardKind = "layer" | "external" | "actor";
 export type CardData = {
@@ -338,8 +340,10 @@ export function buildFlowEdges(
 ): Edge<FlowEdgeData>[] {
   const p = prefix ? `${prefix}__` : "";
   return edges.map((e, i) => {
-    const primary = e.kind === "primary";
-    const color = primary ? ACCENT : MUTED;
+    const control = e.kind === "control";
+    const isPrimary = e.kind === "primary";
+    const heavy = isPrimary || control; // 제어·정방향은 굵게/밝게
+    const color = control ? CONTROL : isPrimary ? ACCENT : MUTED;
     return {
       id: `e-${prefix}-${i}-${e.from}-${e.to}`,
       source: `${p}${e.from}`,
@@ -351,11 +355,11 @@ export function buildFlowEdges(
       markerEnd: { type: MarkerType.ArrowClosed, color, width: 16, height: 16 },
       style: {
         stroke: color,
-        strokeWidth: primary ? 2 : 1.5,
+        strokeWidth: heavy ? 2 : 1.5,
         strokeDasharray: e.dashed ? "6 5" : undefined,
       },
       data: {
-        primary,
+        primary: heavy,
         phase: (i % 5) * 0.5, // 엣지마다 위상차로 흐름 desync
       },
     };

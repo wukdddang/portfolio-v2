@@ -63,6 +63,11 @@ export interface DiagramNode {
   // true면 ProjectDiagram에서 카드가 아니라 가로 버스 레일로 렌더 — 이 노드에서 나가는 엣지(to)
   // 각각이 해당 단계 위로 정렬된 드롭이 된다 (예: SDPE pgmq 이벤트 버스, 메인 미리보기와 동일).
   bus?: boolean;
+  // card 대신 특수 노드로 렌더: dagBuilder=React Flow DAG 빌더 미니 캔버스(운영 콘솔),
+  // cscChain=가로 컴포넌트 스트립(예: SDPE CSC 1~9). 둘 다 ProjectDiagram이 전담 렌더.
+  variant?: "dagBuilder" | "cscChain";
+  // cscChain 전용 — 스트립 핀 목록. id=라벨(CSC-0N) · role=한 줄 역할 · cat=서브시스템 색
+  chain?: { id: string; role: L; cat?: number }[];
   col: number; // 그리드 열 (0-based)
   row: number; // 그리드 행 (0-based)
 }
@@ -73,7 +78,7 @@ export interface DiagramEdge {
   label?: L;
   fromSide?: DiagramSide; // 출발 핸들 (기본 bottom)
   toSide?: DiagramSide; // 도착 핸들 (기본 top)
-  kind?: "primary" | "secondary"; // primary = accent 강조
+  kind?: "primary" | "secondary" | "control"; // primary=amber 데이터 · control=teal 제어(pgmq) · secondary=보조
   dashed?: boolean;
   animated?: boolean;
 }
@@ -1025,132 +1030,115 @@ export const projects: Project[] = [
     },
     diagram: {
       caption: {
-        ko: "운영자가 콘솔에서 DAG를 구성·실행하면, 이를 감싸는 Pipeline Workflow 경계가 내부 pgmq 이벤트 버스로 오케스트레이션합니다 — 각 처리 레벨이 pgmq에서 작업 할당을 구독하고 완료를 발행하는 식으로 L0→L3를 진행합니다(버스는 한 단계가 아니라 모든 레벨을 기동). CSC 1~9 인터페이스 체인(Python 알고리즘, 예: csc03 range compression)이 단계별 처리를 수행하고, 결과 카탈로그는 PostgreSQL에. 새 위성·알고리즘은 기획→DAG 매핑→프로파일 추가만으로 확장(코드 변경 최소). 가운데 주황 = 정방향 흐름.",
-        en: "From the console an operator composes and runs a DAG; the enclosing Pipeline Workflow boundary orchestrates it over its internal pgmq event bus — every processing level subscribes to pgmq for its job assignment and publishes completion, advancing L0→L3 (the bus drives every level, not just the first). A CSC 1–9 interface chain (Python algorithms, e.g. csc03 range compression) runs the per-stage processing, and the product catalog lands in PostgreSQL. A new satellite or algorithm is added by planning → DAG mapping → a processing profile (near-zero code change). Amber = forward flow.",
+        ko: "운영자가 콘솔(React Flow 캔버스)에서 처리 DAG를 구성·배포하면, Pipeline Workflow 서브시스템의 오케스트레이터(CSC-08)가 컨트롤 타워로서 pgmq로 단계별 작업을 할당(SI-04)하고 완료(SI-03)를 추적해 L0→L3를 진행시킵니다. DAG 자체는 이벤트를 듣지 않고 '어떤 조건에 어떤 파이프라인'이라는 배포 규칙만 정의합니다(파이프라인 = 코드 아닌 데이터). 9개 CSC가 수집(DCS)·신호처리(SPS)·후처리(PPS)·서비스(DSS)에 매핑되고, 파일은 NAS·큐엔 경로/메타만 흐릅니다. 산출물은 PostGIS STAC 카탈로그에 등록되고 데이터 서비스(CSC-09)가 REST·OGC·STAC로 서빙합니다. 새 위성은 DAG+프로파일 등록만으로 확장(코드 변경 최소). teal = 제어(pgmq) / amber = 데이터.",
+        en: "From the console (a React Flow canvas) an operator composes and deploys a processing DAG; the Pipeline Workflow subsystem's orchestrator (CSC-08) acts as a control tower, assigning per-stage jobs over pgmq (SI-04) and tracking completion (SI-03) to advance L0→L3. The DAG itself does not listen to events — it only defines deployment rules ('which condition → which pipeline'; a pipeline is data, not code). Nine CSCs map onto collection (DCS), signal processing (SPS), post-processing (PPS) and service (DSS); files stay on NAS while queues carry only paths/metadata. Products are registered into a PostGIS STAC catalog and the Data Service (CSC-09) serves them over REST·OGC·STAC. A new satellite is added by registering a DAG + profile (near-zero code change). Teal = control (pgmq) / amber = data.",
       },
-      // Pipeline Workflow 는 더 이상 평면 노드가 아니라, pgmq 버스 + L0~L3 처리 단계를 감싸는
-      // group="workflow" 프레임의 *제목*이다 (메인 미리보기의 orchestration envelope 와 동일 모델).
-      // 운영 콘솔은 프레임 밖 진입점, CSC 체인·Python 은 아래 구현부, PostgreSQL 은 싱크.
+      // 정확 모델 (SDPE 위키 · SAD/ICD v1.2): Pipeline Workflow 는 컨테이너가 아니라 CSC-08
+      // 오케스트레이터(컨트롤 타워) 그 자체다. 콘솔(DAG 빌더)이 배포한 DAG를 받아 pgmq로
+      // 단계별 작업을 할당(SI-04)하고 완료(SI-03)를 추적해 L0→L3를 구동한다. 9개 CSC는
+      // 수집(DCS)·신호처리(SPS)·후처리(PPS)·서비스(DSS)에 매핑. teal=제어 / amber=데이터.
       nodes: [
         {
           id: "console",
-          kind: "actor",
+          variant: "dagBuilder",
+          kind: "layer",
+          cat: 2,
           icon: "🖥",
           label: { ko: "운영 콘솔", en: "Operator console" },
-          sublabel: { ko: "Next.js · DAG 구성·자동 재배포", en: "Next.js · DAG authoring · auto-redeploy" },
-          col: 1,
+          sublabel: { ko: "Next.js · React Flow DAG 빌더", en: "Next.js · React Flow DAG builder" },
+          col: 1.5,
           row: 0,
         },
         {
-          id: "pgmq",
-          kind: "external",
-          icon: "🔀",
-          label: { ko: "pgmq 이벤트 버스", en: "pgmq event bus" },
-          sublabel: { ko: "sdpe.*.events", en: "sdpe.*.events" },
-          group: "workflow",
-          bus: true, // 가로 버스 레일 — 각 처리 레벨로 드롭 (data/pipeline 미리보기와 동일)
-          col: 0,
+          id: "orchestrator",
+          kind: "layer",
+          cat: 2,
+          icon: "🗼",
+          label: { ko: "Pipeline Workflow", en: "Pipeline Workflow" },
+          sublabel: { ko: "CSC-08 오케스트레이터 · 컨트롤 타워", en: "CSC-08 orchestrator · control tower" },
+          col: 1.5,
           row: 1,
         },
         {
           id: "collection",
           kind: "layer",
-          cat: 2,
+          cat: 3,
           icon: "📡",
-          label: { ko: "데이터 수집", en: "Data Collection" },
-          sublabel: { ko: "L0 원시 수집", en: "L0 raw ingest" },
-          group: "workflow",
+          label: { ko: "수집 · DCS", en: "Collection · DCS" },
+          sublabel: { ko: "CSC-02 · 원시 수신", en: "CSC-02 · raw reception" },
           col: 0,
           row: 2,
         },
         {
-          id: "sarproc",
+          id: "sigproc",
           kind: "layer",
           cat: 6,
-          icon: "⚙",
-          label: { ko: "SAR 처리", en: "SAR Processing" },
-          sublabel: { ko: "L1 · L2", en: "L1 · L2" },
-          group: "workflow",
+          icon: "📶",
+          label: { ko: "신호처리 · SPS", en: "Signal proc · SPS" },
+          sublabel: { ko: "CSC-03·04 · L0 → L1", en: "CSC-03·04 · L0 → L1" },
           col: 1,
           row: 2,
         },
         {
-          id: "post",
+          id: "postproc",
           kind: "layer",
           cat: 4,
           icon: "🛠",
-          label: { ko: "후처리", en: "Post-Processing" },
-          sublabel: { ko: "L3 산출", en: "L3 products" },
-          group: "workflow",
+          label: { ko: "후처리 · PPS", en: "Post-proc · PPS" },
+          sublabel: { ko: "CSC-05·06·07 · L2·L3·등록", en: "CSC-05·06·07 · L2·L3·register" },
           col: 2,
           row: 2,
         },
         {
-          id: "dataservice",
+          id: "catalog",
+          kind: "external",
+          icon: "🐘",
+          label: { ko: "PostgreSQL · PostGIS", en: "PostgreSQL · PostGIS" },
+          sublabel: { ko: "STAC 카탈로그 · @sdpe/database", en: "STAC catalog · @sdpe/database" },
+          col: 2,
+          row: 3,
+        },
+        {
+          id: "service",
           kind: "layer",
           cat: 5,
-          icon: "📦",
-          label: { ko: "데이터 제공", en: "Data Service" },
-          sublabel: { ko: "L3 산출물 서빙", en: "Serve L3 products" },
-          group: "workflow",
+          icon: "🌐",
+          label: { ko: "데이터 서비스 · DSS", en: "Data service · DSS" },
+          sublabel: { ko: "CSC-09 · REST·OGC·STAC", en: "CSC-09 · REST·OGC·STAC" },
           col: 3,
-          row: 2,
+          row: 3,
         },
         {
           id: "cscChain",
-          kind: "layer",
-          cat: 1,
-          icon: "🧮",
-          label: { ko: "CSC 1~9 체인", en: "CSC 1–9 chain" },
-          sublabel: {
-            ko: "L0·L1 → GEC·MAP 인터페이스",
-            en: "L0·L1 → GEC·MAP interfaces",
-          },
-          col: 1,
-          row: 3,
-        },
-        {
-          id: "pyalgo",
-          kind: "external",
-          icon: "🐍",
-          label: { ko: "csc03 range compression", en: "csc03 range compression" },
-          sublabel: { ko: "Python 3.11 · mypy+ruff", en: "Python 3.11 · mypy+ruff" },
+          variant: "cscChain",
+          icon: "🧩",
+          label: { ko: "CSC 1~9 컴포넌트", en: "CSC 1–9 components" },
           col: 0,
-          row: 3,
-        },
-        {
-          id: "db",
-          kind: "external",
-          icon: "🐘",
-          label: { ko: "PostgreSQL", en: "PostgreSQL" },
-          sublabel: { ko: "@sdpe/database · 카탈로그", en: "@sdpe/database · catalog" },
-          col: 3,
-          row: 3,
+          row: 4,
+          chain: [
+            { id: "CSC-01", role: { ko: "공통", en: "Common" } },
+            { id: "CSC-02", role: { ko: "수집", en: "Collect" }, cat: 3 },
+            { id: "CSC-03", role: { ko: "L0", en: "L0" }, cat: 6 },
+            { id: "CSC-04", role: { ko: "L1", en: "L1" }, cat: 6 },
+            { id: "CSC-05", role: { ko: "L2", en: "L2" }, cat: 4 },
+            { id: "CSC-06", role: { ko: "L3", en: "L3" }, cat: 4 },
+            { id: "CSC-07", role: { ko: "등록", en: "Catalog" }, cat: 4 },
+            { id: "CSC-08", role: { ko: "오케스트레이터", en: "Orchestrator" }, cat: 2 },
+            { id: "CSC-09", role: { ko: "Data API", en: "Data API" }, cat: 5 },
+          ],
         },
       ],
       edges: [
-        { from: "console", to: "pgmq", kind: "primary", animated: true, fromSide: "bottom", toSide: "top", label: { ko: "① 구성·실행 (DAG)", en: "① compose & run (DAG)" } },
-        // 이벤트 버스는 데이터 수집(L0)뿐 아니라 *각 처리 레벨*을 모두 기동한다 — 단계마다
-        // pgmq 로 작업 할당(SI-04)을 구독하고 완료(SI-03)를 발행한다 (csc08-orchestrator).
-        { from: "pgmq", to: "collection", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "구독·기동", en: "subscribe" } },
-        { from: "pgmq", to: "sarproc", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "구독·기동", en: "subscribe" } },
-        { from: "pgmq", to: "post", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "구독·기동", en: "subscribe" } },
-        { from: "collection", to: "sarproc", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "② L0", en: "② L0" } },
-        { from: "sarproc", to: "post", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "③ L1·L2", en: "③ L1·L2" } },
-        { from: "post", to: "dataservice", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "④ L3", en: "④ L3" } },
-        { from: "cscChain", to: "sarproc", kind: "secondary", dashed: true, fromSide: "top", toSide: "bottom", label: { ko: "csc-1~6", en: "csc-1–6" } },
-        { from: "cscChain", to: "post", kind: "secondary", dashed: true, fromSide: "right", toSide: "bottom", label: { ko: "csc-7~9", en: "csc-7–9" } },
-        { from: "pyalgo", to: "cscChain", kind: "secondary", fromSide: "right", toSide: "left", label: { ko: "Python 구현", en: "impl" } },
-        { from: "dataservice", to: "db", kind: "secondary", fromSide: "bottom", toSide: "top", label: { ko: "⑤ 카탈로그·메타", en: "⑤ catalog·meta" } },
-        { from: "db", to: "console", kind: "secondary", dashed: true, fromSide: "top", toSide: "top", label: { ko: "⑥ 작업·결과 모니터링", en: "⑥ monitor" } },
-      ],
-      groups: [
-        {
-          id: "workflow",
-          icon: "⚡",
-          cat: 2,
-          label: { ko: "Pipeline Workflow · NestJS 오케스트레이션", en: "Pipeline Workflow · NestJS orchestration" },
-        },
+        { from: "console", to: "orchestrator", kind: "control", animated: true, fromSide: "bottom", toSide: "top", label: { ko: "① DAG 배포", en: "① deploy DAG" } },
+        // 정확 모델: 콘솔이 DAG를 *배포*하면 CSC-08 오케스트레이터가 깨어나(SI-01 수신)
+        // 단계별 작업을 할당(SI-04)하고 완료(SI-03)를 추적한다 — 브로드캐스트 버스가 아닌 허브.
+        { from: "collection", to: "orchestrator", kind: "control", fromSide: "top", toSide: "left", label: { ko: "수신 (SI-01)", en: "reception (SI-01)" } },
+        { from: "orchestrator", to: "sigproc", kind: "control", fromSide: "bottom", toSide: "top", label: { ko: "작업 할당 (SI-04)", en: "assign (SI-04)" } },
+        { from: "postproc", to: "orchestrator", kind: "control", dashed: true, fromSide: "top", toSide: "right", label: { ko: "완료 (SI-03)", en: "done (SI-03)" } },
+        { from: "collection", to: "sigproc", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "원시 (NAS)", en: "raw (NAS)" } },
+        { from: "sigproc", to: "postproc", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "L1·L2", en: "L1·L2" } },
+        { from: "postproc", to: "catalog", kind: "primary", fromSide: "bottom", toSide: "top", label: { ko: "등록·적재", en: "register" } },
+        { from: "catalog", to: "service", kind: "primary", fromSide: "right", toSide: "left", label: { ko: "조회·서빙", en: "serve" } },
       ],
     },
     title: {

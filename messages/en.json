@@ -86,6 +86,7 @@
     "legendForward": "Forward request",
     "legendReturn": "Response · write-back",
     "legendExternal": "External system",
+    "legendControl": "Control · pgmq",
     "problem": "Problem",
     "system": "System",
     "impact": "Impact",

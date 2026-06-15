@@ -7,7 +7,7 @@
  * 공용 프리미티브는 components/diagram-flow.tsx 에서 가져온다.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -30,6 +30,7 @@ import type { ProjectDiagram as ProjectDiagramData, DiagramNode } from "@/data/p
 import {
   ACCENT,
   MUTED,
+  CONTROL,
   COL_W,
   ROW_H,
   DiagramCard,
@@ -147,7 +148,141 @@ function BusRail({ data }: NodeProps<Node<BusData>>) {
   );
 }
 
-const nodeTypes = { card: DiagramCard, groupFrame: GroupFrame, busRail: BusRail };
+// 4면 숨김 핸들 — DiagramCard 와 동일한 id 규약(`${side}-s` / `${side}-t`)으로 엣지가 붙는다.
+const HANDLE_SIDES = [
+  ["top", Position.Top],
+  ["right", Position.Right],
+  ["bottom", Position.Bottom],
+  ["left", Position.Left],
+] as const;
+function SideHandles() {
+  return (
+    <>
+      {HANDLE_SIDES.map(([id, pos]) => (
+        <Fragment key={id}>
+          <Handle id={`${id}-s`} type="source" position={pos} isConnectable={false} style={hiddenHandle} />
+          <Handle id={`${id}-t`} type="target" position={pos} isConnectable={false} style={hiddenHandle} />
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+type DagBuilderData = { label: string; sublabel?: string; icon?: string };
+const DAG_MINI = ["⚡", "⚙", "⚙", "🗄"];
+
+/**
+ * DagBuilderNode — 운영 콘솔을 React Flow DAG 빌더로 그리는 노드 (메인 미리보기 DagFrontendNode 캔버스판).
+ * 윈도우 크롬 점 + 점배경 미니 캔버스 위 노드 스트립(트리거→처리→처리→카탈로그)으로
+ * "이건 DAG 캔버스다"를 노드 모양으로 드러낸다. 제어 플레인 teal(--cat-2).
+ */
+function DagBuilderNode({ data }: NodeProps<Node<DagBuilderData>>) {
+  const teal = "var(--cat-2)";
+  return (
+    <div
+      style={{
+        width: 248,
+        borderColor: `color-mix(in oklch, ${teal} 55%, var(--border))`,
+        backgroundColor: `color-mix(in oklch, ${teal} 8%, var(--card))`,
+      }}
+      className="rounded-xl border"
+    >
+      <SideHandles />
+      <div className="flex items-center gap-2 px-3 pb-1.5 pt-2">
+        <span className="flex items-center gap-1" aria-hidden>
+          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-5) 70%, transparent)" }} />
+          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--accent) 70%, transparent)" }} />
+          <span className="size-1.5 rounded-full" style={{ background: "color-mix(in oklch, var(--cat-6) 70%, transparent)" }} />
+        </span>
+        {data.icon && <span className="text-[13px] leading-none">{data.icon}</span>}
+        <span className="flex min-w-0 flex-col">
+          <span className="text-[12.5px] font-semibold leading-tight text-[var(--foreground)]">{data.label}</span>
+          {data.sublabel && (
+            <span className="font-mono text-[10px] leading-tight text-[var(--muted)]">{data.sublabel}</span>
+          )}
+        </span>
+      </div>
+      <div
+        className="mx-3 mb-2.5 flex items-center justify-center rounded-lg border border-[var(--border)]/60 px-2 py-2.5"
+        style={{
+          backgroundColor: `color-mix(in oklch, ${teal} 5%, var(--background))`,
+          backgroundImage: `radial-gradient(color-mix(in oklch, ${teal} 22%, transparent) 0.5px, transparent 0.5px)`,
+          backgroundSize: "9px 9px",
+        }}
+      >
+        {DAG_MINI.map((icon, i) => (
+          <Fragment key={i}>
+            {i > 0 && (
+              <span aria-hidden className="h-[1.5px] w-4 shrink-0" style={{ background: `color-mix(in oklch, ${teal} 55%, transparent)` }} />
+            )}
+            <span
+              className="flex size-7 shrink-0 items-center justify-center rounded-md border text-[13px] leading-none"
+              style={{
+                borderColor: `color-mix(in oklch, ${teal} 55%, var(--border))`,
+                background: `color-mix(in oklch, ${teal} 14%, var(--card))`,
+              }}
+            >
+              {icon}
+            </span>
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+type CscChainData = {
+  label: string;
+  icon?: string;
+  w: number;
+  chain: { id: string; role: string; color: string }[];
+};
+
+/**
+ * CscChainNode — 가로 컴포넌트 스트립. 9개 CSC 핀을 서브시스템 색으로 깔아 "CSC 1~9"를
+ * 한눈에 보여주는 인벤토리 리본 (예: SDPE). 엣지가 붙지 않는 정보 노드.
+ */
+function CscChainNode({ data }: NodeProps<Node<CscChainData>>) {
+  return (
+    <div
+      style={{ width: data.w }}
+      className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--card)] px-3 py-2.5"
+    >
+      <div className="mb-2 inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-[var(--muted)]">
+        {data.icon && <span className="text-[12px] leading-none not-italic">{data.icon}</span>}
+        {data.label}
+      </div>
+      <div className="flex items-stretch gap-1.5">
+        {data.chain.map((c) => (
+          <div
+            key={c.id}
+            className="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-md border px-1 py-1.5"
+            style={{
+              borderColor: `color-mix(in oklch, ${c.color} 45%, var(--border))`,
+              backgroundColor: `color-mix(in oklch, ${c.color} 8%, var(--card))`,
+            }}
+          >
+            <span
+              className="font-mono text-[11px] font-semibold leading-none"
+              style={{ color: `color-mix(in oklch, ${c.color} 72%, var(--foreground))` }}
+            >
+              {c.id}
+            </span>
+            <span className="truncate font-mono text-[9px] leading-none text-[var(--muted)]">{c.role}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const nodeTypes = {
+  card: DiagramCard,
+  groupFrame: GroupFrame,
+  busRail: BusRail,
+  dagBuilder: DagBuilderNode,
+  cscChain: CscChainNode,
+};
 const edgeTypes = { flow: FlowEdge };
 
 function buildGraph(diagram: ProjectDiagramData, locale: Locale) {
@@ -157,6 +292,46 @@ function buildGraph(diagram: ProjectDiagramData, locale: Locale) {
   const z = hasGroups ? 10 : undefined;
 
   const cards: Node[] = diagram.nodes.map((n) => {
+    // DAG 빌더 노드 — 콘솔을 React Flow 캔버스 미니로 렌더 (n.variant === "dagBuilder").
+    if (n.variant === "dagBuilder") {
+      return {
+        id: n.id,
+        type: "dagBuilder",
+        position: { x: n.col * COL_W, y: n.row * ROW_H },
+        draggable: false,
+        selectable: false,
+        zIndex: z,
+        data: {
+          label: pick(n.label, locale),
+          sublabel: n.sublabel ? pick(n.sublabel, locale) : undefined,
+          icon: n.icon,
+        },
+      } satisfies Node;
+    }
+    // CSC 컴포넌트 스트립 — 단계 행 아래 전폭 인벤토리 리본 (n.variant === "cscChain").
+    if (n.variant === "cscChain") {
+      const maxCol = Math.max(
+        ...diagram.nodes.filter((m) => m.variant !== "cscChain").map((m) => m.col)
+      );
+      return {
+        id: n.id,
+        type: "cscChain",
+        position: { x: n.col * COL_W, y: n.row * ROW_H },
+        draggable: false,
+        selectable: false,
+        zIndex: z,
+        data: {
+          label: pick(n.label, locale),
+          icon: n.icon,
+          w: (maxCol - n.col) * COL_W + CARD_W,
+          chain: (n.chain ?? []).map((c) => ({
+            id: c.id,
+            role: pick(c.role, locale),
+            color: c.cat ? `var(--cat-${c.cat})` : "var(--muted)",
+          })),
+        },
+      } satisfies Node;
+    }
     // 버스 레일 — 카드가 아니라 가로 선. 나가는 엣지의 to 노드들이 정렬된 드롭이 된다.
     if (n.bus) {
       const targets = diagram.edges
@@ -268,6 +443,11 @@ export function ProjectDiagram({
     () => buildGraph(diagram, locale),
     [diagram, locale]
   );
+  // teal 제어 엣지가 있는 다이어그램에서만 제어 범례를 노출 (예: SDPE 오케스트레이션)
+  const hasControl = useMemo(
+    () => diagram.edges.some((e) => e.kind === "control"),
+    [diagram]
+  );
 
   const fs = useDiagramFullscreen();
   const rfRef = useRef<ReactFlowInstance<Node, Edge<FlowEdgeData>> | null>(null);
@@ -359,6 +539,15 @@ export function ProjectDiagram({
           />
           {t("legendForward")}
         </span>
+        {hasControl && (
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className="inline-block h-0.5 w-6 rounded"
+              style={{ background: CONTROL }}
+            />
+            {t("legendControl")}
+          </span>
+        )}
         <span className="inline-flex items-center gap-1.5">
           <span
             className="inline-block w-6 border-t border-dashed"

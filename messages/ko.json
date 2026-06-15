@@ -86,6 +86,7 @@
     "legendForward": "정방향 요청",
     "legendReturn": "응답 · 결과 저장",
     "legendExternal": "외부 시스템",
+    "legendControl": "제어 · pgmq",
     "problem": "문제",
     "system": "시스템",
     "impact": "임팩트",
