@@ -98,6 +98,8 @@ export interface Project {
   impact: L;
   keywords: L[];
   trackVisibility: TrackTag;
+  /** 연관 학습 로그 슬러그(/studies/{slug}) — 프로젝트 상세에서 도메인 학습 로그로 상호 링크 */
+  relatedStudies?: string[];
   honestyNote?: L;
   ownContribution?: L;
   inheritedScope?: L;
@@ -784,6 +786,7 @@ const lumirSarPlatform: Project = {
     { ko: "AI native 100%", en: "100% AI native" },
   ],
   trackVisibility: "both",
+  relatedStudies: ["sar"],
   ownContribution: {
     ko: "3 레이어 모든 코드 단독 (sar-data-retrieval 5개 영역 전부, lumir-linux-snap 도구 평가·운영, sar-search-and-analyzer 프론트엔드 전부). 통합 비전 설계 본인.",
     en: "All three layers, solo (sar-data-retrieval's 5 areas in full · lumir-linux-snap tool selection & operation · sar-search-and-analyzer's frontend in full). The integrated vision is also mine.",
@@ -1190,6 +1193,7 @@ export const projects: Project[] = [
       },
     ],
     trackVisibility: "both",
+    relatedStudies: ["sar"],
     areas: [
       {
         icon: "🎨",

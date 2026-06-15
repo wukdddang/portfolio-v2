@@ -51,6 +51,7 @@
     "signalBadge": "진입 신호",
     "ownFeel": "본인 체감:",
     "resultLabel": "결과물 =",
+    "stageWord": "단계",
     "singleLeverEyebrow": "단일 레버"
   },
   "projects": {
@@ -92,6 +93,7 @@
     "inheritedScope": "인계받은 영역",
     "honestyNote": "솔직성 메모 (면접용)",
     "qaTitle": "면접 Q&A 준비",
+    "relatedStudiesEyebrow": "이 도메인의 학습 로그",
     "keywords": "키워드",
     "measurementPending": "📊 정량 측정 권장 (현재 미측정)",
     "subProjectsEyebrow": "레이어별 깊이",

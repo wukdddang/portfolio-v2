@@ -51,6 +51,7 @@
     "signalBadge": "Entry signal",
     "ownFeel": "How I feel it:",
     "resultLabel": "Output owner =",
+    "stageWord": "Stage",
     "singleLeverEyebrow": "Single lever"
   },
   "projects": {
@@ -92,6 +93,7 @@
     "inheritedScope": "Inherited scope",
     "honestyNote": "Honesty note (for interviews)",
     "qaTitle": "Interview Q&A prep",
+    "relatedStudiesEyebrow": "Study log for this domain",
     "keywords": "Keywords",
     "measurementPending": "📊 Quantitative metrics pending (not yet measured)",
     "subProjectsEyebrow": "Layer-by-layer depth",

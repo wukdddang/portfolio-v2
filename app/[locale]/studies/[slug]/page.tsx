@@ -8,6 +8,7 @@ import { pick } from "@/data/i18n";
 import { cn } from "@/lib/utils";
 import { StudyCalendar } from "@/components/StudyCalendar";
 import { StudySearch } from "@/components/StudySearch";
+import { CountUp } from "@/components/CountUp";
 
 /**
  * 학습 로그 페이지 — Brain Trinity 위키에서 컴파일한 학습 여정 (/studies/sar · /studies/embedded).
@@ -223,7 +224,9 @@ export default async function StudyPage({ params }: { params: Params }) {
             {study.stats.map((stat, i) => (
               <div key={i}>
                 <div className="mb-1 text-[10px] uppercase tracking-widest">{pick(stat.label, locale)}</div>
-                <div className="text-[var(--foreground)]">{pick(stat.value, locale)}</div>
+                <div className="text-[var(--foreground)]">
+                  <CountUp value={pick(stat.value, locale)} />
+                </div>
               </div>
             ))}
           </div>
