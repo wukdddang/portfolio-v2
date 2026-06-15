@@ -8,6 +8,7 @@
   },
   "nav": {
     "location": "위치",
+    "career": "경력",
     "projects": "프로젝트",
     "stack": "스택",
     "faq": "FAQ",
@@ -40,6 +41,14 @@
     "returnNote": "위치·AOI 요청은 역방향(점선)으로 흐르고, 캐시 미스일 때만 신규 분석이 돌아갑니다",
     "cardHint": "카드 클릭 → 해당 레이어 상세",
     "ctaDiagram": "통합 다이어그램 탐험"
+  },
+  "career": {
+    "eyebrow": "경력",
+    "title": "어디서, 무엇을 — 프론트엔드에서 풀스택으로",
+    "lede": "루미르에서 위성영상 검색 프론트엔드로 시작해 사내 시스템들을 거쳐, 지금은 백엔드·SAR 처리·AI까지 한 사이클을 책임지는 풀스택으로 확장하고 있습니다.",
+    "present": "현재",
+    "concurrent": "동시 진행",
+    "resumeCta": "전체 이력 보기"
   },
   "coordinates": {
     "eyebrow": "내 위치",

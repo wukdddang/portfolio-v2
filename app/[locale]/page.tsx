@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Hero } from "@/components/Hero";
 import { PipelineSection } from "@/components/PipelineSection";
 import { Coordinates } from "@/components/Coordinates";
+import { Career } from "@/components/Career";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { TechStack } from "@/components/TechStack";
 import { About } from "@/components/About";
@@ -24,6 +25,7 @@ export default async function HomePage({
       <Hero />
       <PipelineSection />
       <Coordinates />
+      <Career />
       <ProjectsGrid />
       <TechStack />
       <FaqSection />

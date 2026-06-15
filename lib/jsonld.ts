@@ -46,9 +46,13 @@ export function personNode(locale: Locale) {
     sameAs: [resumeContacts.github],
     knowsAbout: KNOWS_ABOUT,
     worksFor: {
-      "@type": "Organization",
-      name: "Lumir",
-      alternateName: "루미르",
+      "@type": "OrganizationRole",
+      startDate: personal.joinDate,
+      worksFor: {
+        "@type": "Organization",
+        name: "Lumir",
+        alternateName: "루미르",
+      },
     },
   };
 }

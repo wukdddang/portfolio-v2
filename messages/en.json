@@ -8,6 +8,7 @@
   },
   "nav": {
     "location": "Location",
+    "career": "Career",
     "projects": "Projects",
     "stack": "Stack",
     "faq": "FAQ",
@@ -40,6 +41,14 @@
     "returnNote": "Location / AOI requests flow the other way (dashed) — fresh analysis runs only on a cache miss",
     "cardHint": "Click a card for that layer's detail",
     "ctaDiagram": "Explore the unified diagram"
+  },
+  "career": {
+    "eyebrow": "Career",
+    "title": "Where & what — from frontend to full-stack",
+    "lede": "Starting at Lumir with the satellite-imagery search frontend, then through internal systems, I'm now expanding into full-stack — owning the whole cycle across backend, SAR processing, and AI.",
+    "present": "Present",
+    "concurrent": "In parallel",
+    "resumeCta": "See full history"
   },
   "coordinates": {
     "eyebrow": "Where I am",

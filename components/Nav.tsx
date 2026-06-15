@@ -15,6 +15,7 @@ export function Nav() {
 
   const links = [
     { href: "/#coordinates", id: "coordinates", label: t("location") },
+    { href: "/#career", id: "career", label: t("career") },
     { href: "/#projects", id: "projects", label: t("projects") },
     { href: "/#stack", id: "stack", label: t("stack") },
     { href: "/#faq", id: "faq", label: t("faq") },
