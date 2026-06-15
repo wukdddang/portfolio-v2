@@ -14,6 +14,8 @@ import {
   BackgroundVariant,
   Controls,
   Panel,
+  Handle,
+  Position,
   type Edge,
   type Node,
   type NodeProps,
@@ -24,7 +26,7 @@ import { motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 import { pick } from "@/data/i18n";
-import type { ProjectDiagram as ProjectDiagramData } from "@/data/projects";
+import type { ProjectDiagram as ProjectDiagramData, DiagramNode } from "@/data/projects";
 import {
   ACCENT,
   MUTED,
@@ -78,32 +80,141 @@ function GroupFrame({ data }: NodeProps<Node<GroupData>>) {
   );
 }
 
-const nodeTypes = { card: DiagramCard, groupFrame: GroupFrame };
+const hiddenHandle = {
+  opacity: 0,
+  width: 1,
+  height: 1,
+  minWidth: 0,
+  minHeight: 0,
+  border: 0,
+  background: "transparent",
+} as const;
+
+type BusData = {
+  label: string;
+  sublabel?: string;
+  icon?: string;
+  color: string;
+  w: number;
+  inLeft: number; // 진입(상단) 핸들 x (버스 좌측 기준)
+  drops: { id: string; left: number }[]; // 각 단계로 내려가는 하단 드롭 핸들
+};
+
+/**
+ * BusRail — 가로 이벤트 버스 레일 (메인 미리보기 BusRail 의 React Flow 판).
+ * 단일 카드가 아니라 처리 단계들 위를 가로지르는 선으로 그려, 상단으로 진입(워크플로 → 버스)하고
+ * 하단의 정렬된 드롭 핸들로 각 레벨을 기동한다. node.bus === true 인 노드에 적용.
+ */
+function BusRail({ data }: NodeProps<Node<BusData>>) {
+  return (
+    <div style={{ width: data.w }} className="relative h-9">
+      <Handle id="in" type="target" position={Position.Top} style={{ left: data.inLeft, ...hiddenHandle }} isConnectable={false} />
+      {/* 레일 — glow 언더레이 + 본선 */}
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-1/2 h-[7px] -translate-y-1/2 rounded-full opacity-30"
+        style={{ background: data.color, filter: "blur(3px)" }}
+      />
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full"
+        style={{ background: `color-mix(in oklch, ${data.color} 75%, var(--border))` }}
+      />
+      {/* 라벨 칩 — 레일 위 중앙 */}
+      <span
+        className="absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 whitespace-nowrap rounded-md border bg-[var(--card)] px-2 py-0.5 font-mono text-[10px] leading-tight"
+        style={{
+          borderColor: `color-mix(in oklch, ${data.color} 45%, var(--border))`,
+          color: `color-mix(in oklch, ${data.color} 65%, var(--foreground))`,
+        }}
+      >
+        {data.icon && <span className="not-italic">{data.icon}</span>}
+        {data.label}
+        {data.sublabel && <span className="text-[var(--muted)]">· {data.sublabel}</span>}
+      </span>
+      {/* 드롭 핸들 — 각 단계 중앙 x 에 정렬 */}
+      {data.drops.map((d) => (
+        <Handle
+          key={d.id}
+          id={d.id}
+          type="source"
+          position={Position.Bottom}
+          style={{ left: d.left, ...hiddenHandle }}
+          isConnectable={false}
+        />
+      ))}
+    </div>
+  );
+}
+
+const nodeTypes = { card: DiagramCard, groupFrame: GroupFrame, busRail: BusRail };
 const edgeTypes = { flow: FlowEdge };
 
 function buildGraph(diagram: ProjectDiagramData, locale: Locale) {
   const hasGroups = !!diagram.groups?.length;
-  const cards: Node[] = diagram.nodes.map((n) => ({
-    id: n.id,
-    type: "card",
-    position: { x: n.col * COL_W, y: n.row * ROW_H },
-    draggable: false,
-    selectable: false,
-    // 그룹 프레임이 있을 때만 명시 z-순서: 프레임(0) < 엣지(5) < 카드(10).
-    // (그룹 없는 다이어그램은 기존 기본 z 유지 → 시각 변화 없음)
-    zIndex: hasGroups ? 10 : undefined,
-    data: {
-      label: pick(n.label, locale),
-      sublabel: n.sublabel ? pick(n.sublabel, locale) : undefined,
-      icon: n.icon,
-      kind: n.kind ?? "layer",
-      cat: n.cat,
-    },
-  }));
+  const byId = new Map(diagram.nodes.map((n) => [n.id, n]));
+  const centerX = (n: DiagramNode) => n.col * COL_W + CARD_W / 2;
+  const z = hasGroups ? 10 : undefined;
 
-  const edges = buildFlowEdges(diagram.edges, locale).map((e) =>
-    hasGroups ? { ...e, zIndex: 5 } : e
-  );
+  const cards: Node[] = diagram.nodes.map((n) => {
+    // 버스 레일 — 카드가 아니라 가로 선. 나가는 엣지의 to 노드들이 정렬된 드롭이 된다.
+    if (n.bus) {
+      const targets = diagram.edges
+        .filter((e) => e.from === n.id)
+        .map((e) => byId.get(e.to))
+        .filter((t): t is DiagramNode => !!t);
+      const left = n.col * COL_W;
+      const right = targets.length
+        ? Math.max(...targets.map((t) => t.col * COL_W + CARD_W))
+        : left + CARD_W;
+      // 진입(상단) 핸들: 이 버스로 들어오는 엣지의 from(예: 워크플로/콘솔) 중앙에 정렬.
+      const inbound = diagram.edges.find((e) => e.to === n.id);
+      const inFrom = inbound ? byId.get(inbound.from) : undefined;
+      return {
+        id: n.id,
+        type: "busRail",
+        position: { x: left, y: n.row * ROW_H },
+        draggable: false,
+        selectable: false,
+        zIndex: z,
+        data: {
+          label: pick(n.label, locale),
+          sublabel: n.sublabel ? pick(n.sublabel, locale) : undefined,
+          icon: n.icon,
+          color: n.cat ? `var(--cat-${n.cat})` : "var(--cat-2)",
+          w: right - left,
+          inLeft: inFrom ? centerX(inFrom) - left : (right - left) / 2,
+          drops: targets.map((t) => ({ id: `drop-${t.id}`, left: centerX(t) - left })),
+        },
+      } satisfies Node;
+    }
+    return {
+      id: n.id,
+      type: "card",
+      position: { x: n.col * COL_W, y: n.row * ROW_H },
+      draggable: false,
+      selectable: false,
+      // 그룹 프레임이 있을 때만 명시 z-순서: 프레임(0) < 엣지(5) < 카드(10).
+      // (그룹 없는 다이어그램은 기존 기본 z 유지 → 시각 변화 없음)
+      zIndex: z,
+      data: {
+        label: pick(n.label, locale),
+        sublabel: n.sublabel ? pick(n.sublabel, locale) : undefined,
+        icon: n.icon,
+        kind: n.kind ?? "layer",
+        cat: n.cat,
+      },
+    } satisfies Node;
+  });
+
+  // 버스 엣지는 정렬된 커스텀 핸들로 다시 연결 — 드롭(버스→단계)/진입(→버스).
+  const busIds = new Set(diagram.nodes.filter((n) => n.bus).map((n) => n.id));
+  const edges = buildFlowEdges(diagram.edges, locale).map((e) => {
+    const ne: Edge<FlowEdgeData> = hasGroups ? { ...e, zIndex: 5 } : { ...e };
+    if (busIds.has(e.source)) ne.sourceHandle = `drop-${e.target}`;
+    if (busIds.has(e.target)) ne.targetHandle = "in";
+    return ne;
+  });
 
   // 그룹 프레임 — 멤버 노드들의 경계 박스를 배경으로 깔고 좌상단에 제목.
   const frames: Node[] = [];

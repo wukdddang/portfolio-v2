@@ -60,6 +60,9 @@ export interface DiagramNode {
   kind?: DiagramNodeKind; // 스타일 변형 (기본 layer)
   cat?: number; // 카테고리 색 인덱스 (1-6) → var(--cat-N). layer "식별" 전용, 아이콘과 페어
   group?: string; // 같은 group id끼리 그룹 프레임으로 묶어 렌더 (예: "ext" 외부 인프라)
+  // true면 ProjectDiagram에서 카드가 아니라 가로 버스 레일로 렌더 — 이 노드에서 나가는 엣지(to)
+  // 각각이 해당 단계 위로 정렬된 드롭이 된다 (예: SDPE pgmq 이벤트 버스, 메인 미리보기와 동일).
+  bus?: boolean;
   col: number; // 그리드 열 (0-based)
   row: number; // 그리드 행 (0-based)
 }
@@ -1043,9 +1046,10 @@ export const projects: Project[] = [
           kind: "external",
           icon: "🔀",
           label: { ko: "pgmq 이벤트 버스", en: "pgmq event bus" },
-          sublabel: { ko: "이벤트 큐 · sdpe.*.events", en: "Event queue · sdpe.*.events" },
+          sublabel: { ko: "sdpe.*.events", en: "sdpe.*.events" },
           group: "workflow",
-          col: 1,
+          bus: true, // 가로 버스 레일 — 각 처리 레벨로 드롭 (data/pipeline 미리보기와 동일)
+          col: 0,
           row: 1,
         },
         {
