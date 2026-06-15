@@ -271,26 +271,6 @@ function DagFrontendNode({ pipeline, locale }: { pipeline: Pipeline; locale: Loc
   );
 }
 
-/** 워크플로 → 버스 탭다운 — 제어 플레인 solid teal 세로선 + 화살촉. flex-1로 버스까지 채운다 */
-function BusTap() {
-  return (
-    <span className="relative flex w-4 flex-1 justify-center" style={{ minHeight: "3rem" }} aria-hidden>
-      <span
-        className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 rounded-full"
-        style={{ background: "color-mix(in oklch, var(--cat-2) 75%, transparent)" }}
-      />
-      <svg
-        viewBox="0 0 12 8"
-        className="absolute -bottom-[3px] left-1/2 h-2 w-3 -translate-x-1/2"
-        style={{ fill: "var(--cat-2)" }}
-        aria-hidden="true"
-      >
-        <path d="M0 0 L6 8 L12 0 Z" />
-      </svg>
-    </span>
-  );
-}
-
 /** CQRS 트윈 레인 — 한 구간을 커맨드/쿼리 두 색 레인으로 분리 (stack 변형) */
 function TwinLanes({
   lanes,
@@ -795,9 +775,11 @@ function SpineRow({ pipeline, locale, reduce }: RowProps) {
 }
 
 /**
- * orchestration 변형 — SDPE. 제어 플레인(콘솔 →run→ 워크플로)이 전폭 pgmq 이벤트
- * 버스에 탭으로 접속하고, 버스가 점선 드롭으로 각 레벨 카드를 디스패치한다.
- * 데이터는 카드 사이를 amber로 흘러 카탈로그에 적재 — 제어(teal)/데이터(amber) 분리.
+ * orchestration 변형 — SDPE. 운영 콘솔(센터 진입점)이 DAG를 넘기면, Pipeline Workflow
+ * 경계가 pgmq 이벤트 버스 + 레벨 카드 트랙을 통째로 감싼다(orchestration envelope) —
+ * 워크플로가 곧 오케스트레이션 컨텍스트임을 모양으로 드러낸다. 워크플로는 경계의 제목
+ * (fieldset legend)으로 상단 중앙에 앉고, 버스가 점선 드롭으로 각 레벨을 디스패치하며,
+ * 데이터는 카드 사이를 amber로 흘러 카탈로그에 적재된다(제어 teal / 데이터 amber).
  */
 function OrchestrationRow({ pipeline, locale, reduce }: RowProps) {
   const control = pipeline.control!;
@@ -846,76 +828,97 @@ function OrchestrationRow({ pipeline, locale, reduce }: RowProps) {
     <div>
       <RowHeader pipeline={pipeline} locale={locale} />
 
-      {/* ── lg+: 2-플레인 보드 — 제어행 / 버스 레일 / 드롭+데이터 트랙 ── */}
+      {/* ── lg+: 오케스트레이션 보드 — 운영 콘솔(센터 진입) → Pipeline Workflow 경계가
+          버스 레일 + 레벨 트랙을 감싼다 (워크플로 = 경계 제목, fieldset legend) ── */}
       <div className="hidden lg:block">
-        {/* 제어 플레인 — DAG 프론트엔드 →배포→ Pipeline Workflow. 워크플로 컬럼이 늘어나
-            BusTap(flex-1)이 항상 버스 레일까지 닿는다 (높이 가변에도 연결 보장). */}
-        <div className="flex items-stretch">
-          <motion.div {...rise(reduce, 0)} className="flex max-w-sm items-center self-center">
+        {/* 운영 콘솔 — 오케스트레이션 경계 밖의 센터 진입점 */}
+        <div className="mx-auto flex max-w-sm flex-col items-center">
+          <motion.div {...rise(reduce, 0)} className="w-full">
             <DagFrontendNode pipeline={pipeline} locale={locale} />
           </motion.div>
-          <motion.div {...rise(reduce, 1)} className="flex items-center self-center">
-            <Connector label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
+          <motion.div {...rise(reduce, 1)}>
+            <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
           </motion.div>
-          {/* 워크플로 컬럼 — 상·하 스페이서 min-h 로 컬럼을 콘솔 카드보다 높게 만들어
-              콘솔(self-center)이 버스와 떨어지고, 워크플로만 BusTap 으로 버스에 접속한다 */}
-          <motion.div {...rise(reduce, 2)} className="flex flex-col items-center">
-            <span className="flex-1" style={{ minHeight: "3rem" }} aria-hidden />
+        </div>
+
+        {/* Pipeline Workflow 경계 — pgmq 버스 + 레벨 카드를 orchestration envelope 로 감싼다.
+            워크플로 노드는 상단 중앙에서 경계 제목(legend)으로 테두리에 걸쳐 앉는다. */}
+        <motion.div
+          {...rise(reduce, 2)}
+          className="relative rounded-2xl border px-5 pb-5 pt-9"
+          style={{
+            borderColor: "color-mix(in oklch, var(--cat-2) 38%, var(--border))",
+            backgroundColor: "color-mix(in oklch, var(--cat-2) 4%, var(--card))",
+          }}
+        >
+          <div
+            className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 px-2"
+            style={{ backgroundColor: "var(--background)" }}
+          >
             <WorkflowNode pipeline={pipeline} locale={locale} />
-            <BusTap />
-          </motion.div>
-        </div>
-        <motion.div {...rise(reduce, 3)}>
+          </div>
           <BusRail label={pick(control.busLabel, locale)} reduce={reduce} />
+          <div className="grid items-stretch" style={{ gridTemplateColumns: gridCols }}>
+            {dropCells}
+            {dataCells}
+          </div>
         </motion.div>
-        <div className="grid items-stretch" style={{ gridTemplateColumns: gridCols }}>
-          {dropCells}
-          {dataCells}
-        </div>
       </div>
 
-      {/* ── lg 미만: 세로 폴백 — DAG 프론트엔드 → 워크플로 → (버스 홉) → 레벨 카드들 ── */}
+      {/* ── lg 미만: 세로 폴백 — 운영 콘솔 → Pipeline Workflow 경계(버스 홉 + 레벨 카드) ── */}
       <div className="flex flex-col lg:hidden">
-        <motion.div {...rise(reduce, 0)}>
+        <motion.div {...rise(reduce, 0)} className="mx-auto w-full max-w-sm">
           <DagFrontendNode pipeline={pipeline} locale={locale} />
         </motion.div>
         <motion.div {...rise(reduce, 1)}>
           <VerticalEdge label={pick(control.runLabel, locale)} phase={0} reduce={reduce} color="var(--cat-2)" />
         </motion.div>
-        <motion.div {...rise(reduce, 2)} className="flex justify-center">
-          <WorkflowNode pipeline={pipeline} locale={locale} />
-        </motion.div>
-        <motion.div {...rise(reduce, 3)} className="relative flex justify-center py-1">
-          <EventDrop tall reduce={reduce} />
-          <span className={cn(chipCls, "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2")} style={tealChipStyle}>
-            {pick(control.busLabel, locale)}
-          </span>
-        </motion.div>
-        {pipeline.stages.map((stage, i) => (
-          <Fragment key={i}>
-            {i > 0 && (
-              <motion.div {...rise(reduce, i * 2 + 4)}>
-                <VerticalEdge label={pick(pipeline.edges[i - 1].label, locale)} phase={(i - 1) * 0.45} reduce={reduce} />
-              </motion.div>
-            )}
-            <motion.div
-              {...rise(reduce, i * 2 + 5)}
-              className={stage.kind === "layer" ? "min-w-0" : "flex justify-center"}
-            >
-              {stage.kind === "layer" ? (
-                <StageCard
-                  stage={stage}
-                  label={pick(stage.label, locale)}
-                  icon={stage.icon}
-                  locale={locale}
-                  projectSlug={pipeline.projectSlug}
-                />
-              ) : (
-                <StagePill stage={stage} locale={locale} />
+        <motion.div
+          {...rise(reduce, 2)}
+          className="relative rounded-2xl border px-3 pb-4 pt-9"
+          style={{
+            borderColor: "color-mix(in oklch, var(--cat-2) 38%, var(--border))",
+            backgroundColor: "color-mix(in oklch, var(--cat-2) 4%, var(--card))",
+          }}
+        >
+          <div
+            className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 px-2"
+            style={{ backgroundColor: "var(--background)" }}
+          >
+            <WorkflowNode pipeline={pipeline} locale={locale} />
+          </div>
+          <div className="relative flex justify-center py-1">
+            <EventDrop tall reduce={reduce} />
+            <span className={cn(chipCls, "absolute left-1/2 top-1/2 ml-4 -translate-y-1/2")} style={tealChipStyle}>
+              {pick(control.busLabel, locale)}
+            </span>
+          </div>
+          {pipeline.stages.map((stage, i) => (
+            <Fragment key={i}>
+              {i > 0 && (
+                <motion.div {...rise(reduce, i * 2 + 4)}>
+                  <VerticalEdge label={pick(pipeline.edges[i - 1].label, locale)} phase={(i - 1) * 0.45} reduce={reduce} />
+                </motion.div>
               )}
-            </motion.div>
-          </Fragment>
-        ))}
+              <motion.div
+                {...rise(reduce, i * 2 + 5)}
+                className={stage.kind === "layer" ? "min-w-0" : "flex justify-center"}
+              >
+                {stage.kind === "layer" ? (
+                  <StageCard
+                    stage={stage}
+                    label={pick(stage.label, locale)}
+                    icon={stage.icon}
+                    locale={locale}
+                    projectSlug={pipeline.projectSlug}
+                  />
+                ) : (
+                  <StagePill stage={stage} locale={locale} />
+                )}
+              </motion.div>
+            </Fragment>
+          ))}
+        </motion.div>
       </div>
 
       {pipeline.returnNote && <ReturnLane note={pipeline.returnNote} locale={locale} />}
