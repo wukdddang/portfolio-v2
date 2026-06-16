@@ -13,7 +13,13 @@ export const psi: TopicDetail = {
         { ko: "PSI는 위상이 안정적인 점만 선별해 풀해상도를 유지하므로 건물·인공구조물처럼 도심에서 강하다.", en: "PSI selects only phase-stable points and keeps full resolution, so it excels in urban settings such as buildings and man-made structures." },
         { ko: "도심 정밀은 PSI, 광역 면적은 거친 SBAS가 정석이며, 매립지·수변 간척지도 PSI 영역이다 — 송도에서 PSI 29,929점 성공 vs SBAS는 temporal coherence 0.17로 적재 불가였다.", en: "Urban precision belongs to PSI and wide-area coverage to coarse SBAS; reclaimed land and waterfront fill are PSI territory too — at Songdo, PSI succeeded with 29,929 points while SBAS was unusable at temporal coherence 0.17." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "network",
+          style: "psi",
+          caption: { ko: "PSI는 단일 마스터 스택 — 한 기준 영상에서 전체로 연결, 멀티룩 없이 위상 안정 점(PS)만 선별", en: "PSI uses a single-master stack — one reference linked to all, selecting only phase-stable points (PS) with no multilook" }
+        },
+        {
         kind: "compare",
         caption: { ko: "같은 스택에서 대상·해상도·철학이 갈린다", en: "From one stack: target, resolution, and philosophy diverge" },
         headers: [
@@ -26,7 +32,8 @@ export const psi: TopicDetail = {
           [ { ko: "해상도", en: "Resolution" }, { ko: "멀티룩만큼 희생 (10–55m)", en: "Sacrificed by multilook (10–55m)" }, { ko: "풀해상도 유지", en: "Full resolution kept" } ],
           [ { ko: "강한 지형", en: "Strong terrain" }, { ko: "면적·평지·(거칠게) 산지", en: "Areal, flatland, mountains" }, { ko: "도심·인공구조물", en: "Urban, man-made structures" } ]
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "MiaplPy 파이프라인", en: "The MiaplPy pipeline" },

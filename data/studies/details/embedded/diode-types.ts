@@ -18,7 +18,18 @@ export const diodeTypes: TopicDetail = {
           en: "Three regions: forward conduction (VF), reverse block (tiny leakage), breakdown (current surges → destruction). Not unlimited current — always check the datasheet max.",
         },
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "iv",
+          caption: { ko: "다이오드 I-V 특성 — 순방향 도통(VF)·역방향 차단(누설)·항복(VBR) 3영역", en: "Diode I-V — forward conduction (VF), reverse block (leakage), breakdown (VBR)" },
+          xLabel: { ko: "V 전압", en: "V" },
+          yLabel: { ko: "I 전류", en: "I" },
+          vfLabel: { ko: "VF≈0.7V", en: "VF≈0.7V" },
+          vbrLabel: { ko: "항복 VBR", en: "breakdown" },
+          fwdLabel: { ko: "순방향 도통", en: "forward on" },
+          revLabel: { ko: "역방향 차단", en: "reverse block" },
+        },
+        {
         kind: "compare",
         caption: { ko: "전압 방향·크기로 갈리는 3영역", en: "Three regions by voltage direction & size" },
         headers: [
@@ -43,7 +54,8 @@ export const diodeTypes: TopicDetail = {
             { ko: "급증 → 파괴 (제너·TVS는 일부러 사용)", en: "Surges → destroyed (Zener/TVS use it on purpose)" },
           ],
         ],
-      },
+        },
+      ],
     },
     {
       heading: { ko: "역회복시간 trr — 두 번째 손실", en: "Reverse-recovery time trr — the second loss" },
@@ -57,7 +69,15 @@ export const diodeTypes: TopicDetail = {
           en: "In switching circuits that toggle on/off constantly the loss accumulates every cycle, so fast switching needs a short-trr diode.",
         },
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "plot",
+          caption: { ko: "역회복(trr) — 끌 때 전류가 즉시 0이 안 되고 잠깐 역방향으로 흘렀다 회복(파형 면적 = 손실)", en: "Reverse recovery (trr) — at turn-off current dips negative briefly before recovering (area = loss)" },
+          xLabel: { ko: "시간", en: "time" },
+          yLabel: { ko: "전류", en: "I" },
+          series: [{ label: { ko: "다이오드 전류", en: "diode current" }, curve: "trr", tone: "accent" }],
+        },
+        {
         kind: "flow",
         dir: "row",
         caption: { ko: "끌 때 역전류가 trr만큼 흐른다 = 손실", en: "Turn-off draws reverse current for trr = loss" },
@@ -67,7 +87,8 @@ export const diodeTypes: TopicDetail = {
           { icon: "↩", label: { ko: "역전류", en: "Reverse current" }, sub: { ko: "trr 구간", en: "trr window" }, tone: "accent" },
           { icon: "🔥", label: { ko: "스위칭 손실", en: "Switching loss" }, tone: 3 },
         ],
-      },
+        },
+      ],
     },
     {
       heading: { ko: "종류 6종 — 효율·속도·보호로 갈림", en: "Six types — split by efficiency, speed, protection" },

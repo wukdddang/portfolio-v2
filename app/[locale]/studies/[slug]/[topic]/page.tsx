@@ -154,7 +154,10 @@ export default async function TopicPage({ params }: { params: Params }) {
                 </li>
               ))}
             </ul>
-            {sec.diagram && <TopicDiagram diagram={sec.diagram} locale={locale} catColor={catColor} />}
+            {sec.diagram &&
+              (Array.isArray(sec.diagram) ? sec.diagram : [sec.diagram]).map((d, di) => (
+                <TopicDiagram key={di} diagram={d} locale={locale} catColor={catColor} />
+              ))}
           </section>
         ))}
 

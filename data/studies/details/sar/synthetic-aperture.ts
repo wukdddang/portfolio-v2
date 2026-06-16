@@ -21,7 +21,13 @@ export const syntheticAperture: TopicDetail = {
         { ko: "한 표적은 위성이 지나가는 동안 수백~수천 번 관측되고, 각 위치에서 표적까지의 거리가 조금씩 달라지며, 거리가 다르면 돌아오는 신호의 위상도 달라진다.", en: "A single target is observed hundreds to thousands of times as the satellite passes, the range to it differs slightly at each position, and a different range means a different phase in the returning signal." },
         { ko: "핵심은 프로세서가 이 위상 변화가 같은 표적 때문임을 안다는 것이며, 각 관측을 위상 보정 후 전부 더하면(matched filter) 신호가 한 점에 강하게 모인다.", en: "The key is that the processor knows this phase variation comes from the same target, so when each observation is summed after phase correction (a matched filter), the signal concentrates strongly at a single point." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "scene",
+          variant: "aperture",
+          caption: { ko: "위성이 이동하며 같은 표적을 여러 번 관측 — 거리 R₁≠R₂≠R₃가 위상차로 남고, 위상 정렬 합산이 수 km 가상 안테나를 만든다", en: "The moving satellite observes one target many times — ranges R₁≠R₂≠R₃ leave phase differences, and coherent summation builds a km-scale virtual antenna" }
+        },
+        {
         kind: "flow",
         dir: "col",
         caption: { ko: "합성개구 처리 흐름: 안테나 이동에서 가상 거대 안테나까지", en: "Synthetic aperture processing flow: from antenna motion to a virtual giant antenna" },
@@ -31,7 +37,8 @@ export const syntheticAperture: TopicDetail = {
           { icon: "🔄", label: { ko: "위상 보정·합산", en: "Phase correction and summation" }, sub: { ko: "Azimuth Compression / matched filter", en: "Azimuth Compression / matched filter" }, tone: "accent" },
           { icon: "🎯", label: { ko: "가상 거대 안테나", en: "Virtual giant antenna" }, sub: { ko: "한 점에 에너지 집중 → 높은 Azimuth 해상도 → SLC", en: "Energy concentrated at one point → high azimuth resolution → SLC" }, tone: 4 }
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "작은 안테나 vs 합성개구, 그리고 왜 복소수인가", en: "Small antenna vs synthetic aperture, and why complex numbers" },

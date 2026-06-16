@@ -32,7 +32,15 @@ export const deformation: TopicDetail = {
         { ko: "Sentinel-1(λ=5.6cm)에서 1 fringe는 약 2.8cm(=λ/2), 10 fringe는 약 28cm에 해당하고, 수십~수백 개는 지진급 단층 이동을 가리킨다.", en: "On Sentinel-1 (λ=5.6cm) 1 fringe equals about 2.8cm (=λ/2), 10 fringes about 28cm, and tens to hundreds indicate earthquake-scale fault motion." },
         { ko: "fringe가 많을수록 큰 변위이며, 줄 간격이 좁아질수록 기울기가 큰 deformation을 의미한다.", en: "More fringes mean larger displacement, and narrower stripe spacing means deformation with a steeper gradient." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "plot",
+          caption: { ko: "위상은 −π~π로 반복 wrap돼 줄무늬(fringe)가 된다 — 한 줄(톱니 한 주기) = λ/2 ≈ 2.8cm LOS 변위", en: "Phase wraps repeatedly to −π~π, forming fringes — one stripe (one sawtooth period) = λ/2 ≈ 2.8cm LOS" },
+          xLabel: { ko: "거리/위치", en: "distance" },
+          yLabel: { ko: "위상", en: "phase" },
+          series: [{ label: { ko: "wrap된 위상", en: "wrapped phase" }, curve: "wrap", tone: "accent" }]
+        },
+        {
         kind: "compare",
         caption: { ko: "fringe 줄 수와 LOS 변위 (Sentinel-1, λ=5.6cm)", en: "Fringe count vs LOS displacement (Sentinel-1, λ=5.6cm)" },
         headers: [
@@ -45,7 +53,8 @@ export const deformation: TopicDetail = {
           [ { ko: "열 줄", en: "Ten fringes" }, { ko: "10 fringe", en: "10 fringes" }, { ko: "~28cm", en: "~28cm" } ],
           [ { ko: "지진급", en: "Earthquake-scale" }, { ko: "수십~수백", en: "Tens to hundreds" }, { ko: "단층 이동급", en: "Fault-motion scale" } ]
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "LOS 제약 — ASC + DESC 결합", en: "The LOS constraint — combining ASC + DESC" },

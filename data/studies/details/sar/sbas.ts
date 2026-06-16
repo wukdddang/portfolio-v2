@@ -37,7 +37,13 @@ export const sbas: TopicDetail = {
         { ko: "어떤 페어끼리 연결할지가 전체 품질을 지배하며, B⊥<100·ΔT<48의 Small Baseline 전략(20장 기준 약 40~60페어)이 균형과 중복을 확보한 SBAS 표준이다.", en: "Which pairs to connect dominates overall quality; the Small Baseline strategy (B⊥<100, ΔT<48; roughly 40-60 pairs for 20 scenes) is the SBAS standard, securing balance and redundancy." },
         { ko: "연결성 원칙상 모든 영상이 최소 1개 페어에 연결돼 disconnected island가 없어야 한다.", en: "By the connectivity rule every scene must join at least one pair with no disconnected islands." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "network",
+          style: "sbas",
+          caption: { ko: "Small Baseline 네트워크 — 시간·수직기선이 가까운 페어만 다중 연결(중복 확보, disconnected island 금지)", en: "Small-baseline network — only pairs close in time and B⊥ are linked, with redundancy and no disconnected islands" }
+        },
+        {
         kind: "flow",
         dir: "row",
         caption: { ko: "SBAS 시계열 역산 흐름", en: "SBAS time-series inversion flow" },
@@ -47,7 +53,8 @@ export const sbas: TopicDetail = {
           { icon: "🧮", label: { ko: "시계열 역산", en: "Time-series inversion" }, sub: { ko: "MintPy WLS + reference point", en: "MintPy WLS + reference point" }, tone: 2 },
           { icon: "📈", label: { ko: "mm/yr 속도장 + 시계열", en: "mm/yr velocity + time series" }, tone: "accent" }
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "Reference Point 보정 — ±37mm APS를 상쇄", en: "Reference-point correction — canceling ±37mm APS" },
