@@ -76,6 +76,7 @@ export const embeddedJournal: JournalEntry[] = [
         kind: "lecture",
         title: { ko: "바이폴라 트랜지스터 (BJT)", en: "Bipolar transistor (BJT)" },
         meta: { ko: "강의 녹음 6호 · 8:30", en: "Lecture recording #6 · 8:30" },
+        topicSlug: "bjt",
       },
       {
         date: "2026-06-13",

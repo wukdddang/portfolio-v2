@@ -13,6 +13,7 @@ import { voltageDrop } from "./details/embedded/voltage-drop";
 import { diodeTypes } from "./details/embedded/diode-types";
 import { diodeCircuits } from "./details/embedded/diode-circuits";
 import { mosfet } from "./details/embedded/mosfet";
+import { bjt } from "./details/embedded/bjt";
 
 export const embedded: Study = {
     slug: "embedded",
@@ -32,7 +33,7 @@ export const embedded: Study = {
     },
     stats: [
       { label: { ko: "로드맵", en: "Roadmap" }, value: { ko: "18토픽 · 4블록", en: "18 topics · 4 blocks" } },
-      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "13페이지 (진행 중)", en: "13 pages (ongoing)" } },
+      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "14페이지 (진행 중)", en: "14 pages (ongoing)" } },
       { label: { ko: "본 강의", en: "Main course" }, value: { ko: "153강 · 16.5h", en: "153 lectures · 16.5 h" } },
     ],
     journal: embeddedJournal,
@@ -316,17 +317,20 @@ export const embedded: Study = {
           },
           {
             icon: "📶",
-            title: { ko: "BJT", en: "BJT" },
+            title: { ko: "BJT — 바이폴라 트랜지스터", en: "BJT — bipolar transistor" },
             summary: {
-              ko: "다음 차례 — 전류 증폭·스위칭(차단/선형/포화), 2N3904 설계. 강의 녹음 전사까지 마쳤고 위키/포트폴리오 컴파일 대기 중입니다.",
-              en: "Up next — current amplify/switch (cutoff/active/saturation), 2N3904 design. Transcribed; wiki/portfolio compile pending.",
+              ko: "작은 베이스 전류로 큰 컬렉터 전류를 제어하는 전류 제어 소자 — 증폭(선형)·스위칭(포화). NPN/PNP·베이스-에미터 0.7V 문턱·IC=IB·hFE. 2N3904로 IC=50mA 스위치 설계(RL·RB). 스위칭 영역 명명이 MOSFET과 정반대(BJT 포화=ON).",
+              en: "A current-controlled device steering a large collector current with a small base current — amplify (active) / switch (saturation). NPN/PNP, 0.7V base-emitter threshold, IC=IB·hFE, a 2N3904 50mA-switch design (RL·RB). Its switching region is named opposite a MOSFET (BJT saturation = ON).",
             },
             tags: [
-              { ko: "BJT", en: "BJT" },
+              { ko: "전류 제어", en: "Current control" },
               { ko: "hFE", en: "hFE" },
-              { ko: "#10", en: "#10" },
+              { ko: "2N3904", en: "2N3904" },
             ],
-            status: "doing",
+            status: "done",
+            wikiSlug: "embedded-bjt",
+            slug: "bjt",
+            detail: bjt,
           },
         ],
       },
