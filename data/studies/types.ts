@@ -16,6 +16,7 @@ import type { L } from "../i18n";
  *  - branch  : 한 노드에서 여러 갈래로 분기 (root → children[]).
  *  - compare : 미니 비교표 (headers + rows).
  *  - formula : 큰 수식 한 줄 + 기호 설명.
+ *  - plot    : 개념 이해용 곡선 그래프(정현파·임피던스 곡선 등) — series[]를 SVG 곡선으로.
  */
 export type DiagramNode = {
   icon?: string;
@@ -29,7 +30,18 @@ export type Diagram =
   | { kind: "flow"; dir?: "row" | "col"; caption?: L; nodes: DiagramNode[] }
   | { kind: "branch"; caption?: L; root: DiagramNode; children: DiagramNode[] }
   | { kind: "compare"; caption?: L; headers: L[]; rows: L[][] }
-  | { kind: "formula"; expr: string; caption?: L; legend?: { sym: string; desc: L }[] };
+  | { kind: "formula"; expr: string; caption?: L; legend?: { sym: string; desc: L }[] }
+  | { kind: "plot"; caption?: L; xLabel?: L; yLabel?: L; series: PlotSeries[]; markers?: PlotMarker[] };
+
+/**
+ * plot 곡선 — 개념 이해용(정밀 데이터 아님). 컴포넌트가 curve 종류별로 SVG path를 생성한다.
+ *  sine 정현파 · dc 수평선 · decay 1/f 감소(Xc) · rise 선형 증가(XL) ·
+ *  lowpass 저역통과 응답 · rectified 정류 맥동(|sin|) · pulse PWM 구형파.
+ */
+export type PlotCurve = "sine" | "dc" | "decay" | "rise" | "lowpass" | "rectified" | "pulse";
+export type PlotSeries = { label: L; curve: PlotCurve; tone?: "accent" | "muted" | number };
+/** x는 0~1 정규화 위치. 세로 점선 + 라벨로 특정 지점(공진·차단 등)을 표시. */
+export type PlotMarker = { x: number; label: L; tone?: "accent" | "muted" | number };
 
 /** 토픽 상세 — Brain Trinity 위키 본문에서 컴파일한 복습 노트 */
 export interface TopicDetail {
@@ -69,6 +81,8 @@ export interface StudyBlock {
   desc: L;
   /** 카테고리 색 — 통합 다이어그램의 cat 인덱스와 동일 (--cat-N) */
   cat: number;
+  /** "prerequisite"면 본 커리큘럼 블록들보다 앞에 '선수 지식 · 먼저 보기' 전용 구획으로 분리 렌더 */
+  kind?: "prerequisite";
   topics: StudyTopic[];
 }
 

@@ -196,6 +196,8 @@
     "calendar": "Study calendar",
     "calendarLede": "When I studied what — dated by when each wiki page was created or each lecture recorded. Tap an active day to see that day's topics.",
     "viewDetail": "View detail",
+    "prereqBadge": "Read first",
+    "prereqHint": "Lay this groundwork before the curriculum",
     "tldr": "TL;DR",
     "pitfall": "Pitfalls & gotchas",
     "backToStudy": "Back to study log",

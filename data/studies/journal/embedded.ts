@@ -67,8 +67,8 @@ export const embeddedJournal: JournalEntry[] = [
       {
         date: "2026-06-13",
         kind: "wiki",
-        title: { ko: "반도체 기초 (PN 접합)", en: "Semiconductor basics (PN junction)" },
-        meta: { ko: "선수 개념 갭 보충", en: "Filling a prerequisite gap" },
+        title: { ko: "반도체 기초 (PN 접합·도핑)", en: "Semiconductor basics (PN junction)" },
+        meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
         topicSlug: "semiconductor-basics",
       },
       {
@@ -76,5 +76,26 @@ export const embeddedJournal: JournalEntry[] = [
         kind: "lecture",
         title: { ko: "바이폴라 트랜지스터 (BJT)", en: "Bipolar transistor (BJT)" },
         meta: { ko: "강의 녹음 6호 · 8:30", en: "Lecture recording #6 · 8:30" },
+      },
+      {
+        date: "2026-06-13",
+        kind: "wiki",
+        title: { ko: "선수 개념 점검표", en: "Prerequisite checklist" },
+        meta: { ko: "자가진단 트래커", en: "Self-assessment tracker" },
+        topicSlug: "study-checklist",
+      },
+      {
+        date: "2026-06-16",
+        kind: "wiki",
+        title: { ko: "AC/DC · 주파수 · 정현파", en: "AC/DC · frequency · sine" },
+        meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
+        topicSlug: "ac-dc-frequency",
+      },
+      {
+        date: "2026-06-16",
+        kind: "wiki",
+        title: { ko: "임피던스 기초", en: "Impedance basics" },
+        meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
+        topicSlug: "impedance-basics",
       },
     ];
