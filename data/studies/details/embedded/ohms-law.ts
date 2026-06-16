@@ -34,6 +34,34 @@ export const ohmsLaw: TopicDetail = {
                   },
                 },
                 {
+                  heading: { ko: "접지(GND) — 0V 기준점이자 전류의 귀환로", en: "Ground (GND) — the 0V reference and current's return path" },
+                  bullets: [
+                    {
+                      ko: "전압은 항상 '어딘가 기준'인 상대값입니다(높이를 해발 0m로 재듯). 그 0V 기준점이 접지(GND) — VGS·VCE 같은 전압도 한쪽(보통 GND)을 0으로 놓고 잰 값입니다.",
+                      en: "Voltage is always relative to some reference (like altitude from sea level); that 0V reference is ground (GND) — even VGS or VCE are measured with one side (usually GND) set to 0.",
+                    },
+                    {
+                      ko: "역할 셋 — ① 모든 전압의 0점 기준, ② 전류가 돌아오는 공통 귀환 경로(전원→부품→GND→전원), ③ 노이즈·서지를 흘려보내는 출구.",
+                      en: "Three roles — (1) the 0V reference for every voltage, (2) the common return path for current (supply→part→GND→supply), (3) the exit that shunts noise/surge away.",
+                    },
+                    {
+                      ko: "그래서 바이패스 커패시터는 고주파 노이즈를, TVS는 서지를 GND로 빼냅니다 — '버리는 곳'이 있어야 빼낼 수 있습니다. 한 줄: 접지 = 이 회로의 0V 기준점이자 전류가 돌아오는 길.",
+                      en: "That's why a bypass capacitor dumps HF noise and a TVS dumps surges to GND — you need a 'place to dump' to shunt anything. In one line: ground is the circuit's 0V reference and the path current returns on.",
+                    },
+                  ],
+                  diagram: {
+                    kind: "flow",
+                    dir: "row",
+                    caption: { ko: "전류는 GND를 거쳐 전원으로 돌아온다 (0V 기준)", en: "Current returns to the supply via GND (the 0V reference)" },
+                    nodes: [
+                      { icon: "⚡", label: { ko: "전원 +", en: "Supply +" }, tone: 2 },
+                      { label: { ko: "부품 (R·소자)", en: "Part (R/device)" }, tone: 6 },
+                      { label: { ko: "접지 GND", en: "Ground GND" }, sub: { ko: "0V 기준", en: "0V reference" }, tone: "accent" },
+                      { label: { ko: "전원으로 귀환", en: "back to supply" }, tone: 2 },
+                    ],
+                  },
+                },
+                {
                   heading: { ko: "킥보드/STM32 맥락", en: "Kickboard / STM32 context" },
                   bullets: [
                     {

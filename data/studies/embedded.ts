@@ -12,6 +12,7 @@ import { studyChecklist } from "./details/embedded/study-checklist";
 import { voltageDrop } from "./details/embedded/voltage-drop";
 import { diodeTypes } from "./details/embedded/diode-types";
 import { diodeCircuits } from "./details/embedded/diode-circuits";
+import { mosfet } from "./details/embedded/mosfet";
 
 export const embedded: Study = {
     slug: "embedded",
@@ -31,7 +32,7 @@ export const embedded: Study = {
     },
     stats: [
       { label: { ko: "로드맵", en: "Roadmap" }, value: { ko: "18토픽 · 4블록", en: "18 topics · 4 blocks" } },
-      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "12페이지 (진행 중)", en: "12 pages (ongoing)" } },
+      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "13페이지 (진행 중)", en: "13 pages (ongoing)" } },
       { label: { ko: "본 강의", en: "Main course" }, value: { ko: "153강 · 16.5h", en: "153 lectures · 16.5 h" } },
     ],
     journal: embeddedJournal,
@@ -297,16 +298,33 @@ export const embedded: Study = {
             detail: diodeCircuits,
           },
           {
-            icon: "📶",
-            title: { ko: "BJT · MOSFET", en: "BJT · MOSFET" },
+            icon: "🎚",
+            title: { ko: "MOSFET — 전압 제어 스위치", en: "MOSFET — voltage-controlled switch" },
             summary: {
-              ko: "다음 차례 — BJT(전류 증폭·스위칭, 차단/선형/포화)는 강의 녹음 전사까지 마쳤고, 인버터 핵심 MOSFET(전압 제어·스위칭 손실)은 로드맵 대기 중입니다.",
-              en: "Up next — the BJT (current amplify/switch; cutoff/active/saturation) is transcribed and compiling; the inverter's MOSFET (voltage control, switching loss) is still on the roadmap.",
+              ko: "게이트 전압으로 채널을 여닫는 인버터 핵심 부품 — ON 시 Rds(on) 발열(SQJQ466E는 200A에서 80W), 기생 커패시턴스(Ciss/Coss/Crss)가 스위칭 손실, 바디 다이오드. 스위칭은 선형(ohmic) 영역에서 하고 게이트 드라이버 필수(STM32 3.3V로는 부족). BJT와 동작영역 명명이 반대.",
+              en: "The inverter's core part that opens its channel by gate voltage — Rds(on) heat when ON (80W at 200A on the SQJQ466E), parasitic caps (Ciss/Coss/Crss) as switching loss, plus a body diode. Switch in the linear (ohmic) region; a gate driver is mandatory (3.3V from an STM32 isn't enough). Region naming is opposite to the BJT.",
+            },
+            tags: [
+              { ko: "Rds(on)", en: "Rds(on)" },
+              { ko: "기생 C", en: "Parasitic C" },
+              { ko: "게이트 드라이버", en: "Gate driver" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-mosfet",
+            slug: "mosfet",
+            detail: mosfet,
+          },
+          {
+            icon: "📶",
+            title: { ko: "BJT", en: "BJT" },
+            summary: {
+              ko: "다음 차례 — 전류 증폭·스위칭(차단/선형/포화), 2N3904 설계. 강의 녹음 전사까지 마쳤고 위키/포트폴리오 컴파일 대기 중입니다.",
+              en: "Up next — current amplify/switch (cutoff/active/saturation), 2N3904 design. Transcribed; wiki/portfolio compile pending.",
             },
             tags: [
               { ko: "BJT", en: "BJT" },
-              { ko: "MOSFET", en: "MOSFET" },
-              { ko: "#10–11", en: "#10–11" },
+              { ko: "hFE", en: "hFE" },
+              { ko: "#10", en: "#10" },
             ],
             status: "doing",
           },

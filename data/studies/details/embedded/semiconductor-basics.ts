@@ -216,6 +216,10 @@ export const semiconductorBasics: TopicDetail = {
           ko: "MOSFET = 게이트에 전압을 걸어 반도체 표면에 전도 채널을 만드는 전압 제어 소자(게이트는 절연).",
           en: "MOSFET = a voltage-controlled device that forms a conducting channel at the semiconductor surface via gate voltage (the gate is insulated).",
         },
+        {
+          ko: "문턱 전압은 셋 다 있지만 메커니즘이 다르다 — 다이오드 VF·BJT 베이스-에미터는 PN 접합 장벽(~0.7V)을 넘기는 것이고, MOSFET VGS(th)는 절연된 게이트 너머 채널을 만드는 전압이라 PN 장벽이 아니다. '문턱을 넘겨야 켜진다'는 형태만 공통이다.",
+          en: "All three have a threshold, but via different mechanisms — diode VF and BJT base-emitter cross a PN-junction barrier (~0.7V), while MOSFET VGS(th) forms a channel across an insulated gate (not a PN barrier). Only the 'must cross a threshold to turn on' shape is shared.",
+        },
       ],
       diagram: {
         kind: "branch",
@@ -225,6 +229,34 @@ export const semiconductorBasics: TopicDetail = {
           { label: { ko: "다이오드 #9", en: "Diode #9" }, sub: { ko: "PN 접합 1개 · 한 방향 도통", en: "1 junction · one-way" }, tone: 3 },
           { label: { ko: "BJT #10", en: "BJT #10" }, sub: { ko: "PN 접합 2개 (NPN) · 베이스 전류 제어", en: "2 junctions · base current" }, tone: 4 },
           { label: { ko: "MOSFET #11", en: "MOSFET #11" }, sub: { ko: "게이트 전압으로 채널 형성", en: "gate voltage forms channel" }, tone: 6 },
+        ],
+      },
+    },
+    {
+      heading: { ko: "기생(바디) 다이오드 — 구조가 만드는 부산물", en: "Body (parasitic) diode — a byproduct of the structure" },
+      bullets: [
+        {
+          ko: "반도체 소자를 만들면 의도한 접합 외에 공정상 어쩔 수 없이 생기는 PN 접합이 따라온다. 대표적으로 MOSFET에는 드레인-소스 사이에 바디(기생) 다이오드가 항상 존재한다(N형·P형은 방향만 반대).",
+          en: "Fabricating a semiconductor device brings unintended PN junctions along with the intended ones. Notably, every MOSFET has a body (parasitic) diode between drain and source (N-/P-type differ only in direction).",
+        },
+        {
+          ko: "이 바디 다이오드도 보통 다이오드와 같은 특성 — 순방향 도통·역방향 차단·역회복시간(trr)을 가져서, 스위칭 회로에선 그 역회복을 반드시 고려해야 한다.",
+          en: "It behaves like an ordinary diode — forward conduction, reverse blocking, and a reverse-recovery time (trr) — so its recovery must be accounted for in switching circuits.",
+        },
+        {
+          ko: "인버터에서는 이 바디 다이오드가 모터 같은 유도성 부하의 환류(freewheeling) 경로로 활용되기도 한다 — 부산물이지만 쓸모가 있다. 데이터시트의 기생 성분은 버그가 아니라 PN 접합의 자연스러운 결과다.",
+          en: "In inverters this body diode even serves as the freewheeling path for inductive loads like motors — a useful byproduct. The parasitics on a datasheet aren't bugs; they're the natural result of PN junctions.",
+        },
+      ],
+      diagram: {
+        kind: "flow",
+        dir: "row",
+        caption: { ko: "공정이 만든 기생 PN → 바디 다이오드 → 인버터 환류", en: "Process-made parasitic PN → body diode → inverter freewheeling" },
+        nodes: [
+          { icon: "🏭", label: { ko: "MOSFET 제조", en: "MOSFET fab" }, sub: { ko: "반도체 공정", en: "semiconductor process" } },
+          { label: { ko: "의도치 않은 PN 접합", en: "unintended PN junction" }, sub: { ko: "드레인-소스 사이", en: "drain–source" } },
+          { label: { ko: "바디(기생) 다이오드", en: "body diode" }, sub: { ko: "순방향 도통 · 역회복 trr", en: "forward · trr" }, tone: "accent" },
+          { label: { ko: "인버터 환류 경로", en: "inverter freewheeling" }, sub: { ko: "+ 역회복 손실 고려", en: "+ recovery loss" }, tone: 4 },
         ],
       },
     },

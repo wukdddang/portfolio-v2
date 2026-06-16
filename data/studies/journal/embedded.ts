@@ -98,4 +98,11 @@ export const embeddedJournal: JournalEntry[] = [
         meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
         topicSlug: "impedance-basics",
       },
+      {
+        date: "2026-06-16",
+        kind: "wiki",
+        title: { ko: "MOSFET — 전압 제어 스위치", en: "MOSFET — voltage-controlled switch" },
+        meta: { ko: "강의 녹음 7·8호 합본 (+ SQJQ466E 슬라이드)", en: "Lecture recordings #7·#8 merged (+ SQJQ466E slides)" },
+        topicSlug: "mosfet",
+      },
     ];
