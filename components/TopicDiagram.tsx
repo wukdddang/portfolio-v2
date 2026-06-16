@@ -4,6 +4,7 @@
  * @xyflow/mermaid를 싣지 않고 순수 DOM/SVG로 그린다. 서버 컴포넌트(상호작용 없음).
  */
 
+import { Fragment } from "react";
 import katex from "katex";
 import { ArrowRight, ArrowDown } from "lucide-react";
 import type { Diagram, DiagramNode, PlotCurve, LatticePanel, JunctionState } from "@/data/studies";
@@ -573,29 +574,28 @@ export function TopicDiagram({
       <figure className="my-5 rounded-xl border border-[var(--border)] bg-[var(--background)]/40 p-4">
         <div
           className={
-            row
-              ? "flex flex-col items-stretch gap-2 sm:flex-row sm:items-center"
-              : "flex flex-col items-stretch gap-2"
+            row ? "flex flex-col items-stretch gap-2 sm:flex-row sm:items-stretch" : "flex flex-col items-stretch gap-2"
           }
         >
           {diagram.nodes.map((n, i) => (
-            <div
-              key={i}
-              className={row ? "flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-2" : "contents"}
-            >
-              <div className={row ? "flex-1" : undefined}>
-                <NodeBox node={n} locale={locale} fallback={catColor} />
+            <Fragment key={i}>
+              {/* 노드 — row일 때 동일 폭(flex-1)으로 전체 폭을 채움 */}
+              <div className={row ? "flex sm:flex-1 sm:min-w-0" : undefined}>
+                <NodeBox node={n} locale={locale} fallback={catColor} className="w-full" />
               </div>
-              {i < diagram.nodes.length - 1 &&
-                (row ? (
-                  <>
-                    <ArrowRight className="mx-auto hidden size-5 shrink-0 text-[var(--accent)] sm:block" strokeWidth={2.25} />
-                    <ArrowDown className="mx-auto size-5 shrink-0 text-[var(--accent)] sm:hidden" strokeWidth={2.25} />
-                  </>
-                ) : (
-                  <ArrowDown className="mx-auto size-5 shrink-0 text-[var(--accent)]" strokeWidth={2.25} />
-                ))}
-            </div>
+              {i < diagram.nodes.length - 1 && (
+                <div className="flex items-center justify-center">
+                  {row ? (
+                    <>
+                      <ArrowRight className="hidden size-5 shrink-0 text-[var(--accent)] sm:block" strokeWidth={2.25} />
+                      <ArrowDown className="size-5 shrink-0 text-[var(--accent)] sm:hidden" strokeWidth={2.25} />
+                    </>
+                  ) : (
+                    <ArrowDown className="size-5 shrink-0 text-[var(--accent)]" strokeWidth={2.25} />
+                  )}
+                </div>
+              )}
+            </Fragment>
           ))}
         </div>
         {diagram.caption && <Caption text={pick(diagram.caption, locale)} />}
