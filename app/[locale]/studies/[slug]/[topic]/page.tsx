@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { studies, type StudyTopic } from "@/data/studies";
 import { pick } from "@/data/i18n";
-import { TopicDiagram } from "@/components/TopicDiagram";
+import { TopicDiagram, RichText } from "@/components/TopicDiagram";
 
 /**
  * 토픽 상세 페이지 — /studies/{study}/{topic}. data/studies.ts에서 detail이 있는 토픽만 존재.
@@ -133,7 +133,9 @@ export default async function TopicPage({ params }: { params: Params }) {
           <div className="mb-2 font-mono text-[11px] uppercase tracking-widest" style={{ color: catColor }}>
             {t("tldr")}
           </div>
-          <p className="text-[15px] leading-relaxed text-[var(--card-foreground)]">{pick(detail.tldr, locale)}</p>
+          <p className="text-[15px] leading-relaxed text-[var(--card-foreground)]">
+            <RichText text={pick(detail.tldr, locale)} />
+          </p>
         </section>
 
         {/* 섹션들 */}
@@ -146,7 +148,9 @@ export default async function TopicPage({ params }: { params: Params }) {
               {sec.bullets.map((b, bi) => (
                 <li key={bi} className="flex gap-3 text-sm leading-relaxed text-[var(--card-foreground)]">
                   <span className="mt-2 size-1.5 shrink-0 rounded-full" style={{ backgroundColor: catColor }} />
-                  <span>{pick(b, locale)}</span>
+                  <span>
+                    <RichText text={pick(b, locale)} />
+                  </span>
                 </li>
               ))}
             </ul>
@@ -160,7 +164,9 @@ export default async function TopicPage({ params }: { params: Params }) {
             <div className="mb-2 font-mono text-[11px] uppercase tracking-widest text-[var(--accent)]">
               {t("pitfall")}
             </div>
-            <p className="text-sm leading-relaxed text-[var(--card-foreground)]">{pick(detail.pitfall, locale)}</p>
+            <p className="text-sm leading-relaxed text-[var(--card-foreground)]">
+              <RichText text={pick(detail.pitfall, locale)} />
+            </p>
           </section>
         )}
 

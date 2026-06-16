@@ -6,13 +6,68 @@
 
 import katex from "katex";
 import { ChevronRight, ChevronDown } from "lucide-react";
-import type { Diagram, DiagramNode } from "@/data/studies";
+import type { Diagram, DiagramNode, PlotCurve } from "@/data/studies";
 import type { Locale } from "@/i18n/routing";
 import { pick } from "@/data/i18n";
 
 /** LaTeX → HTML (서버 렌더). displayMode=true는 논문식 블록 수식. */
 function tex(src: string, displayMode: boolean) {
   return katex.renderToString(src, { displayMode, throwOnError: false, output: "html" });
+}
+
+/**
+ * RichText — 본문 텍스트 안의 인라인 수식을 KaTeX로 렌더한다.
+ * "$...$"로 감싼 부분만 수식이고 나머지는 평문. 학습 노트의 bullet·TL;DR·함정에 쓴다.
+ */
+export function RichText({ text }: { text: string }) {
+  const parts = text.split(/\$([^$]+)\$/g);
+  return (
+    <>
+      {parts.map((p, i) =>
+        i % 2 === 1 ? (
+          <span key={i} className="topic-eq-inline" dangerouslySetInnerHTML={{ __html: tex(p, false) }} />
+        ) : (
+          <span key={i}>{p}</span>
+        ),
+      )}
+    </>
+  );
+}
+
+/** plot 곡선 — x∈[0,1] → y∈[0,1] (y=1이 위). 정밀 데이터가 아니라 개념 모양만 표현. */
+function curveY(curve: PlotCurve, x: number): number {
+  switch (curve) {
+    case "sine":
+      return 0.5 + 0.4 * Math.sin(2 * Math.PI * 1.5 * x);
+    case "dc":
+      return 0.72;
+    case "decay":
+      return 0.92 / (1 + 7 * x);
+    case "rise":
+      return 0.08 + 0.84 * x;
+    case "lowpass":
+      return x < 0.42 ? 0.82 : (0.82 * 0.46) / (x + 0.04);
+    case "rectified":
+      return 0.12 + 0.72 * Math.abs(Math.sin(2 * Math.PI * 1.5 * x));
+    case "pulse":
+      return Math.floor(x * 6) % 2 === 0 ? 0.78 : 0.16;
+    default:
+      return 0.5;
+  }
+}
+
+/** 곡선을 SVG path(d)로 변환. pulse는 계단이라 촘촘히 샘플링한다. */
+function plotPath(curve: PlotCurve, padL: number, padT: number, pw: number, ph: number): string {
+  const n = curve === "pulse" ? 240 : 72;
+  let d = "";
+  for (let i = 0; i <= n; i++) {
+    const x = i / n;
+    const y = curveY(curve, x);
+    const px = padL + x * pw;
+    const py = padT + (1 - y) * ph;
+    d += (i === 0 ? "M" : "L") + px.toFixed(1) + " " + py.toFixed(1) + " ";
+  }
+  return d;
 }
 
 function toneColor(tone: DiagramNode["tone"], fallback: string): string {
@@ -152,6 +207,76 @@ export function TopicDiagram({
             <Caption text={pick(diagram.caption, locale)} />
           </div>
         )}
+      </figure>
+    );
+  }
+
+  if (diagram.kind === "plot") {
+    const W = 320, H = 172, padL = 40, padR = 14, padT = 16, padB = 30;
+    const pw = W - padL - padR;
+    const ph = H - padT - padB;
+    return (
+      <figure className="my-5 rounded-xl border border-[var(--border)] bg-[var(--background)]/40 p-4">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="w-full"
+          role="img"
+          aria-label={diagram.caption ? pick(diagram.caption, locale) : "graph"}
+        >
+          {/* 축 */}
+          <line x1={padL} y1={padT} x2={padL} y2={padT + ph} stroke="var(--border)" strokeWidth="1" />
+          <line x1={padL} y1={padT + ph} x2={padL + pw} y2={padT + ph} stroke="var(--border)" strokeWidth="1" />
+          {/* 특정 지점 표시 (공진·차단 등) */}
+          {diagram.markers?.map((m, i) => {
+            const mx = padL + m.x * pw;
+            const col = toneColor(m.tone, "var(--accent)");
+            return (
+              <g key={i}>
+                <line x1={mx} y1={padT} x2={mx} y2={padT + ph} stroke={col} strokeWidth="1" strokeDasharray="3 3" opacity="0.65" />
+                <text x={mx} y={padT - 4} textAnchor="middle" fontSize="9" fill={col} className="font-mono">
+                  {pick(m.label, locale)}
+                </text>
+              </g>
+            );
+          })}
+          {/* 곡선들 */}
+          {diagram.series.map((s, i) => (
+            <path
+              key={i}
+              d={plotPath(s.curve, padL, padT, pw, ph)}
+              fill="none"
+              stroke={toneColor(s.tone, catColor)}
+              strokeWidth="2"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            />
+          ))}
+          {/* 축 라벨 */}
+          {diagram.xLabel && (
+            <text x={padL + pw} y={H - 7} textAnchor="end" fontSize="9.5" fill="var(--muted)" className="font-mono">
+              {pick(diagram.xLabel, locale)}
+            </text>
+          )}
+          {diagram.yLabel && (
+            <text x={padL - 4} y={padT + 1} textAnchor="end" fontSize="9.5" fill="var(--muted)" className="font-mono">
+              {pick(diagram.yLabel, locale)}
+            </text>
+          )}
+        </svg>
+        {diagram.series.length > 1 && (
+          <div className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
+            {diagram.series.map((s, i) => (
+              <span key={i} className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[var(--muted)]">
+                <span
+                  className="inline-block h-[3px] w-4 rounded-full"
+                  style={{ backgroundColor: toneColor(s.tone, catColor) }}
+                />
+                {pick(s.label, locale)}
+              </span>
+            ))}
+          </div>
+        )}
+        {diagram.caption && <Caption text={pick(diagram.caption, locale)} />}
       </figure>
     );
   }

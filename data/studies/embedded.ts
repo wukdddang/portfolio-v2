@@ -1,10 +1,14 @@
 import type { Study } from "./types";
 import { embeddedJournal } from "./journal/embedded";
+import { acDcFrequency } from "./details/embedded/ac-dc-frequency";
 import { capacitor } from "./details/embedded/capacitor";
 import { componentMap } from "./details/embedded/component-map";
+import { impedanceBasics } from "./details/embedded/impedance-basics";
 import { inductorTypes } from "./details/embedded/inductor-types";
 import { kvlKcl } from "./details/embedded/kvl-kcl";
 import { ohmsLaw } from "./details/embedded/ohms-law";
+import { semiconductorBasics } from "./details/embedded/semiconductor-basics";
+import { studyChecklist } from "./details/embedded/study-checklist";
 import { voltageDrop } from "./details/embedded/voltage-drop";
 
 export const embedded: Study = {
@@ -25,7 +29,7 @@ export const embedded: Study = {
     },
     stats: [
       { label: { ko: "로드맵", en: "Roadmap" }, value: { ko: "18토픽 · 4블록", en: "18 topics · 4 blocks" } },
-      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "6페이지 (진행 중)", en: "6 pages (ongoing)" } },
+      { label: { ko: "위키 컴파일", en: "Wiki compiled" }, value: { ko: "10페이지 (진행 중)", en: "10 pages (ongoing)" } },
       { label: { ko: "본 강의", en: "Main course" }, value: { ko: "153강 · 16.5h", en: "153 lectures · 16.5 h" } },
     ],
     journal: embeddedJournal,
@@ -53,6 +57,85 @@ export const embedded: Study = {
       },
     ],
     blocks: [
+      {
+        kind: "prerequisite",
+        title: { ko: "선수 지식 · 먼저 보기", en: "Prerequisites · read first" },
+        desc: {
+          ko: "본 커리큘럼(회로 기초 → 제어)을 채우기 전에 깔아야 하는 토대 — 강의가 '당연히 안다'고 넘어가는 배경 개념.",
+          en: "The foundation to lay before the main curriculum (circuit basics → control) — the background the lectures assume you already know.",
+        },
+        cat: 3,
+        topics: [
+          {
+            icon: "〰",
+            title: { ko: "AC/DC · 주파수 · 정현파", en: "AC/DC · frequency · sine" },
+            summary: {
+              ko: "임피던스·필터·정류가 깔고 가는 가장 아래 토대 — DC vs AC, 정현파 v(t)=Vp·sin(2πft), 주기·주파수·각주파수, 그리고 220V가 피크 311V인 RMS(실효값)까지.",
+              en: "The bottom layer impedance/filters/rectification all assume — DC vs AC, the sine v(t)=Vp·sin(2πft), period/frequency/angular frequency, and RMS (why 220V peaks at 311V).",
+            },
+            tags: [
+              { ko: "정현파", en: "Sine wave" },
+              { ko: "주파수·RMS", en: "Frequency·RMS" },
+              { ko: "정류", en: "Rectify" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-ac-dc-frequency",
+            slug: "ac-dc-frequency",
+            detail: acDcFrequency,
+          },
+          {
+            icon: "🎚",
+            title: { ko: "임피던스 기초", en: "Impedance basics" },
+            summary: {
+              ko: "'주파수에 따라 변하는 저항' Z=R+jX. 커패시터(Xc↓)와 인덕터(XL↑)가 정반대로 거동하는 거울 대칭이 필터·디커플링·공진의 공통 언어 — 자기공진 SRF 너머엔 역할이 뒤집힌다.",
+              en: "'Resistance that varies with frequency,' Z=R+jX. The mirror symmetry where a capacitor (Xc↓) and inductor (XL↑) behave oppositely is the shared language of filters, decoupling and resonance — roles flip past self-resonance (SRF).",
+            },
+            tags: [
+              { ko: "Z=R+jX", en: "Z=R+jX" },
+              { ko: "리액턴스", en: "Reactance" },
+              { ko: "SRF", en: "SRF" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-impedance-basics",
+            slug: "impedance-basics",
+            detail: impedanceBasics,
+          },
+          {
+            icon: "🔬",
+            title: { ko: "반도체 기초 (PN 접합·도핑)", en: "Semiconductor basics (PN junction · doping)" },
+            summary: {
+              ko: "다이오드·BJT·MOSFET이 전부 그 위에 서는 토대 — 도핑(N·P형), PN 접합 공핍층, 그리고 한 방향 도통과 ~0.7V 문턱의 정체. 강의가 설명 없이 넘어가는 바닥을 먼저 깝니다.",
+              en: "The foundation diode/BJT/MOSFET all stand on — doping (N/P), the PN-junction depletion region, and the origin of one-way conduction and the ~0.7V threshold. Lays the floor the lectures skip.",
+            },
+            tags: [
+              { ko: "PN 접합", en: "PN junction" },
+              { ko: "공핍층", en: "Depletion" },
+              { ko: "0.7V 문턱", en: "0.7V threshold" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-semiconductor-basics",
+            slug: "semiconductor-basics",
+            detail: semiconductorBasics,
+          },
+          {
+            icon: "✅",
+            title: { ko: "선수 개념 점검표", en: "Prerequisite checklist" },
+            summary: {
+              ko: "강의를 들을 때 '이게 뭔 소린가'를 줄이는 자가진단표 — 기초 전기·전자(Layer 0)부터 소자별 핵심까지 '검색 없이 한 문장으로 설명 가능한가'로 점검하고, 갭으로 드러난 개념을 다음 위키 1순위로 삼습니다.",
+              en: "A self-assessment that cuts the 'what does this even mean' moments — checking from basic electronics (Layer 0) to per-component essentials by 'can I explain it in one sentence,' turning gaps into the next wiki priority.",
+            },
+            tags: [
+              { ko: "Layer 0~2", en: "Layer 0–2" },
+              { ko: "자가진단", en: "Self-assessment" },
+              { ko: "갭 분석", en: "Gap analysis" },
+            ],
+            status: "done",
+            wikiSlug: "embedded-study-checklist",
+            slug: "study-checklist",
+            detail: studyChecklist,
+          },
+        ],
+      },
       {
         title: { ko: "회로 기초 (#1–6)", en: "Circuit basics (#1–6)" },
         desc: {

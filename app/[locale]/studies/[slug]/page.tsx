@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { studies, type StudyTopic } from "@/data/studies";
+import { studies, type StudyTopic, type StudyBlock } from "@/data/studies";
 import { pick } from "@/data/i18n";
 import { cn } from "@/lib/utils";
 import { StudyCalendar } from "@/components/StudyCalendar";
@@ -187,6 +187,40 @@ export default async function StudyPage({ params }: { params: Params }) {
   const t = await getTranslations({ locale, namespace: "studies" });
   const other = studies.find((s) => s.slug !== slug);
 
+  // 선수 지식(prerequisite) 블록은 본 커리큘럼보다 앞에 '먼저 보기' 전용 구획으로 분리
+  const prereqBlocks = study.blocks.filter((b) => b.kind === "prerequisite");
+  const mainBlocks = study.blocks.filter((b) => b.kind !== "prerequisite");
+
+  // 블록 내부(헤더 + 토픽 그리드) — 선수 구획과 본 커리큘럼이 공유
+  const blockBody = (block: StudyBlock) => {
+    const catColor = `var(--cat-${block.cat})`;
+    return (
+      <>
+        <div
+          className="mb-6 border-l-2 pl-4"
+          style={{ borderColor: `color-mix(in oklch, ${catColor} 70%, var(--border))` }}
+        >
+          <h2 className="text-lg font-semibold tracking-tight md:text-xl">{pick(block.title, locale)}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{pick(block.desc, locale)}</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {block.topics.map((topic, ti) => (
+            <TopicCard
+              key={ti}
+              topic={topic}
+              locale={locale}
+              cat={block.cat}
+              statusLabel={t(STATUS_LABEL_KEY[topic.status])}
+              wikiBadge={t("wikiBadge")}
+              studySlug={study.slug}
+              detailLabel={t("viewDetail")}
+            />
+          ))}
+        </div>
+      </>
+    );
+  };
+
   return (
     <main className="relative overflow-hidden">
       {/* 헤더 영역 점 격자 — 파이프라인 섹션과 같은 배경 언어 */}
@@ -321,35 +355,31 @@ export default async function StudyPage({ params }: { params: Params }) {
           </section>
         )}
 
-        {/* 학습 블록들 */}
-        {study.blocks.map((block, bi) => {
-          const catColor = `var(--cat-${block.cat})`;
-          return (
-            <section key={bi} className="mt-14">
-              <div
-                className="mb-6 border-l-2 pl-4"
-                style={{ borderColor: `color-mix(in oklch, ${catColor} 70%, var(--border))` }}
-              >
-                <h2 className="text-lg font-semibold tracking-tight md:text-xl">{pick(block.title, locale)}</h2>
-                <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">{pick(block.desc, locale)}</p>
+        {/* 선수 지식 — 본 커리큘럼 앞에 '먼저 보기' 전용 구획 (점선 박스로 토대임을 구분) */}
+        {prereqBlocks.length > 0 && (
+          <section className="mt-14">
+            <div className="rounded-2xl border border-dashed border-[var(--accent)]/35 bg-[var(--accent)]/[0.04] p-5 md:p-7">
+              <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/45 bg-[var(--accent)]/10 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+                  ↓ {t("prereqBadge")}
+                </span>
+                <span className="font-mono text-[11px] text-[var(--muted)]">{t("prereqHint")}</span>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                {block.topics.map((topic, ti) => (
-                  <TopicCard
-                    key={ti}
-                    topic={topic}
-                    locale={locale}
-                    cat={block.cat}
-                    statusLabel={t(STATUS_LABEL_KEY[topic.status])}
-                    wikiBadge={t("wikiBadge")}
-                    studySlug={study.slug}
-                    detailLabel={t("viewDetail")}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+              {prereqBlocks.map((block, bi) => (
+                <div key={bi} className={bi > 0 ? "mt-10" : ""}>
+                  {blockBody(block)}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 학습 블록들 — 본 커리큘럼 */}
+        {mainBlocks.map((block, bi) => (
+          <section key={bi} className="mt-14">
+            {blockBody(block)}
+          </section>
+        ))}
 
         {/* 실무/프로젝트 연결 */}
         <section className="mt-14 rounded-2xl border border-[var(--border)] bg-[var(--card)]/40 p-6 md:p-8">

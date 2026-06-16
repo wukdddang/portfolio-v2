@@ -43,4 +43,32 @@ export const embeddedJournal: JournalEntry[] = [
         meta: { ko: "강의 녹음 2호 · 9:09", en: "Lecture recording #2 · 9:09" },
         topicSlug: "inductor-types",
       },
+      {
+        date: "2026-06-13",
+        kind: "wiki",
+        title: { ko: "반도체 기초 (PN 접합·도핑)", en: "Semiconductor basics (PN junction)" },
+        meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
+        topicSlug: "semiconductor-basics",
+      },
+      {
+        date: "2026-06-13",
+        kind: "wiki",
+        title: { ko: "선수 개념 점검표", en: "Prerequisite checklist" },
+        meta: { ko: "자가진단 트래커", en: "Self-assessment tracker" },
+        topicSlug: "study-checklist",
+      },
+      {
+        date: "2026-06-16",
+        kind: "wiki",
+        title: { ko: "AC/DC · 주파수 · 정현파", en: "AC/DC · frequency · sine" },
+        meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
+        topicSlug: "ac-dc-frequency",
+      },
+      {
+        date: "2026-06-16",
+        kind: "wiki",
+        title: { ko: "임피던스 기초", en: "Impedance basics" },
+        meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
+        topicSlug: "impedance-basics",
+      },
     ];
