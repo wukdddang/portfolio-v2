@@ -275,7 +275,7 @@ export default async function StudyPage({ params }: { params: Params }) {
             locale={locale}
             placeholder={t("searchPlaceholder")}
             hint={t("searchHint")}
-            countLabel={t("searchCount")}
+            countLabel={t.raw("searchCount")}
             emptyLabel={t("searchEmpty")}
           />
         </section>

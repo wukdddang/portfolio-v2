@@ -44,11 +44,38 @@ export const embeddedJournal: JournalEntry[] = [
         topicSlug: "inductor-types",
       },
       {
+        date: "2026-06-12",
+        kind: "lecture",
+        title: { ko: "인덕터 포화 전류 · DCR", en: "Inductor saturation current · DCR" },
+        meta: { ko: "강의 녹음 3호 · 2:29", en: "Lecture recording #3 · 2:29" },
+        topicSlug: "inductor-types",
+      },
+      {
+        date: "2026-06-12",
+        kind: "lecture",
+        title: { ko: "다이오드 특성 및 종류", en: "Diode characteristics & types" },
+        meta: { ko: "강의 녹음 4호 · 8:09", en: "Lecture recording #4 · 8:09" },
+        topicSlug: "diode-types",
+      },
+      {
+        date: "2026-06-13",
+        kind: "lecture",
+        title: { ko: "다이오드를 사용한 회로 설계", en: "Diode circuit design" },
+        meta: { ko: "강의 녹음 5호 · 8:25", en: "Lecture recording #5 · 8:25" },
+        topicSlug: "diode-circuits",
+      },
+      {
         date: "2026-06-13",
         kind: "wiki",
         title: { ko: "반도체 기초 (PN 접합·도핑)", en: "Semiconductor basics (PN junction)" },
         meta: { ko: "선수 개념 보충", en: "Prerequisite fill-in" },
         topicSlug: "semiconductor-basics",
+      },
+      {
+        date: "2026-06-13",
+        kind: "lecture",
+        title: { ko: "바이폴라 트랜지스터 (BJT)", en: "Bipolar transistor (BJT)" },
+        meta: { ko: "강의 녹음 6호 · 8:30", en: "Lecture recording #6 · 8:30" },
       },
       {
         date: "2026-06-13",
