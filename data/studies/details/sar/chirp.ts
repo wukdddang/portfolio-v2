@@ -41,7 +41,14 @@ export const chirp: TopicDetail = {
         { ko: "Chirp는 시간에 따라 주파수가 선형으로 변하는 신호로, 쏘는 동안 주파수가 계속 올라간다(새 짹짹 소리 같아서 chirp).", en: "A chirp is a signal whose frequency changes linearly over time, climbing continuously as it is transmitted (named for a bird's chirp)." },
         { ko: "Sentinel-1은 중심 5.405 GHz, 대역폭 56 MHz로, 대략 5.377~5.433 GHz 범위를 쓸며 송신한다(단순화).", en: "Sentinel-1 has a center of 5.405 GHz and a bandwidth of 56 MHz, sweeping roughly the 5.377~5.433 GHz range as it transmits (simplified)." },
         { ko: "이처럼 길게 쏘면서 넓은 대역폭을 확보하는 것이, 짧은 펄스를 실제로 만들어내는 Chirp의 정체다.", en: "Securing a wide bandwidth while transmitting long is exactly how a chirp realizes what amounts to a short pulse." }
-      ]
+      ],
+      diagram: {
+        kind: "plot",
+        caption: { ko: "Chirp — 시간이 갈수록 주파수가 선형으로 올라가는 신호(5.38→5.43 GHz)", en: "Chirp — frequency climbs linearly over time (5.38→5.43 GHz)" },
+        xLabel: { ko: "시간", en: "time" },
+        yLabel: { ko: "진폭", en: "amp" },
+        series: [{ label: { ko: "송신 Chirp", en: "transmit chirp" }, curve: "chirp", tone: "accent" }]
+      }
     },
     {
       heading: { ko: "Range Compression — 왜 해상도가 좋아지나", en: "Range Compression — why resolution improves" },
@@ -51,7 +58,15 @@ export const chirp: TopicDetail = {
         { ko: "길게 쐈는데 짧게 쏜 효과가 나, 에너지(SNR)와 해상도를 동시에 얻는 것이 핵심이다.", en: "The signal was transmitted long yet acts as if short, so the key is gaining energy (SNR) and resolution at the same time." },
         { ko: "압축 후 해상도는 펄스 길이가 아니라 대역폭으로 결정된다(ΔR=c/2B).", en: "After compression the resolution is set not by pulse length but by bandwidth (ΔR=c/2B)." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "plot",
+          caption: { ko: "Matched filter 압축 — 길게 퍼진 에코가 한 점으로 모인다(해상도 ΔR=c/2B)", en: "Matched-filter compression — the spread echo collapses to one peak (ΔR=c/2B)" },
+          xLabel: { ko: "거리(시간)", en: "range (time)" },
+          yLabel: { ko: "세기", en: "power" },
+          series: [{ label: { ko: "압축된 펄스", en: "compressed pulse" }, curve: "compressed", tone: 4 }]
+        },
+        {
         kind: "flow",
         dir: "row",
         caption: { ko: "긴 Chirp 송신에서 matched filter 압축까지", en: "From transmitting a long chirp to matched-filter compression" },
@@ -61,7 +76,8 @@ export const chirp: TopicDetail = {
           { label: { ko: "Matched Filter", en: "Matched filter" }, sub: { ko: "원본 Chirp와 상관", en: "correlate with original chirp" }, tone: "accent" },
           { label: { ko: "짧은 펄스 압축", en: "Compressed short pulse" }, sub: { ko: "= Range Compression → SNR↑·해상도↑", en: "= Range Compression → SNR↑·resolution↑" }, tone: 4 }
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "SNAP에서의 위치", en: "Where it sits in SNAP" },

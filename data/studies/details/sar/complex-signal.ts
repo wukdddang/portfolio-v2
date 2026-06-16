@@ -14,7 +14,14 @@ export const complexSignal: TopicDetail = {
         { ko: "위상 θ = atan2(Q, I)는 전파가 돌아온 시점, 곧 회전 각도를 담으며, 이 위상이 InSAR의 핵심이다.", en: "The phase θ = atan2(Q, I) holds the round-trip timing, i.e. the rotation angle, and this phase is the heart of InSAR." },
         { ko: "GRD가 진폭만 남기고 위상을 버리는 제품인 이유가 바로 여기서 갈린다.", en: "This is precisely where GRD diverges as a product that keeps only amplitude and discards the phase." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "phasor",
+          mode: "single",
+          caption: { ko: "SLC 한 픽셀 = I + jQ — 길이 A(진폭)·각도 θ(위상)인 벡터 하나", en: "One SLC pixel = I + jQ — a single vector of length A (amplitude) and angle θ (phase)" },
+          vectors: [{ label: { ko: "A∠θ", en: "A∠θ" }, angleDeg: 38, mag: 0.92, tone: "accent" }]
+        },
+        {
         kind: "flow",
         dir: "row",
         caption: { ko: "수신 전파에서 SLC 복소 픽셀, 그리고 진폭·위상 분기까지", en: "From received wave to the complex SLC pixel, then the amplitude/phase split" },
@@ -24,7 +31,8 @@ export const complexSignal: TopicDetail = {
           { label: { ko: "진폭 A", en: "Amplitude A" }, sub: { ko: "후방산란 세기 → GRD", en: "backscatter → GRD" }, tone: 2 },
           { label: { ko: "위상 θ", en: "Phase θ" }, sub: { ko: "왕복 시점 → InSAR", en: "round-trip → InSAR" }, tone: 4 }
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "왜 복소수인가 — 회전 = 곱셈", en: "Why complex numbers — rotation is multiplication" },
@@ -82,7 +90,18 @@ export const complexSignal: TopicDetail = {
         { ko: "시계 비유로 Master 30°, Slave 20°일 때 그냥 더하면 50°(무의미)이지만, Slave를 −20°로 뒤집어 더하면 10°라는 원하는 상대 각도가 나온다.", en: "By the clock analogy, with Master 30° and Slave 20°, plain addition gives a meaningless 50°, but flipping the slave to −20° gives the desired relative angle of 10°." },
         { ko: "SNAP의 Interferogram Formation 단계는 사실상 픽셀마다 이 M × S*를 수행하는 위상차 계산기이고, SNAPHU가 푸는 대상은 Master도 Slave도 아닌 바로 이 θ₁ − θ₂이며, 그 차이가 경로 길이차 ΔR을 거쳐 표고·변위로 환산된다.", en: "SNAP's Interferogram Formation step is effectively a per-pixel phase-difference calculator running this M × S*, and what SNAPHU solves is neither the master nor slave phase but exactly this θ₁ − θ₂, which becomes a path-length difference ΔR and thus elevation and displacement." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "phasor",
+          mode: "interf",
+          caption: { ko: "M × S* — Slave 위상을 뒤집어(켤레) 곱하면 위상차 θ₁−θ₂만 남는다", en: "M × S* — multiplying by the flipped (conjugate) slave leaves only θ₁−θ₂" },
+          vectors: [
+            { label: { ko: "M θ₁", en: "M θ₁" }, angleDeg: 52, mag: 0.95, tone: 1 },
+            { label: { ko: "S* −θ₂", en: "S* −θ₂" }, angleDeg: -30, mag: 0.8, tone: 3, dashed: true },
+            { label: { ko: "θ₁−θ₂", en: "θ₁−θ₂" }, angleDeg: 22, mag: 0.6, tone: "accent" }
+          ]
+        },
+        {
         kind: "flow",
         dir: "row",
         caption: { ko: "M × S* 곱이 위상차를 토하고 경로차·변위로 이어지는 흐름", en: "The M × S* product yields the phase difference, leading to path difference and displacement" },
@@ -92,7 +111,8 @@ export const complexSignal: TopicDetail = {
           { icon: "✳️", label: { ko: "M × S*", en: "M × S*" }, sub: { ko: "AB·e^(j(θ₁−θ₂))", en: "AB·e^(j(θ₁−θ₂))" }, tone: "accent" },
           { label: { ko: "경로차 ΔR", en: "Path diff ΔR" }, sub: { ko: "→ 표고 / 변위", en: "→ elevation / displacement" }, tone: 5 }
         ]
-      }
+        }
+      ]
     }
   ],
   pitfall: {

@@ -18,7 +18,18 @@ export const diodeCircuits: TopicDetail = {
           en: "This rectifier is the reverse of the 6-MOSFET three-phase inverter (DC→AC), and the smoothing cap is the same idea as the kickboard's 940 µF input electrolytic.",
         },
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "plot",
+          caption: { ko: "정류 직후엔 맥동(ripple)이 크고, 평활 커패시터가 골을 채워 매끈한 DC에 가깝게 만든다", en: "Right after rectification the ripple is large; the smoothing cap fills the troughs toward clean DC" },
+          xLabel: { ko: "시간", en: "time" },
+          yLabel: { ko: "전압", en: "V" },
+          series: [
+            { label: { ko: "정류 맥동 DC", en: "rippled DC" }, curve: "rectified", tone: 3 },
+            { label: { ko: "평활 후 ≈ 매끈한 DC", en: "smoothed ≈ clean DC" }, curve: "dc", tone: "accent" },
+          ],
+        },
+        {
         kind: "flow",
         dir: "row",
         caption: { ko: "AC → 6다이오드 → 평활 → 매끈한 DC", en: "AC → 6 diodes → smoothing → clean DC" },
@@ -28,7 +39,8 @@ export const diodeCircuits: TopicDetail = {
           { label: { ko: "맥동 DC", en: "Rippled DC" }, tone: 3 },
           { icon: "🔋", label: { ko: "평활 커패시터", en: "Smoothing cap" }, sub: { ko: "매끈한 DC", en: "clean DC" }, tone: 4 },
         ],
-      },
+        },
+      ],
     },
     {
       heading: { ko: "제너 정전압 — RS로 전류를 묶어 일정 전압", en: "Zener regulator — clamp current with RS for steady V" },

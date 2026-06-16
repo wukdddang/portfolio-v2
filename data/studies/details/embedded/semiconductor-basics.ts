@@ -22,7 +22,29 @@ export const semiconductorBasics: TopicDetail = {
           en: "A hole is 'where an electron is missing'; as neighboring electrons fill it, it looks like a + charge drifting the other way.",
         },
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "lattice",
+          caption: {
+            ko: "도핑 — 진성 Si 격자에 불순물 원자 1개를 끼워 캐리어를 만든다",
+            en: "Doping — one impurity atom in the intrinsic Si lattice creates a carrier",
+          },
+          panels: [
+            {
+              type: "n",
+              label: { ko: "N형 — 5가(인 P) 도핑", en: "N-type — pentavalent (P)" },
+              dopant: "P",
+              carrier: { ko: "결합에 안 쓰인 전자 1개가 남음 → 자유 전자 −", en: "one electron left over → free electron −" },
+            },
+            {
+              type: "p",
+              label: { ko: "P형 — 3가(붕소 B) 도핑", en: "P-type — trivalent (B)" },
+              dopant: "B",
+              carrier: { ko: "결합 자리가 1개 비어 정공 + 이 생김", en: "one bond seat empty → a hole +" },
+            },
+          ],
+        },
+        {
         kind: "compare",
         caption: { ko: "도핑 — N형 vs P형", en: "Doping — N-type vs P-type" },
         headers: [
@@ -42,7 +64,8 @@ export const semiconductorBasics: TopicDetail = {
             { ko: "정공 hole (+)", en: "holes (+)" },
           ],
         ],
-      },
+        },
+      ],
     },
     {
       heading: { ko: "PN 접합과 공핍층 — 0.7V 문턱의 정체", en: "PN junction & depletion region — origin of the 0.7V threshold" },
@@ -56,7 +79,22 @@ export const semiconductorBasics: TopicDetail = {
           en: "The depletion region sets up a built-in potential barrier that current must overcome — and that barrier is exactly the ~0.7V (Si) threshold seen in diodes and BJTs.",
         },
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "junction",
+          caption: {
+            ko: "PN 접합 — 경계에서 전자·정공이 재결합해 캐리어 없는 공핍층이 남는다",
+            en: "PN junction — electrons and holes recombine at the boundary, leaving a carrier-free depletion region",
+          },
+          states: [
+            {
+              bias: "eq",
+              label: { ko: "무바이어스 (평형)", en: "No bias (equilibrium)" },
+              sub: { ko: "내부 전위 장벽 ≈0.7V", en: "built-in barrier ≈0.7V" },
+            },
+          ],
+        },
+        {
         kind: "flow",
         dir: "col",
         caption: { ko: "PN 접합 → 공핍층 → 문턱 전압", en: "PN junction → depletion → threshold" },
@@ -66,7 +104,8 @@ export const semiconductorBasics: TopicDetail = {
           { label: { ko: "공핍층 형성", en: "depletion region" }, sub: { ko: "캐리어 없는 영역", en: "carrier-free zone" } },
           { label: { ko: "전위 장벽 ≈0.7V", en: "barrier ≈0.7V" }, sub: { ko: "= 문턱 전압의 정체", en: "= the threshold" }, tone: "accent" },
         ],
-      },
+        },
+      ],
     },
     {
       heading: { ko: "순방향 vs 역방향 — 한 방향 도통의 원리", en: "Forward vs reverse — why one-way conduction" },
@@ -88,15 +127,40 @@ export const semiconductorBasics: TopicDetail = {
           en: "This behavior is the diode I-V curve itself — forward conduction, reverse block, and breakdown all explained by the depletion region.",
         },
       ],
-      diagram: {
-        kind: "branch",
-        caption: { ko: "전압 방향이 공핍층을 바꾼다", en: "Bias direction reshapes the depletion region" },
-        root: { icon: "🔋", label: { ko: "PN 접합에 전압 인가", en: "bias the PN junction" }, tone: "accent" },
-        children: [
-          { label: { ko: "순방향 (P+ · N−)", en: "forward (P+, N−)" }, sub: { ko: "공핍층 좁아짐 → 0.7V↑ 도통 ✅", en: "narrows → conducts past 0.7V ✅" }, tone: 6 },
-          { label: { ko: "역방향 (P− · N+)", en: "reverse (P−, N+)" }, sub: { ko: "공핍층 넓어짐 → 차단 (항복 시 도통 💥)", en: "widens → blocks (breakdown 💥)" }, tone: 5 },
-        ],
-      },
+      diagram: [
+        {
+          kind: "junction",
+          caption: {
+            ko: "전압 방향이 공핍층 폭을 바꾼다 — 순방향은 좁히고, 역방향은 넓힌다",
+            en: "Bias direction reshapes the depletion width — forward narrows it, reverse widens it",
+          },
+          states: [
+            {
+              bias: "forward",
+              label: { ko: "순방향 (P에 + · N에 −)", en: "Forward (+ on P, − on N)" },
+              sub: { ko: "공핍층 좁아짐 → 0.7V↑ 도통", en: "narrows → conducts past 0.7V" },
+            },
+            {
+              bias: "reverse",
+              label: { ko: "역방향 (P에 − · N에 +)", en: "Reverse (− on P, + on N)" },
+              sub: { ko: "공핍층 넓어짐 → 차단", en: "widens → blocks" },
+            },
+          ],
+        },
+        {
+          kind: "iv",
+          caption: {
+            ko: "다이오드 I-V 특성 곡선 — 위 공핍층 거동의 결과 (순방향 도통·역방향 차단·항복)",
+            en: "Diode I-V characteristic — the result of the depletion behavior above",
+          },
+          xLabel: { ko: "V 전압", en: "V" },
+          yLabel: { ko: "I 전류", en: "I" },
+          vfLabel: { ko: "VF≈0.7V", en: "VF≈0.7V" },
+          vbrLabel: { ko: "항복 VBR", en: "breakdown" },
+          fwdLabel: { ko: "순방향 도통", en: "forward on" },
+          revLabel: { ko: "역방향 차단(누설)", en: "reverse block" },
+        },
+      ],
     },
     {
       heading: { ko: "문턱 전압은 왜 재료마다 다른가", en: "Why the threshold differs by material" },

@@ -51,7 +51,13 @@ export const swathTops: TopicDetail = {
         { ko: "위성은 위쪽(Azimuth)으로 날아가고, IW1·IW2·IW3는 그 궤적 옆(Range)으로 나란히 놓인다.", en: "The satellite flies upward (Azimuth) while IW1·IW2·IW3 lie side by side next to its track (Range)." },
         { ko: "이 그림을 외워두면 좌표계 혼동을 막을 수 있다 — IW 번호가 진행 방향 단계가 아니라 옆으로 늘어선 띠임을 기억하자.", en: "Memorizing this picture prevents coordinate-system confusion — remember that the IW numbers are strips lined up sideways, not stages along the flight direction." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "scene",
+          variant: "swath",
+          caption: { ko: "IW1·IW2·IW3는 위성 궤적 옆(Range) 방향으로 나란히 — 진행(Azimuth)이 아니라 측방 배열", en: "IW1·IW2·IW3 lie side by side along Range (next to the track) — arrayed sideways, not along Azimuth" }
+        },
+        {
         kind: "compare",
         caption: { ko: "두 축의 의미와 IW 배열 방향", en: "The meaning of the two axes and the direction IW are arrayed" },
         headers: [
@@ -71,7 +77,8 @@ export const swathTops: TopicDetail = {
             { ko: "이 방향으로 나란히 배열", en: "Arrayed side by side here" }
           ]
         ]
-      }
+        }
+      ]
     },
     {
       heading: { ko: "SNAP 실무 연결", en: "Connecting to SNAP in practice" },

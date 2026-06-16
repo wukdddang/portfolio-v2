@@ -56,7 +56,15 @@ export const resolution: TopicDetail = {
         { ko: "SNAP에서 SLC 픽셀이 직사각형으로 보이는 것은 Range 5m / Azimuth 20m의 정상적인 결과이므로 당황할 필요가 없다.", en: "Seeing a rectangular SLC pixel in SNAP is the normal result of Range 5m / Azimuth 20m, so there is no need to be alarmed." },
         { ko: "이미 Azimuth가 20m로 나쁜데 azimuth를 더 뭉개면 해상도가 과도하게 떨어지므로, InSAR speckle 저감용 Multilook은 보통 Range 방향만 더 평균하는 3×1로 건다.", en: "Since Azimuth is already poor at 20m, smearing it further would drop resolution excessively, so InSAR multilook for speckle reduction is usually applied as 3×1, averaging mainly in Range." }
       ],
-      diagram: {
+      diagram: [
+        {
+          kind: "pixel",
+          rangeM: 5,
+          azimuthM: 20,
+          multilook: [3, 1],
+          caption: { ko: "IW SLC 픽셀은 5m×20m 직사각형 — Azimuth가 4배 거칠다. 멀티룩 3×1로 Range 3픽셀을 평균하면 15m×20m로 더 등방적", en: "An IW SLC pixel is a 5m×20m rectangle — azimuth is 4× coarser. A 3×1 multilook averages 3 range pixels into 15m×20m, more isotropic" }
+        },
+        {
         kind: "compare",
         caption: { ko: "Range vs Azimuth, 그리고 모드별 값", en: "Range vs Azimuth, and values by mode" },
         headers: [
@@ -86,7 +94,8 @@ export const resolution: TopicDetail = {
             { ko: "~5m", en: "~5m" }
           ]
         ]
-      }
+        }
+      ]
     }
   ],
   pitfall: {

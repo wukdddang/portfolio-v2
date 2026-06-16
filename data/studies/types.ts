@@ -17,6 +17,13 @@ import type { L } from "../i18n";
  *  - compare : 미니 비교표 (headers + rows).
  *  - formula : 큰 수식 한 줄 + 기호 설명.
  *  - plot    : 개념 이해용 곡선 그래프(정현파·임피던스 곡선 등) — series[]를 SVG 곡선으로.
+ *  - lattice : 도핑 결정 그림 — Si 격자에 도펀트 1개 + 자유 캐리어(N형 전자·P형 정공)를 SVG로.
+ *  - junction: PN 접합 단면도 — P|공핍층|N 막대에 캐리어·이온을 그리고, bias별 공핍층 폭 변화를 보여줌.
+ *  - iv      : 다이오드 I-V 특성 곡선 — 순방향 도통·역방향 차단·항복 3영역을 4상한 그래프로.
+ *  - phasor  : 복소평면(I/Q) 위상자 — 길이 A·각도 θ 벡터. mode=interf면 M·S* 위상차까지.
+ *  - scene   : SAR 관측 기하 — variant=aperture(합성개구) | swath(서브스왓). 라벨은 컴포넌트 내장.
+ *  - network : 간섭쌍 네트워크 — 시간·수직기선 평면의 취득점 + 페어. style=sbas(소기선) | psi(단일 마스터).
+ *  - pixel   : 비등방 픽셀 — Range×Azimuth 직사각형 + 멀티룩 창. 해상도 비대칭 설명용.
  */
 export type DiagramNode = {
   icon?: string;
@@ -31,14 +38,62 @@ export type Diagram =
   | { kind: "branch"; caption?: L; root: DiagramNode; children: DiagramNode[] }
   | { kind: "compare"; caption?: L; headers: L[]; rows: L[][] }
   | { kind: "formula"; expr: string; caption?: L; legend?: { sym: string; desc: L }[] }
-  | { kind: "plot"; caption?: L; xLabel?: L; yLabel?: L; series: PlotSeries[]; markers?: PlotMarker[] };
+  | { kind: "plot"; caption?: L; xLabel?: L; yLabel?: L; series: PlotSeries[]; markers?: PlotMarker[] }
+  | { kind: "lattice"; caption?: L; panels: LatticePanel[] }
+  | { kind: "junction"; caption?: L; states: JunctionState[] }
+  | {
+      kind: "iv";
+      caption?: L;
+      xLabel?: L;
+      yLabel?: L;
+      /** 영역 라벨 — 4상한 그래프 위 주석 */
+      vfLabel?: L;
+      vbrLabel?: L;
+      fwdLabel?: L;
+      revLabel?: L;
+    }
+  | { kind: "phasor"; caption?: L; mode?: "single" | "interf"; vectors: PhasorVec[] }
+  | { kind: "scene"; variant: "aperture" | "swath"; caption?: L }
+  | { kind: "network"; style: "sbas" | "psi"; caption?: L }
+  | { kind: "pixel"; caption?: L; rangeM: number; azimuthM: number; multilook?: [number, number] };
+
+/** phasor 벡터 — 복소평면 위 화살표 하나. angleDeg=각도(반시계 +), mag=길이(0~1). */
+export type PhasorVec = { label: L; angleDeg: number; mag?: number; tone?: "accent" | "muted" | number; dashed?: boolean };
+
+/**
+ * lattice 패널 — Si 결정 격자 한 칸을 도펀트로 바꾼 그림.
+ *  type=n: 5가 도펀트(인 P 등) → 남는 자유 전자(−).
+ *  type=p: 3가 도펀트(붕소 B 등) → 빈 자리 정공(+).
+ */
+export type LatticePanel = { type: "n" | "p"; label: L; dopant: string; carrier: L };
+
+/**
+ * junction 상태 — PN 접합 단면 한 컷. bias가 공핍층 폭을 정한다.
+ *  eq=무바이어스(평형) · forward=순방향(공핍층 좁아짐) · reverse=역방향(공핍층 넓어짐).
+ */
+export type JunctionBias = "eq" | "forward" | "reverse";
+export type JunctionState = { bias: JunctionBias; label: L; sub?: L };
 
 /**
  * plot 곡선 — 개념 이해용(정밀 데이터 아님). 컴포넌트가 curve 종류별로 SVG path를 생성한다.
  *  sine 정현파 · dc 수평선 · decay 1/f 감소(Xc) · rise 선형 증가(XL) ·
  *  lowpass 저역통과 응답 · rectified 정류 맥동(|sin|) · pulse PWM 구형파.
  */
-export type PlotCurve = "sine" | "dc" | "decay" | "rise" | "lowpass" | "rectified" | "pulse";
+export type PlotCurve =
+  | "sine"
+  | "dc"
+  | "decay"
+  | "rise"
+  | "lowpass"
+  | "rectified"
+  | "pulse"
+  /** chirp 주파수 선형 증가 신호 · compressed 압축된 sinc 첨두 · trr 다이오드 역회복 딥 ·
+   *  wrap 위상 래핑 톱니(간섭무늬) · charge RC 충전 1−e^(−t) */
+  | "chirp"
+  | "compressed"
+  | "trr"
+  | "wrap"
+  | "charge";
 export type PlotSeries = { label: L; curve: PlotCurve; tone?: "accent" | "muted" | number };
 /** x는 0~1 정규화 위치. 세로 점선 + 라벨로 특정 지점(공진·차단 등)을 표시. */
 export type PlotMarker = { x: number; label: L; tone?: "accent" | "muted" | number };
@@ -47,7 +102,7 @@ export type PlotMarker = { x: number; label: L; tone?: "accent" | "muted" | numb
 export interface TopicDetail {
   /** 핵심 요약 — 상세 페이지 최상단 고정 */
   tldr: L;
-  sections: { heading: L; bullets: L[]; diagram?: Diagram }[];
+  sections: { heading: L; bullets: L[]; diagram?: Diagram | Diagram[] }[];
   /** 내 경험·주의점·함정 */
   pitfall?: L;
 }
