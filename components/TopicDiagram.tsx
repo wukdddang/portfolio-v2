@@ -5,10 +5,11 @@
  */
 
 import katex from "katex";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ArrowDown } from "lucide-react";
 import type { Diagram, DiagramNode, PlotCurve, LatticePanel, JunctionState } from "@/data/studies";
 import type { Locale } from "@/i18n/routing";
 import { pick } from "@/data/i18n";
+import { cn } from "@/lib/utils";
 
 /** LaTeX → HTML (서버 렌더). displayMode=true는 논문식 블록 수식. */
 function tex(src: string, displayMode: boolean) {
@@ -102,11 +103,21 @@ function toneColor(tone: DiagramNode["tone"], fallback: string): string {
   return fallback;
 }
 
-function NodeBox({ node, locale, fallback }: { node: DiagramNode; locale: Locale; fallback: string }) {
+function NodeBox({
+  node,
+  locale,
+  fallback,
+  className,
+}: {
+  node: DiagramNode;
+  locale: Locale;
+  fallback: string;
+  className?: string;
+}) {
   const color = toneColor(node.tone, fallback);
   return (
     <div
-      className="flex min-w-0 flex-col gap-0.5 rounded-lg border px-3 py-2 text-center"
+      className={cn("flex min-w-0 flex-col justify-center gap-0.5 rounded-lg border px-3 py-2 text-center", className)}
       style={{
         borderColor: `color-mix(in oklch, ${color} 50%, var(--border))`,
         backgroundColor: `color-mix(in oklch, ${color} 9%, var(--card))`,
@@ -578,11 +589,11 @@ export function TopicDiagram({
               {i < diagram.nodes.length - 1 &&
                 (row ? (
                   <>
-                    <ChevronRight className="mx-auto hidden size-4 shrink-0 text-[var(--accent)] sm:block" />
-                    <ChevronDown className="mx-auto size-4 shrink-0 text-[var(--accent)] sm:hidden" />
+                    <ArrowRight className="mx-auto hidden size-5 shrink-0 text-[var(--accent)] sm:block" strokeWidth={2.25} />
+                    <ArrowDown className="mx-auto size-5 shrink-0 text-[var(--accent)] sm:hidden" strokeWidth={2.25} />
                   </>
                 ) : (
-                  <ChevronDown className="mx-auto size-4 shrink-0 text-[var(--accent)]" />
+                  <ArrowDown className="mx-auto size-5 shrink-0 text-[var(--accent)]" strokeWidth={2.25} />
                 ))}
             </div>
           ))}
@@ -593,18 +604,20 @@ export function TopicDiagram({
   }
 
   if (diagram.kind === "branch") {
+    const n = diagram.children.length;
+    const colClass = n >= 4 ? "sm:grid-cols-4" : n === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2";
     return (
       <figure className="my-5 rounded-xl border border-[var(--border)] bg-[var(--background)]/40 p-4">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-full max-w-[16rem]">
-            <NodeBox node={diagram.root} locale={locale} fallback={catColor} />
-          </div>
-          <ChevronDown className="size-4 text-[var(--accent)]" />
-          <div className="grid w-full gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {diagram.children.map((c, i) => (
-              <NodeBox key={i} node={c} locale={locale} fallback={catColor} />
-            ))}
-          </div>
+        {/* 근원 노드 — 전체 폭 (여기서 갈라진다) */}
+        <NodeBox node={diagram.root} locale={locale} fallback={catColor} />
+        {/* 분기 — 자식마다 아래 화살표로 갈라짐을 명시 */}
+        <div className={`mt-1.5 grid grid-cols-2 gap-2.5 ${colClass}`}>
+          {diagram.children.map((c, i) => (
+            <div key={i} className="flex flex-col gap-1">
+              <ArrowDown className="mx-auto size-5 shrink-0 text-[var(--accent)]" strokeWidth={2.25} />
+              <NodeBox node={c} locale={locale} fallback={catColor} className="flex-1" />
+            </div>
+          ))}
         </div>
         {diagram.caption && <Caption text={pick(diagram.caption, locale)} />}
       </figure>
