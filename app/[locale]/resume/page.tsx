@@ -5,6 +5,7 @@ import { tenureLabel } from "@/lib/tenure";
 import {
   resumeSummary,
   resumeExperience,
+  resumeEducation,
   resumeSideProjects,
   resumeContacts,
   type ResumeProject,
@@ -177,6 +178,32 @@ export default async function ResumePage({
                 <p className="text-base leading-relaxed">
                   <Md>{pick(q, locale)}</Md>
                 </p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Education */}
+        <Section title={t("sections.education")} eyebrow={t("sections.educationEyebrow")}>
+          <div className="space-y-5">
+            {resumeEducation.map((edu, i) => (
+              <div key={i} className="break-inside-avoid">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="text-xl md:text-2xl font-bold tracking-tight">
+                    {pick(edu.degree, locale)}
+                  </h3>
+                  <span className="text-sm font-mono text-[var(--muted)]">
+                    {pick(edu.period, locale)}
+                  </span>
+                </div>
+                <div className="text-base text-[var(--muted)] mt-1">
+                  {pick(edu.school, locale)}
+                </div>
+                {edu.note && (
+                  <p className="mt-2 text-base leading-relaxed text-[var(--card-foreground)]">
+                    <Md>{pick(edu.note, locale)}</Md>
+                  </p>
+                )}
               </div>
             ))}
           </div>

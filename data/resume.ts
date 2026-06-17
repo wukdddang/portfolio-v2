@@ -26,15 +26,22 @@ export interface ResumeRole {
   projects: ResumeProject[];
 }
 
+export interface ResumeEducation {
+  school: L;
+  degree: L;
+  period: L;
+  note?: L;
+}
+
 export const resumeSummary = {
   oneLiner: {
-    ko: "웹 개발자로 출발해 SAR(위성 레이더) 도메인까지 영역을 넓혀가는 풀스택 개발자입니다. AI를 단순한 코드 생성 도구가 아니라 함께 고민하는 사고 파트너로 두고, 원래 제 직군이 아니던 영역까지 들어가 시스템을 만듭니다.",
-    en: "A full-stack developer who started in web and keeps widening the scope — most recently into the SAR (satellite-radar) domain. I treat AI not as a code-generation tool but as a thinking partner, and use it to step into areas outside my original role and build real systems there.",
+    ko: "지형공간정보 석사(지각변동·GNSS) 배경 위에, 위성 InSAR로 지표 변위를 직접 측정·검증하고 그 위의 시스템까지 짓는 풀스택 엔지니어입니다. 연구 도메인 이해와 프로덕션 엔지니어링을 한 사람이 겸합니다.",
+    en: "A full-stack engineer on a geospatial-engineering M.S. foundation (crustal deformation · GNSS), who measures and validates ground displacement with satellite InSAR and builds the systems on top of it. I pair research-domain understanding with production engineering in one person.",
   } satisfies L,
   paragraphs: [
     {
-      ko: "프론트엔드부터 백엔드, 인프라·CI/CD까지 한 사람이 풀스택으로 맡습니다. 루미르에 입사한 뒤 처음 마주친 SAR(합성개구레이더)·위성 도메인도 '내 전공이 아니'라고 미루지 않고 직군 확장으로 흡수해 실제 서비스에 적용해 왔습니다. 일하는 방식은 'AI native'입니다 — 코드 작성은 AI가 맡고, 저는 UI를 기획하고, AI가 연결한 코드를 검토하고, e2e 테스트로 동작을 보증하는 '사람이 책임지는 노드'에 집중합니다.",
-      en: "I run frontend, backend, and infra/CI-CD end-to-end as a single full-stack engineer. The SAR (synthetic-aperture radar) and satellite domain I first met after joining Lumir wasn't 'someone else's job' — I absorbed it as a role expansion and put it into real services. The way I work is 'AI-native': AI writes the code, and I focus on the human-owned nodes — planning the UI, reviewing how AI wires the code together, and guaranteeing behavior with e2e tests.",
+      ko: "성균관대에서 토목공학(학사)과 지형공간정보공학(석사, 학위논문 「한반도 동남권 지각변동 모델 개발」·GNSS)을 했습니다. 그래서 위성 InSAR가 측정하는 '지표·지각 변위'는 제 연구 주제 그 자체이고, SAR 처리 도구·파이프라인은 입사 후 AI를 사고 파트너 삼아 빠르게 익혔습니다. 동시에 기획·프론트·백엔드·인프라/CI-CD까지 풀스택으로 맡으며, 코드 작성은 AI가, 저는 기획·검토·e2e 테스트로 동작을 보증하는 '사람이 책임지는 노드'에 집중합니다(AI native).",
+      en: "I studied Civil Engineering (B.S.) and Geospatial Information Engineering (M.S., thesis: a crustal-deformation model for southeastern Korea, GNSS-based) at Sungkyunkwan University. So the 'ground / crustal displacement' that satellite InSAR measures is my own research topic; the SAR processing tools and pipelines I picked up after joining, with AI as a thinking partner. In parallel I own the full stack — planning, frontend, backend, infra/CI-CD — working AI-native: AI writes the code while I focus on the human-owned nodes (planning, review, e2e tests that guarantee behavior).",
     },
     {
       ko: "회사에서는 성격이 다른 세 갈래 일을 동시에 끌고 갑니다. (1) **LumirX 위성 SAR 처리 파이프라인(SDPE)** — 운영자가 처리 단계를 구성·실행하는 DAG UI를 만들고, GitLab CI/CD를 맨바닥부터 구축했으며, 처리 단계 사이의 인터페이스를 세부 설계했습니다. (2) **Sentinel SAR 검색·분석 백엔드(sar-data-retrieval, NestJS)** 와 실제 InSAR 분석을 담당하는 별도 레포(lumir-linux-snap, 분석 도구 5종을 묶은 다중 스택). (3) **사내 백오피스 4개 도메인(Lumir-ERP — CMS·자원예약·채용·면접관리)** 풀스택.",
@@ -47,8 +54,8 @@ export const resumeSummary = {
   ] satisfies L[],
   positioning: {
     headline: {
-      ko: "AI native + 풀스택 + 도메인 적응력",
-      en: "AI-native + full-stack + domain adaptability",
+      ko: "지형공간 연구 배경 × 풀스택 시스템 × AI native",
+      en: "Geospatial research × full-stack systems × AI-native",
     } satisfies L,
     bullets: [
       {
@@ -56,8 +63,8 @@ export const resumeSummary = {
         en: "**100% AI-native** — AI writes the code; the human is the node that owns planning, design, and review. I aim for a 'system-designer' mode where one person keeps several workstreams running at once.",
       },
       {
-        ko: "**도메인 적응력** — SAR·InSAR·MintPy·SNAPHU처럼 제 전공 밖의 영역도 AI를 사고 파트너 삼아 진입해 실제 결과를 냅니다. 같은 방식이면 임베디드·로보틱스도 흡수할 수 있다고 봅니다.",
-        en: "**Domain adaptability** — I enter areas well outside my background (SAR, InSAR, MintPy, SNAPHU) with AI as a thinking partner and produce real results. The same approach, I believe, extends to embedded and robotics.",
+        ko: "**연구 도메인 이해 + 적응력** — 지표·지각 변위는 석사 전공(지각변동·GNSS)이라 방법론을 판단할 수 있고, 새 처리 도구(SAR·InSAR·MintPy·SNAPHU)는 AI를 사고 파트너 삼아 익혀 실제 결과를 냅니다. 같은 방식이면 임베디드·로보틱스도 흡수할 수 있다고 봅니다.",
+        en: "**Research-domain understanding + adaptability** — ground/crustal displacement is my master's field (crustal deformation · GNSS), so I can judge the methodology; the new processing tools (SAR, InSAR, MintPy, SNAPHU) I learned with AI as a thinking partner to produce real results. The same approach, I believe, extends to embedded and robotics.",
       },
       {
         ko: "**풀스택 · 한 사이클 책임** — 기획·프론트·백엔드·인프라·테스트·CI/CD까지 한 사이클을 끝까지 책임진 경험이 있습니다. 예를 들어 CMS를 풀스택 단독으로 납품했고, GitLab CI/CD를 맨바닥부터 구축했습니다.",
@@ -265,6 +272,26 @@ export const resumeExperience: ResumeRole[] = [
         },
       },
     ],
+  },
+];
+
+export const resumeEducation: ResumeEducation[] = [
+  {
+    school: { ko: "성균관대학교", en: "Sungkyunkwan University" },
+    degree: {
+      ko: "건설환경시스템공학과 · 지형공간정보공학 석사",
+      en: "M.S., Geospatial Information Engineering",
+    },
+    period: { ko: "2023.02 졸업", en: "Feb 2023" },
+    note: {
+      ko: "학위논문 「한반도 동남권 지각변동 모델 개발」(GNSS 기반) — 위성 InSAR가 측정하는 지표·지각 변위와 같은 물리 현상입니다.",
+      en: "Thesis: \"A crustal-deformation model for southeastern Korea\" (GNSS-based) — the very phenomenon satellite InSAR measures.",
+    },
+  },
+  {
+    school: { ko: "성균관대학교", en: "Sungkyunkwan University" },
+    degree: { ko: "토목공학 학사", en: "B.S., Civil Engineering" },
+    period: { ko: "2021.02 졸업", en: "Feb 2021" },
   },
 ];
 

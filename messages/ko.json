@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "homeTitle": "우창욱 · 웹 개발자, SAR 도메인 확장 중",
+    "homeTitle": "우창욱 · 지형공간 연구자 · 풀스택 엔지니어",
     "homeDescription": "AI 활용 5단계 모델로 자가 진단한 본인 좌표 + 5개 프로젝트(snap·sdpe·sar-data-retrieval·집비치기·Brain Trinity) — 3+4단계 진행 중.",
-    "resumeTitle": "우창욱 이력서 · 웹 개발자, SAR 도메인 확장 중",
+    "resumeTitle": "우창욱 이력서 · 지형공간 연구자 · 풀스택 엔지니어",
     "resumeDescription": "AI native 풀스택 + 직군 확장 · base 이력서 (회사 미정 시점, 인쇄·PDF export 가능)",
     "projectSuffix": "· 우창욱 포트폴리오"
   },
@@ -53,7 +53,7 @@
   "coordinates": {
     "eyebrow": "내 위치",
     "title": "단계 진단은 직군이 기준선입니다",
-    "lede": "같은 SAR 작업이라도 공간정보공학 전공자가 메인 직군으로 하는 것과, 웹 개발자가 직군 확장으로 하는 것은 다릅니다. 아래 매트릭스와 5단계 모델이 본인의 현재 좌표입니다.",
+    "lede": "같은 SAR 작업이라도 지형공간정보(석사) 전공자가 하는 것과 비전공자가 직군 확장으로 하는 것은 다릅니다. 저는 측정 대상(지표 변위)이 연구 주제였던 전공자입니다. 아래 매트릭스와 5단계 모델이 본인의 현재 좌표입니다.",
     "stagesTitle": "AI 활용 5단계 — 본인식 정의",
     "currentLabel": "현재 좌표",
     "currentBadge": "현재",
@@ -115,10 +115,10 @@
   "techStack": {
     "eyebrow": "기술 스택",
     "title": "메인 직군 · 학습 도메인 · 미래",
-    "lede": "본인 직군(웹 개발)과 회사에서 배운 학습 도메인(SAR·위성영상)을 분리해서 봅니다. 직군 안의 깊이와 직군 확장을 명확히 구분합니다.",
-    "mainColumn": "메인 직군 · 웹 개발",
+    "lede": "주력 엔지니어링 스택과, 연구 도메인 위에서 익힌 SAR 처리 도구를 분리해서 봅니다. 직군 안의 깊이와 직군 확장을 명확히 구분합니다.",
+    "mainColumn": "주력 · 풀스택 엔지니어링",
     "mainStage": "4단계 시스템화",
-    "learnedColumn": "학습 도메인 · SAR · 위성영상",
+    "learnedColumn": "학습 도메인 · SAR 처리",
     "learnedStage": "3단계 직군 확장",
     "futureHeading": "다음 직군 확장 — 예측"
   },
@@ -138,7 +138,7 @@
     "header": "Resume · 2026-05 · Base 버전",
     "meta": {
       "mainDomain": "메인 직군",
-      "mainDomainValue": "웹 개발 · 풀스택 · InSAR 처리",
+      "mainDomainValue": "지형공간 · 풀스택 · InSAR",
       "learnedDomain": "학습 도메인",
       "learnedDomainValue": "SAR · 위성영상 · 임베디드",
       "aiStage": "AI 활용 단계",
@@ -150,6 +150,8 @@
       "summaryEyebrow": "요약",
       "invitations": "찾으시는 분이라면",
       "invitationsEyebrow": "invitations",
+      "education": "Education",
+      "educationEyebrow": "학력",
       "experience": "Experience",
       "experienceEyebrow": "회사 경력",
       "side": "Side Projects",
@@ -162,8 +164,8 @@
       "contactEyebrow": "연락처"
     },
     "stack": {
-      "mainColumn": "메인 직군 · 웹 개발",
-      "learnedColumn": "학습 도메인 · SAR · 위성영상",
+      "mainColumn": "주력 · 풀스택 엔지니어링",
+      "learnedColumn": "학습 도메인 · SAR 처리",
       "nextDirection": "다음 방향: 임베디드 → 하드웨어 → 로보틱스"
     },
     "about": {

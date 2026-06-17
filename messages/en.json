@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "homeTitle": "Changuk Woo · Web Developer, expanding into SAR",
+    "homeTitle": "Changuk Woo · Geospatial researcher · full-stack engineer",
     "homeDescription": "Self-diagnosed coordinates on a 5-stage AI usage model + 5 projects (snap · sdpe · sar-data-retrieval · him · Brain Trinity) — currently at stage 3+4.",
-    "resumeTitle": "Changuk Woo Resume · Web Developer, expanding into SAR",
+    "resumeTitle": "Changuk Woo Resume · Geospatial researcher · full-stack engineer",
     "resumeDescription": "AI-native full-stack + domain expansion · base resume (no target company yet, print / PDF export ready).",
     "projectSuffix": "· Changuk Woo Portfolio"
   },
@@ -53,7 +53,7 @@
   "coordinates": {
     "eyebrow": "Where I am",
     "title": "Stage diagnosis starts from your main role",
-    "lede": "The same SAR work means something different when a geospatial-engineering major does it as their main role versus when a web developer does it as a domain expansion. The matrix below and the 5-stage model anchor my current coordinates.",
+    "lede": "The same SAR work means something different when a geospatial-engineering major (M.S.) does it versus when a non-major does it as a domain expansion. I'm the former — the measured quantity, ground displacement, was my research topic. The matrix below and the 5-stage model anchor my current coordinates.",
     "stagesTitle": "AI usage · 5 stages — in my own words",
     "currentLabel": "Current coordinates",
     "currentBadge": "Now",
@@ -115,10 +115,10 @@
   "techStack": {
     "eyebrow": "Tech stack",
     "title": "Main role · Learned domain · Future",
-    "lede": "I separate my main role (web development) from the learned domain (SAR · satellite imagery) picked up at work. Depth-within-role and role-expansion are two distinct things.",
-    "mainColumn": "Main role · Web Development",
+    "lede": "I separate my core engineering stack from the SAR processing tools I picked up on top of my research domain. Depth-within-role and role-expansion are two distinct things.",
+    "mainColumn": "Core · Full-stack engineering",
     "mainStage": "Stage 4 · systemization",
-    "learnedColumn": "Learned domain · SAR · Satellite imagery",
+    "learnedColumn": "Learned domain · SAR processing",
     "learnedStage": "Stage 3 · role expansion",
     "futureHeading": "Next role expansion — projected"
   },
@@ -138,7 +138,7 @@
     "header": "Resume · 2026-05 · Base version",
     "meta": {
       "mainDomain": "Main role",
-      "mainDomainValue": "Web Dev · Full-stack · InSAR processing",
+      "mainDomainValue": "Geospatial · Full-stack · InSAR",
       "learnedDomain": "Learned domain",
       "learnedDomainValue": "SAR · Satellite imagery · Embedded",
       "aiStage": "AI usage stage",
@@ -150,6 +150,8 @@
       "summaryEyebrow": "summary",
       "invitations": "If you're looking for",
       "invitationsEyebrow": "invitations",
+      "education": "Education",
+      "educationEyebrow": "education",
       "experience": "Experience",
       "experienceEyebrow": "company experience",
       "side": "Side Projects",
@@ -162,8 +164,8 @@
       "contactEyebrow": "contact"
     },
     "stack": {
-      "mainColumn": "Main role · Web Development",
-      "learnedColumn": "Learned domain · SAR · Satellite imagery",
+      "mainColumn": "Core · Full-stack engineering",
+      "learnedColumn": "Learned domain · SAR processing",
       "nextDirection": "What's next: Embedded → Hardware → Robotics"
     },
     "about": {

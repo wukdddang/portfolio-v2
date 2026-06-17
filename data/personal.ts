@@ -1,6 +1,7 @@
 /**
  * 본인 직군 정의 — AI 활용 5단계 진단의 기준선
  * Brain Trinity wiki/ai/ai-usage-levels-seong-pm.md (2026-05-20 회고 인터뷰) 추출
+ * 2026-06-17 재정렬: 리드 정체성을 "웹 개발자 + SAR 확장" → "지형공간 연구자(석사) × 풀스택 엔지니어"로.
  * Bilingual {ko, en} fields — see data/i18n.ts pick().
  */
 
@@ -12,26 +13,25 @@ export type VisionItem = L & { link?: L & { href: string } };
 export const personal = {
   name: { ko: "우창욱", en: "Changuk Woo" } satisfies L,
   tagline: {
-    ko: "웹 개발자, SAR 도메인 확장 중",
-    en: "Web Developer, expanding into SAR",
+    ko: "지형공간 연구자 · 풀스택 엔지니어",
+    en: "Geospatial researcher · full-stack engineer",
   } satisfies L,
-  // Hero h1 타자기 효과용 — 본인 직군을 한 단어씩 순환 (모두 실제 프로필 기반)
+  // Hero h1 타자기 효과용 — 본인 정체성을 한 단어씩 순환 (모두 실제 프로필 기반)
   roles: [
-    { ko: "웹 개발자", en: "Web Developer" },
+    { ko: "지형공간정보 연구자", en: "Geospatial Researcher" },
+    { ko: "InSAR 엔지니어", en: "InSAR Engineer" },
     { ko: "풀스택 개발자", en: "Full-stack Developer" },
     { ko: "데이터 분석가", en: "Data Analyst" },
-    { ko: "프로덕트 엔지니어", en: "Product Engineer" },
     { ko: "인프라 엔지니어", en: "Infra Engineer" },
-    { ko: "SAR·위성 도메인 엔지니어", en: "SAR / Satellite Engineer" },
     { ko: "AI native 빌더", en: "AI-native Builder" },
   ] satisfies L[],
   subTagline: {
-    ko: "AI를 사고 파트너로, 직군을 확장하며 설계·구현·운영을 하나의 시스템으로 잇는 프로덕트 엔지니어입니다",
-    en: "A product engineer who uses AI as a thinking partner — expanding across roles to connect design, implementation, and operations into one system",
+    ko: "측지·지형공간(석사)에서 출발해, 위성 InSAR로 지표 변위를 직접 측정·검증하고 그 위의 시스템까지 AI native로 짓는 엔지니어입니다",
+    en: "Starting from geodesy / geospatial research (M.S.), I measure and validate ground displacement with satellite InSAR — and build the systems on top of it, AI-native",
   } satisfies L,
   pitch: {
-    ko: "회사가 풀어야 할 문제를 옆에서 빠르게 흡수해, 도메인 학습부터 풀스택 구현·운영까지 한 사이클로 매듭짓는 것을 좋아합니다.",
-    en: "I like absorbing a company's problem quickly from the sidelines and closing the whole loop — from domain learning through full-stack implementation to operations.",
+    ko: "연구 도메인을 깊이 이해하면서, 그 위의 프로덕션 시스템까지 한 사이클로 매듭짓는 것을 좋아합니다.",
+    en: "I like understanding a research domain deeply while closing the whole loop on top of it — up to the production system.",
   } satisfies L,
   currentStage: {
     range: { ko: "3+4 진행", en: "Stage 3+4 in progress" } satisfies L,
@@ -50,39 +50,39 @@ export const personal = {
   // Hero 메타 스트립 — 직군/학습 도메인 값 세그먼트. href가 있으면 학습 로그(/studies/*) 페이지로 링크
   heroDomains: {
     main: [
-      { label: { ko: "웹 개발 · 풀스택", en: "Web Dev · Full-stack" } satisfies L },
+      { label: { ko: "지형공간 · 풀스택", en: "Geospatial · Full-stack" } satisfies L },
       { label: { ko: "InSAR 처리", en: "InSAR processing" } satisfies L, href: "/studies/sar" },
     ],
     learned: [
-      { label: { ko: "SAR · 위성영상", en: "SAR · Satellite imagery" } satisfies L, href: "/studies/sar" },
+      { label: { ko: "SAR 처리 도구", en: "SAR processing tools" } satisfies L, href: "/studies/sar" },
       { label: { ko: "임베디드", en: "Embedded" } satisfies L, href: "/studies/embedded" },
     ],
   } satisfies Record<string, { label: L; href?: string }[]>,
   identity: {
-    ko: "기획·설계 + 프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다루며, 회사에서 만난 SAR/위성 도메인까지 확장해 적용하고 있습니다.",
-    en: "I cover planning & design + frontend + backend + infra/CI-CD + AI end-to-end as one full-stack developer, and have extended that reach into the SAR / satellite domain I first met at work.",
+    ko: "지형공간정보 석사(지각변동·GNSS) 배경 위에 기획·설계 + 프론트엔드 + 백엔드 + 인프라/CI-CD + AI를 한 사람이 풀스택으로 다룹니다. 위성 SAR/InSAR는 제 연구 주제였던 지표·지각 변위를 다른 센서로 다시 만난 영역입니다.",
+    en: "On a geospatial-engineering M.S. foundation (crustal deformation · GNSS), I cover planning & design + frontend + backend + infra/CI-CD + AI end-to-end as one full-stack engineer. SAR / InSAR is the same ground-displacement my thesis studied — met again through a different sensor.",
   } satisfies L,
   mainDomain: {
     label: { ko: "메인 직군", en: "Main role" } satisfies L,
-    value: { ko: "웹 개발", en: "Web Development" } satisfies L,
+    value: { ko: "지형공간 + 풀스택", en: "Geospatial + full-stack" } satisfies L,
     detail: {
       ko: "기획·설계 + 프론트엔드 + 백엔드 + 인프라/CI-CD + AI",
       en: "Planning & design + frontend + backend + infra/CI-CD + AI",
     } satisfies L,
     note: {
-      ko: "전천후 풀스택으로 확장 중입니다.",
-      en: "Expanding into a generalist full-stack profile.",
+      ko: "측지 연구 배경 위의 전천후 엔지니어로 확장 중입니다.",
+      en: "Expanding into a generalist engineer on a geodesy-research foundation.",
     } satisfies L,
   },
   academicBackground: {
     label: { ko: "전공 배경", en: "Academic background" } satisfies L,
     value: {
-      ko: "공간정보공학",
-      en: "Geospatial Information Engineering",
+      ko: "지형공간정보공학 석사",
+      en: "M.S., Geospatial Information Engineering",
     } satisfies L,
     detail: {
-      ko: "SAR·위성 도메인과 간접적으로 연결됩니다 (학부 수준).",
-      en: "Indirectly connected to SAR / satellite work (undergraduate level).",
+      ko: "성균관대 건설환경시스템공학과 지형공간정보공학 석사(2023) · 토목공학 학사. 학위논문 「한반도 동남권 지각변동 모델 개발」(GNSS) — InSAR가 측정하는 지표·지각 변위와 같은 현상입니다.",
+      en: "M.S. in Geospatial Information Engineering, Sungkyunkwan Univ. (2023) · B.S. in Civil Engineering. Thesis: \"A crustal-deformation model for southeastern Korea\" (GNSS) — the very phenomenon InSAR measures.",
     } satisfies L,
   },
   learnedDomain: {
@@ -95,8 +95,8 @@ export const personal = {
       en: "Sentinel · SAR · Satellite imagery · InSAR · MintPy · SNAPHU",
     } satisfies L,
     detail: {
-      ko: "루미르 입사 후 학습한 직군 외 영역입니다.",
-      en: "Out-of-role areas I picked up after joining Lumir.",
+      ko: "위성 SAR 처리 도구·파이프라인은 입사 후 익혔습니다 (측정 대상인 지표 변위는 전공 영역).",
+      en: "I picked up the satellite-SAR processing tools and pipelines after joining (the measured quantity — ground displacement — is my academic field).",
     } satisfies L,
   },
   diagnosticRules: [
@@ -105,12 +105,12 @@ export const personal = {
       en: "Pure web work is within my main role. Stages 2–4 measure depth inside the role.",
     },
     {
-      ko: "SAR/위성 도메인 회사 프로젝트는 본인 직군 확장입니다. 3단계가 출발 신호이고, 시스템화·운영화로 가면 4단계가 위에 얹힙니다 → 3+4 혼합.",
-      en: "SAR / satellite work at the company is a role expansion. Stage 3 is the entry signal, and systemization / ops layer stage 4 on top of it — hence the 3+4 blend.",
+      ko: "SAR/위성 회사 프로젝트에서 *처리 엔지니어링*은 직군 확장이지만, 측정 대상(지표·지각 변위)은 석사 전공이라 도메인 판단은 연구 배경에서 나옵니다. 3단계 확장 + 4단계 시스템화가 겹칩니다 → 3+4.",
+      en: "In SAR / satellite work, the *processing engineering* is a role expansion — but the measured quantity (ground / crustal deformation) is my master's field, so the domain judgment comes from my research background. Stage-3 expansion and stage-4 systemization overlap → 3+4.",
     },
     {
-      ko: "snap/MintPy처럼 원래 본인 업무가 아닌 영역에 AI를 사고 파트너로 두고 진입해 결과를 내는 사례는 3단계(직군 확장)의 교과서적인 모습입니다.",
-      en: "Cases like snap/MintPy — entering a non-role area with AI as a thinking partner and producing results — are textbook stage 3 (role expansion).",
+      ko: "snap/MintPy 같은 처리 *도구*는 원래 본인 업무가 아니었고 AI를 사고 파트너로 두고 익혔습니다 — 3단계(직군 확장)의 모습입니다.",
+      en: "Processing *tools* like snap/MintPy weren't originally my job; I learned them with AI as a thinking partner — the shape of stage 3 (role expansion).",
     },
   ] satisfies L[],
   futureVision: [
@@ -130,8 +130,8 @@ export const personal = {
   ] satisfies VisionItem[],
   invitations: [
     {
-      ko: "도메인을 빠르게 흡수해야 하는 새로운 산업을 시작하시나요?",
-      en: "Are you launching into a new industry that demands fast domain absorption?",
+      ko: "관측·실험 데이터를 직접 분석하고, 그 위의 시스템까지 만들 사람이 필요하신가요?",
+      en: "Do you need someone who can analyze observational / experimental data and build the systems on top of it?",
     },
     {
       ko: "AI를 도구가 아니라 협업자로 쓰는 풀스택이 필요하신가요?",

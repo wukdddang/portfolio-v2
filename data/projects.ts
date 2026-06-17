@@ -460,8 +460,8 @@ const lumirLinuxSnapLayer: Project = {
   ],
   trackVisibility: "both",
   honestyNote: {
-    ko: "SAR 도메인은 본인 직군(웹 개발) 외 영역입니다. AI 사고 파트너 없이는 진입이 불가능했을 영역으로 평가합니다 (3단계 직군 확장의 표본 사례).",
-    en: "SAR is outside my primary role (web development). I'd consider entering it impossible without AI as a thinking partner — a textbook example of stage-3 role expansion.",
+    ko: "측정 대상인 지표·지각 변위는 석사 전공(지각변동·GNSS)입니다. 다만 SAR 처리 도구·파이프라인(SNAP·MintPy·StaMPS 등)은 입사 후 AI를 사고 파트너 삼아 익힌 직군 확장 영역입니다 — 도메인 판단은 연구 배경에서, 처리 구현은 AI 가속으로.",
+    en: "The measured quantity — ground/crustal deformation — is my master's field (crustal deformation · GNSS). The SAR processing tools and pipelines (SNAP, MintPy, StaMPS, …), though, I picked up after joining with AI as a thinking partner — a role expansion. Domain judgment from research; processing implementation accelerated by AI.",
   },
   metrics: [
     {
@@ -869,8 +869,8 @@ const lumirSarPlatform: Project = {
         en: "What's your contribution vs. inherited scope in each layer?",
       },
       a: {
-        ko: "저장(sar-data-retrieval): 5개 영역 전부 본인. 분석(lumir-linux-snap): SAR 도메인은 학부 수준이라 AI 사고 파트너 의존이 큼. 프론트(sar-search-and-analyzer): 프론트엔드 전부 본인, Plan/Current 패턴은 파트장 인계.",
-        en: "Storage (sar-data-retrieval): all 5 areas mine. Analysis (lumir-linux-snap): SAR domain knowledge was undergraduate-level, so heavy reliance on AI as a thinking partner. Frontend (sar-search-and-analyzer): the frontend all mine; the Plan/Current pattern came from the team lead.",
+        ko: "저장(sar-data-retrieval): 5개 영역 전부 본인. 분석(lumir-linux-snap): 측정 대상(지표·지각 변위)은 석사 전공이고, SAR 처리 도구는 AI 사고 파트너로 익혀 가속. 프론트(sar-search-and-analyzer): 프론트엔드 전부 본인, Plan/Current 패턴은 파트장 인계.",
+        en: "Storage (sar-data-retrieval): all 5 areas mine. Analysis (lumir-linux-snap): the measured quantity (ground/crustal deformation) is my master's field; the SAR processing tools I learned with AI as a thinking partner. Frontend (sar-search-and-analyzer): the frontend all mine; the Plan/Current pattern came from the team lead.",
       },
     },
     {
@@ -1908,8 +1908,8 @@ export const trackPositioning = {
       en: "SAR domain detail · accuracy · concrete results",
     },
     headline: {
-      ko: "SAR 도메인을 AI 사고 파트너 + 위키 컴파일로 학부 수준 → 5종 도구 다중 스택 + 5,143,119 PSI까지 끌어올렸습니다",
-      en: "Took SAR from undergraduate level to a 5-tool stack with 5,143,119 PSI scatterers — powered by AI as a thinking partner and wiki-style compilation.",
+      ko: "전공(지표·지각 변위) 위에 SAR 처리 도구를 AI 사고 파트너 + 위키 컴파일로 빠르게 익혀 5종 도구 다중 스택 + 5,143,119 PSI까지 끌어올렸습니다",
+      en: "On top of my academic field (ground/crustal displacement), I ramped up the SAR processing tooling — with AI as a thinking partner and wiki compilation — to a 5-tool stack with 5,143,119 PSI scatterers.",
     },
   },
   robotics: {
