@@ -167,12 +167,3 @@ export const learnedDomain: StackCategory[] = [
     ],
   },
 ];
-
-export const future: L[] = [
-  { ko: "임베디드 (예정)", en: "Embedded (planned)" },
-  { ko: "하드웨어 (자연 확장 예측)", en: "Hardware (natural extension)" },
-  {
-    ko: "로보틱스 (산업 전환 도전)",
-    en: "Robotics (industry-transition target)",
-  },
-];

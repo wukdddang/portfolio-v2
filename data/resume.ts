@@ -63,8 +63,8 @@ export const resumeSummary = {
         en: "**100% AI-native** — AI writes the code; the human is the node that owns planning, design, and review. I aim for a 'system-designer' mode where one person keeps several workstreams running at once.",
       },
       {
-        ko: "**연구 도메인 이해 + 적응력** — 지표·지각 변위는 석사 전공(지각변동·GNSS)이라 방법론을 판단할 수 있고, 새 처리 도구(SAR·InSAR·MintPy·SNAPHU)는 AI를 사고 파트너 삼아 익혀 실제 결과를 냅니다. 같은 방식이면 임베디드·로보틱스도 흡수할 수 있다고 봅니다.",
-        en: "**Research-domain understanding + adaptability** — ground/crustal displacement is my master's field (crustal deformation · GNSS), so I can judge the methodology; the new processing tools (SAR, InSAR, MintPy, SNAPHU) I learned with AI as a thinking partner to produce real results. The same approach, I believe, extends to embedded and robotics.",
+        ko: "**연구 도메인 이해 + 적응력** — 지표·지각 변위는 석사 전공(지각변동·GNSS)이라 방법론을 판단할 수 있고, 새 처리 도구(SAR·InSAR·MintPy·SNAPHU)는 AI를 사고 파트너 삼아 익혀 실제 결과를 냅니다.",
+        en: "**Research-domain understanding + adaptability** — ground/crustal displacement is my master's field (crustal deformation · GNSS), so I can judge the methodology; the new processing tools (SAR, InSAR, MintPy, SNAPHU) I learned with AI as a thinking partner to produce real results.",
       },
       {
         ko: "**풀스택 · 한 사이클 책임** — 기획·프론트·백엔드·인프라·테스트·CI/CD까지 한 사이클을 끝까지 책임진 경험이 있습니다. 예를 들어 CMS를 풀스택 단독으로 납품했고, GitLab CI/CD를 맨바닥부터 구축했습니다.",
@@ -407,8 +407,8 @@ export const resumeSideProjects: ResumeProject[] = [
         en: "**This portfolio, the resume, the self-diagnosis, and the 6 project briefs are all Brain Trinity compile outputs** — the system itself is the living evidence of stage-4 automatic operation.",
       },
       {
-        ko: "새로운 도메인이 나타나도 정보 구조화 + AI native 기반이면 해결하지 못할 일이 없다고 봅니다 — 임베디드·하드웨어·로보틱스로 자연 확장",
-        en: "Given a new domain, structured information + an AI-native foundation can solve almost anything — naturally extending into embedded, hardware, and robotics.",
+        ko: "새로운 도메인이 나타나도 정보 구조화 + AI native 기반이면 해결하지 못할 일이 없다고 봅니다",
+        en: "Given a new domain, structured information + an AI-native foundation can solve almost anything.",
       },
     ],
     stack: [

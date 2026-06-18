@@ -1926,8 +1926,8 @@ export const trackPositioning = {
       en: "Mechanism · extensibility · ability to enter the next domain",
     },
     headline: {
-      ko: "정보 구조화 + AI native 기반이면 어떤 새 도메인도 같은 방식으로 진입한다고 봅니다. 임베디드·하드웨어·로보틱스로 자연 확장 가능합니다",
-      en: "With structured information + an AI-native foundation, any new domain can be entered the same way. Embedded, hardware, and robotics extend naturally.",
+      ko: "정보 구조화 + AI native 기반이면 어떤 새 도메인도 같은 방식으로 진입한다고 봅니다",
+      en: "With structured information + an AI-native foundation, any new domain can be entered the same way.",
     },
   },
 } as const;

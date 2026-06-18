@@ -1,9 +1,8 @@
 import type { L } from "../i18n";
 import type { Study, StudyTopic, TopicDetail } from "./types";
 import { sar } from "./sar";
-import { embedded } from "./embedded";
 
-const studies: Study[] = [sar, embedded];
+const studies: Study[] = [sar];
 
 /**
  * 학습 검색 인덱스 — 모든 Study의 토픽을 하나의 평탄한 레코드 배열로 펼친다.
