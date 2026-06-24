@@ -2,7 +2,7 @@ import type { L } from "../i18n";
 
 /**
  * 학습 로그 페이지 데이터 — /studies/[slug].
- * Brain Trinity 위키(wiki/concepts/sar-*, embedded-*)에서 컴파일한 학습 여정 요약.
+ * Brain Trinity 위키(wiki/concepts/sar-*)에서 컴파일한 학습 여정 요약.
  * 히어로 메타 스트립(personal.heroDomains)의 "학습 도메인" 링크가 도착하는 곳.
  *
  * 토픽 status: done=위키 페이지 컴파일 완료 / doing=진행 중 / todo=로드맵 대기.

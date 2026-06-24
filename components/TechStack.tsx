@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { mainStack, learnedDomain, future } from "@/data/stack";
+import { mainStack, learnedDomain } from "@/data/stack";
 import { pick, type L } from "@/data/i18n";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
@@ -67,23 +67,6 @@ export function TechStack() {
                   accent
                 />
               ))}
-            </div>
-
-            {/* Future */}
-            <div className="mt-10 pt-6 border-t border-dashed border-[var(--border)]">
-              <div className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] mb-3">
-                {t("futureHeading")}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {future.map((f, i) => (
-                  <span
-                    key={i}
-                    className="text-xs font-mono px-3 py-1.5 rounded-md border border-dashed border-[var(--border)] text-[var(--muted)]"
-                  >
-                    {pick(f, locale)}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         </div>

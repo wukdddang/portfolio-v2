@@ -284,9 +284,6 @@ export default async function ResumePage({
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-3 border-t border-dashed border-[var(--border)] text-sm font-mono text-[var(--muted)]">
-                {t("stack.nextDirection")}
-              </div>
             </div>
           </div>
         </Section>

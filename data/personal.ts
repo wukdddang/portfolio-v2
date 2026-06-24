@@ -55,7 +55,6 @@ export const personal = {
     ],
     learned: [
       { label: { ko: "SAR 처리 도구", en: "SAR processing tools" } satisfies L, href: "/studies/sar" },
-      { label: { ko: "임베디드", en: "Embedded" } satisfies L, href: "/studies/embedded" },
     ],
   } satisfies Record<string, { label: L; href?: string }[]>,
   identity: {
@@ -114,15 +113,6 @@ export const personal = {
     },
   ] satisfies L[],
   futureVision: [
-    {
-      ko: "임베디드 확장을 진행하고 있습니다",
-      en: "Currently extending into embedded systems",
-      link: { ko: "임베디드", en: "embedded", href: "/studies/embedded" },
-    },
-    {
-      ko: "하드웨어·로보틱스로의 자연 확장을 예상하고 있습니다",
-      en: "Expecting a natural extension into hardware and robotics",
-    },
     {
       ko: "Brain Trinity를 본인 완전체 시스템으로 키울 계획입니다 (음성·일기·회의록·PDF 통합)",
       en: "Plan to grow Brain Trinity into a complete personal system (voice + journal + meeting notes + PDFs unified)",

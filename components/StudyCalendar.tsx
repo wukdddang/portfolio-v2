@@ -4,7 +4,7 @@
  * StudyCalendar — 학습 캘린더. data/studies.ts의 journal(날짜별 활동)을 단일 월 그리드로 그린다.
  * ◀ ▶ 로 월을 이동하며, 활동이 있는 날은 kind 색으로 칠해지고 클릭하면 그날 학습한 토픽이
  * 패널에 뜬다. topicSlug가 있으면 상세 문서(/studies/{slug}/{topic})로 링크.
- * SAR는 AI 대화, 임베디드는 강의 녹음 위주 — kind 색으로 출처가 구분된다.
+ * 활동은 출처(AI 대화·강의 등)에 따라 kind 색으로 구분된다.
  */
 
 import { useMemo, useState } from "react";

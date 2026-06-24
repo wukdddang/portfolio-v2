@@ -114,13 +114,12 @@
   },
   "techStack": {
     "eyebrow": "Tech stack",
-    "title": "Main role · Learned domain · Future",
+    "title": "Main role · Learned domain",
     "lede": "I separate my core engineering stack from the SAR processing tools I picked up on top of my research domain. Depth-within-role and role-expansion are two distinct things.",
     "mainColumn": "Core · Full-stack engineering",
     "mainStage": "Stage 4 · systemization",
     "learnedColumn": "Learned domain · SAR processing",
-    "learnedStage": "Stage 3 · role expansion",
-    "futureHeading": "Next role expansion — projected"
+    "learnedStage": "Stage 3 · role expansion"
   },
   "about": {
     "eyebrow": "About",
@@ -140,7 +139,7 @@
       "mainDomain": "Main role",
       "mainDomainValue": "Geospatial · Full-stack · InSAR",
       "learnedDomain": "Learned domain",
-      "learnedDomainValue": "SAR · Satellite imagery · Embedded",
+      "learnedDomainValue": "SAR · Satellite imagery",
       "aiStage": "AI usage stage",
       "yearsLabel": "Experience"
     },
@@ -165,8 +164,7 @@
     },
     "stack": {
       "mainColumn": "Core · Full-stack engineering",
-      "learnedColumn": "Learned domain · SAR processing",
-      "nextDirection": "What's next: Embedded → Hardware → Robotics"
+      "learnedColumn": "Learned domain · SAR processing"
     },
     "about": {
       "brainTrinityEyebrow": "Brain Trinity · live demo available",
