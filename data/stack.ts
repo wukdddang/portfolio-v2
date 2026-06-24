@@ -18,6 +18,64 @@ export interface StackCategory {
 
 export const mainStack: StackCategory[] = [
   {
+    label: { ko: "인프라 · 시스템 운영 · CI/CD", en: "Infra · Systems Ops · CI/CD" },
+    items: [
+      {
+        name: "Linux 서버 운영",
+        note: { ko: "다중 노드 · 트러블슈팅", en: "Multi-node · troubleshooting" },
+      },
+      {
+        name: "서버 · 네트워크",
+        note: { ko: "3-노드 토폴로지 · LAN 재구성", en: "3-node topology · LAN rework" },
+      },
+      {
+        name: "NAS · 스토리지",
+        note: { ko: "RAID5 27TB · NFS / SMB2 / CIFS", en: "RAID5 27TB · NFS / SMB2 / CIFS" },
+      },
+      { name: "Docker · docker-compose" },
+      {
+        name: "GitLab CI/CD",
+        note: {
+          ko: "0에서 구축 + 커스텀 메일",
+          en: "Built from scratch + custom mail",
+        },
+      },
+      {
+        name: "Ansible · systemd",
+        note: { ko: "운영 자동화 · 타이머 이관", en: "Ops automation · scheduled eviction" },
+      },
+      {
+        name: "모니터링",
+        note: {
+          ko: "Uptime Kuma 함대 + Grafana / Prometheus",
+          en: "Uptime Kuma fleet + Grafana / Prometheus",
+        },
+      },
+      {
+        name: "장애 대응 · 성능",
+        note: {
+          ko: "디스크풀 DB 복구 · 부하 진단 · 81MB→1.1MB",
+          en: "Disk-full DB recovery · load diagnosis · 81MB→1.1MB",
+        },
+      },
+      {
+        name: "Terraform IaC",
+        note: { ko: "S3 양쪽 레시피", en: "Recipes for both S3 sides" },
+      },
+      {
+        name: "Kubernetes",
+        note: { ko: "학습 중 · CKA 준비 (홈랩)", en: "Learning · CKA prep (homelab)" },
+      },
+      {
+        name: "FastAPI",
+        note: {
+          ko: "분석 서버 (NestJS 연결)",
+          en: "Analysis server (bridged to NestJS)",
+        },
+      },
+    ],
+  },
+  {
     label: { ko: "프론트엔드", en: "Frontend" },
     items: [
       { name: "TypeScript" },
@@ -49,37 +107,6 @@ export const mainStack: StackCategory[] = [
         },
       },
       { name: "Jest + Testcontainers" },
-    ],
-  },
-  {
-    label: { ko: "인프라 · CI/CD", en: "Infra · CI/CD" },
-    items: [
-      { name: "Docker · docker-compose" },
-      {
-        name: "GitLab CI/CD",
-        note: {
-          ko: "0에서 구축 + 커스텀 메일",
-          en: "Built from scratch + custom mail",
-        },
-      },
-      {
-        name: "Terraform IaC",
-        note: { ko: "S3 양쪽 레시피", en: "Recipes for both S3 sides" },
-      },
-      {
-        name: "Grafana + Prometheus",
-        note: {
-          ko: "백업 메트릭 textfile collector",
-          en: "Backup metrics via textfile collector",
-        },
-      },
-      {
-        name: "FastAPI",
-        note: {
-          ko: "분석 서버 (NestJS 연결)",
-          en: "Analysis server (bridged to NestJS)",
-        },
-      },
     ],
   },
   {

@@ -70,6 +70,10 @@ export const resumeSummary = {
         ko: "**풀스택 · 한 사이클 책임** — 기획·프론트·백엔드·인프라·테스트·CI/CD까지 한 사이클을 끝까지 책임진 경험이 있습니다. 예를 들어 CMS를 풀스택 단독으로 납품했고, GitLab CI/CD를 맨바닥부터 구축했습니다.",
         en: "**Full-stack · owns the whole cycle** — I've taken full cycles end to end: planning · frontend · backend · infra · testing · CI/CD. For example, I delivered a CMS solo full-stack and stood up GitLab CI/CD from scratch.",
       },
+      {
+        ko: "**시스템·인프라 운영** — InSAR 처리 플랫폼을 다중 서버(처리·DB·PSI 노드)로 나눠 운영하고, RAID5+NFS 스토리지·Uptime Kuma 함대 모니터링·systemd 자동 이관을 직접 구성했습니다. 디스크 풀로 죽은 PostgreSQL을 복구하고 응답 페이로드를 81MB→1.1MB로 줄이는 등 장애·성능까지 책임집니다. 다음 단계로 Kubernetes(CKA)를 준비 중입니다.",
+        en: "**Systems & infra operation** — I run the InSAR processing platform split across multiple servers (processing · DB · PSI nodes), and set up RAID5+NFS storage, Uptime-Kuma fleet monitoring, and systemd-based auto-eviction myself. I own incidents and performance too — recovered a PostgreSQL killed by a full disk, cut a response payload from 81 MB to 1.1 MB. Next: Kubernetes (CKA).",
+      },
     ] satisfies L[],
   },
 };

@@ -457,6 +457,8 @@ const lumirLinuxSnapLayer: Project = {
     { ko: "사전점검 엔드포인트", en: "Preflight endpoints" },
     { ko: "다중 지역 (광교·죽전·송도)", en: "Multi-region (Gwanggyo · Jukjeon · Songdo)" },
     { ko: "PSI 자기완결 (-W slc)", en: "Self-contained PSI (-W slc)" },
+    { ko: "다중 서버 운영 (host affinity)", en: "Multi-server ops (host affinity)" },
+    { ko: "운영 하드닝 (systemd·Docker)", en: "Ops hardening (systemd · Docker)" },
   ],
   trackVisibility: "both",
   honestyNote: {
@@ -489,6 +491,10 @@ const lumirLinuxSnapLayer: Project = {
         ko: "광교·죽전·송도 (+새만금)",
         en: "Gwanggyo · Jukjeon · Songdo (+Saemangeum)",
       },
+    },
+    {
+      label: { ko: "운영 토폴로지", en: "Ops topology" },
+      value: { ko: "3-서버 (처리·DB·PSI)", en: "3 servers (proc · DB · PSI)" },
     },
   ],
   measurementPending: [
