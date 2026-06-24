@@ -13,21 +13,21 @@ export type VisionItem = L & { link?: L & { href: string } };
 export const personal = {
   name: { ko: "우창욱", en: "Changuk Woo" } satisfies L,
   tagline: {
-    ko: "지형공간 연구자 · 풀스택 엔지니어",
-    en: "Geospatial researcher · full-stack engineer",
+    ko: "지형공간 연구자 · 풀스택 · 인프라 엔지니어",
+    en: "Geospatial researcher · full-stack & infra engineer",
   } satisfies L,
   // Hero h1 타자기 효과용 — 본인 정체성을 한 단어씩 순환 (모두 실제 프로필 기반)
   roles: [
     { ko: "지형공간정보 연구자", en: "Geospatial Researcher" },
+    { ko: "인프라 엔지니어", en: "Infra Engineer" },
     { ko: "InSAR 엔지니어", en: "InSAR Engineer" },
     { ko: "풀스택 개발자", en: "Full-stack Developer" },
     { ko: "데이터 분석가", en: "Data Analyst" },
-    { ko: "인프라 엔지니어", en: "Infra Engineer" },
     { ko: "AI native 빌더", en: "AI-native Builder" },
   ] satisfies L[],
   subTagline: {
-    ko: "측지·지형공간(석사)에서 출발해, 위성 InSAR로 지표 변위를 직접 측정·검증하고 그 위의 시스템까지 AI native로 짓는 엔지니어입니다",
-    en: "Starting from geodesy / geospatial research (M.S.), I measure and validate ground displacement with satellite InSAR — and build the systems on top of it, AI-native",
+    ko: "측지·지형공간(석사)에서 출발해, 위성 InSAR로 지표 변위를 직접 측정·검증하고, 그 위의 시스템을 AI native로 짓고 다중 서버·스토리지·모니터링으로 직접 운영하는 엔지니어입니다",
+    en: "Starting from geodesy / geospatial research (M.S.), I measure and validate ground displacement with satellite InSAR — then build the systems on top of it AI-native and operate them across multiple servers, storage, and monitoring",
   } satisfies L,
   pitch: {
     ko: "연구 도메인을 깊이 이해하면서, 그 위의 프로덕션 시스템까지 한 사이클로 매듭짓는 것을 좋아합니다.",
@@ -69,8 +69,8 @@ export const personal = {
       en: "Planning & design + frontend + backend + infra/CI-CD + AI",
     } satisfies L,
     note: {
-      ko: "측지 연구 배경 위의 전천후 엔지니어로 확장 중입니다.",
-      en: "Expanding into a generalist engineer on a geodesy-research foundation.",
+      ko: "측지 연구 배경 위의 전천후 엔지니어 — 특히 시스템·인프라 운영(다중 서버·스토리지·모니터링·CI/CD·장애 대응)으로 무게를 옮기는 중입니다.",
+      en: "A generalist engineer on a geodesy-research foundation — now shifting weight toward systems & infra operation (multi-server · storage · monitoring · CI/CD · incident response).",
     } satisfies L,
   },
   academicBackground: {
@@ -119,6 +119,10 @@ export const personal = {
     },
   ] satisfies VisionItem[],
   invitations: [
+    {
+      ko: "여러 서버·스토리지·CI/CD를 직접 운영하고 장애·성능까지 책임지는 인프라 엔지니어가 필요하신가요?",
+      en: "Need an infra engineer who operates servers, storage, and CI/CD — and owns incidents and performance end to end?",
+    },
     {
       ko: "관측·실험 데이터를 직접 분석하고, 그 위의 시스템까지 만들 사람이 필요하신가요?",
       en: "Do you need someone who can analyze observational / experimental data and build the systems on top of it?",
