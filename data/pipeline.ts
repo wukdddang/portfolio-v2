@@ -315,13 +315,13 @@ export const pipelines: Pipeline[] = [
     },
   },
 
-  // ── 동천 플릿 인프라 운영 — Ansible·모니터링·Semaphore (가로 스파인) ────────
+  // ── InSAR 인프라 운영 — Ansible·모니터링·Semaphore (2-플레인 fleet) ────────
   {
     id: "infra",
     projectSlug: "fleet-infra-ops",
     icon: "🛠",
     variant: "fleet",
-    title: { ko: "동천 서버 플릿 인프라 운영", en: "Dongcheon Fleet — Infra Ops" },
+    title: { ko: "InSAR 인프라 운영", en: "InSAR Infrastructure Ops" },
     note: {
       ko: "운영자가 Semaphore(Ansible 웹 UI)에서 버튼으로 플레이북을 돌리면, .173 제어 허브의 Ansible이 이기종 3노드 플릿을 구성(SSH+become·인터넷 없는 노드엔 LAN 코드 push)하고, Prometheus가 각 노드 exporter를 scrape해 Grafana·Alertmanager로 시각화·알림합니다. 디스크 고갈은 자동정리 동작 전에 사전 알림으로 돌아옵니다.",
       en: "An operator runs a playbook as a button in Semaphore (Ansible web UI); Ansible on the .173 control hub configures the heterogeneous 3-node fleet (SSH+become, LAN code push for the offline node), and Prometheus scrapes each node's exporter for Grafana/Alertmanager to visualize and alert. Disk exhaustion comes back as a pre-alert before the auto-eviction fires.",
@@ -367,7 +367,7 @@ export const pipelines: Pipeline[] = [
       pushLabel: { ko: "배포·구성 (push)", en: "deploy/configure (push)" },
       node: {
         icon: "🖥",
-        label: { ko: "동천 Fleet", en: "Dongcheon Fleet" },
+        label: { ko: "InSAR 인프라", en: "InSAR infra" },
         sublabel: {
           ko: "이기종 Linux · /mnt/nas249 NFS 무중단 표준화",
           en: "Heterogeneous Linux · /mnt/nas249 NFS standardized (zero-downtime)",

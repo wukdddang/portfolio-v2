@@ -1035,7 +1035,7 @@ function FleetGroupBox({
         borderColor: "color-mix(in oklch, var(--cat-3) 50%, var(--border))",
         backgroundColor: "color-mix(in oklch, var(--cat-3) 6%, var(--card))",
       }}
-      className="group/fleet mx-auto flex w-full max-w-4xl flex-col gap-3 rounded-2xl border-2 border-dashed px-5 py-4 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
+      className="group/fleet mx-auto flex w-full max-w-lg flex-col gap-3 rounded-2xl border-2 border-dashed px-5 py-4 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
     >
       <div className="flex items-center gap-2.5">
         <span className="text-xl leading-none">{node.icon}</span>
