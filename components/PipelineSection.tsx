@@ -557,10 +557,10 @@ function StagePill({
       >
         {stage.icon}
       </div>
-      <div className={cn("font-mono font-semibold leading-tight", compact ? "text-[10px]" : "text-[11px]")}>
+      <div className={cn("break-keep font-mono font-semibold leading-tight", compact ? "text-[10px]" : "text-[11px]")}>
         {pick(stage.label, locale)}
       </div>
-      <div className="font-mono text-[9px] uppercase tracking-wider leading-tight text-[var(--muted)]">
+      <div className="break-keep font-mono text-[9px] uppercase tracking-wider leading-tight text-[var(--muted)]">
         {pick(stage.sublabel, locale)}
       </div>
     </div>
@@ -608,14 +608,14 @@ function StageCard({
           <span className="size-1.5 shrink-0 rounded-full" style={{ background: catColor }} />
         )}
         <span className="text-base leading-none">{icon}</span>
-        <span className={cn("min-w-0 flex-1 font-semibold leading-tight", compact ? "text-sm" : "text-[15px]")}>
+        <span className={cn("min-w-0 flex-1 break-keep text-balance font-semibold leading-tight", compact ? "text-sm" : "text-[15px]")}>
           {label}
         </span>
         <ArrowUpRight className="size-3.5 shrink-0 -translate-x-0.5 translate-y-0.5 text-[var(--accent)] opacity-0 transition-all group-hover/card:translate-x-0 group-hover/card:translate-y-0 group-hover/card:opacity-100" />
       </div>
       <div
         className={cn(
-          "border-t border-[var(--border)]/60 font-mono text-[10px] leading-snug text-[var(--muted)]",
+          "border-t border-[var(--border)]/60 break-keep font-mono text-[10px] leading-snug text-[var(--muted)]",
           compact ? "px-3 py-1.5" : "px-4 py-2"
         )}
       >
@@ -624,7 +624,7 @@ function StageCard({
       {stage.desc && (
         <p
           className={cn(
-            "flex-1 leading-relaxed text-[var(--card-foreground)]",
+            "flex-1 break-keep leading-relaxed text-[var(--card-foreground)]",
             compact ? "px-3 py-2 text-[11px]" : "px-4 py-2.5 text-xs"
           )}
         >
