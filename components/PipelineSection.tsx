@@ -977,10 +977,126 @@ function StackRow({ pipeline, locale, reduce }: RowProps) {
   );
 }
 
+/** fleet 변형 — 가로 플레인 한 줄(제어/관측)을 compact 카드+커넥터로 렌더 (SpineRow 에코) */
+function FleetPlane({
+  stages,
+  edges,
+  locale,
+  reduce,
+  projectSlug,
+}: {
+  stages: PipelineStage[];
+  edges: L[];
+  locale: Locale;
+  reduce: boolean;
+  projectSlug: string;
+}) {
+  const gridCols = stages.map((s) => (s.kind === "layer" ? "minmax(0,1fr)" : "auto")).join(" auto ");
+  const items: ReactNode[] = [];
+  stages.forEach((stage, i) => {
+    if (i > 0) {
+      items.push(
+        <div key={`c-${i}`} className="flex justify-center lg:self-center">
+          <Connector label={pick(edges[i - 1], locale)} phase={(i - 1) * 0.45} reduce={reduce} />
+        </div>
+      );
+    }
+    items.push(
+      <div key={`s-${i}`} className={stage.kind === "layer" ? "min-w-0" : "flex justify-center lg:self-center"}>
+        {stage.kind === "layer" ? (
+          <StageCard stage={stage} label={pick(stage.label, locale)} icon={stage.icon} locale={locale} projectSlug={projectSlug} compact />
+        ) : (
+          <StagePill stage={stage} locale={locale} compact />
+        )}
+      </div>
+    );
+  });
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-col lg:grid lg:items-stretch" style={{ gridTemplateColumns: gridCols }}>
+      {items}
+    </div>
+  );
+}
+
+/** fleet 변형 — 운영 대상(노드들)을 하나로 묶은 그룹 박스 (점선 테두리 = 한 클러스터) */
+function FleetGroupBox({
+  node,
+  locale,
+  projectSlug,
+}: {
+  node: NonNullable<Pipeline["fleet"]>["node"];
+  locale: Locale;
+  projectSlug: string;
+}) {
+  return (
+    <Link
+      href={`/projects/${projectSlug}`}
+      style={{
+        borderColor: "color-mix(in oklch, var(--cat-3) 50%, var(--border))",
+        backgroundColor: "color-mix(in oklch, var(--cat-3) 6%, var(--card))",
+      }}
+      className="group/fleet mx-auto flex w-full max-w-lg flex-col gap-3 rounded-2xl border-2 border-dashed px-5 py-4 transition-all duration-300 hover:ring-2 hover:ring-[var(--accent)]/40"
+    >
+      <div className="flex items-center gap-2.5">
+        <span className="text-xl leading-none">{node.icon}</span>
+        <span className="flex min-w-0 flex-col">
+          <span className="break-keep text-[15px] font-semibold leading-tight">{pick(node.label, locale)}</span>
+          <span className="break-keep font-mono text-[10px] leading-tight text-[var(--muted)]">{pick(node.sublabel, locale)}</span>
+        </span>
+        <ArrowUpRight className="ml-auto size-3.5 shrink-0 text-[var(--accent)] opacity-0 transition-all group-hover/fleet:opacity-100" />
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {node.chips.map((c, i) => (
+          <span
+            key={i}
+            className="break-keep rounded-md border px-2 py-0.5 font-mono text-[11px] leading-tight text-[var(--muted)]"
+            style={{
+              borderColor: "color-mix(in oklch, var(--cat-3) 30%, var(--border))",
+              backgroundColor: "color-mix(in oklch, var(--cat-3) 8%, var(--card))",
+            }}
+          >
+            {pick(c, locale)}
+          </span>
+        ))}
+      </div>
+    </Link>
+  );
+}
+
+/**
+ * fleet 변형 — 인프라 운영. 제어 플레인(운영자→Semaphore→Ansible)이 위에서 Fleet를 구성(push),
+ * Fleet 그룹 박스가 가운데 묶이고, 관측 플레인(Prometheus→Grafana)이 아래서 metrics를 긁어 올린다(pull).
+ */
+function FleetRow({ pipeline, locale, reduce }: RowProps) {
+  const f = pipeline.fleet!;
+  return (
+    <div>
+      <RowHeader pipeline={pipeline} locale={locale} />
+      <motion.div {...rise(reduce, 0)}>
+        <FleetPlane stages={f.control} edges={f.controlEdges} locale={locale} reduce={reduce} projectSlug={pipeline.projectSlug} />
+      </motion.div>
+      <motion.div {...rise(reduce, 1)} className="flex justify-center">
+        <VerticalEdge label={pick(f.pushLabel, locale)} phase={0} reduce={reduce} color="var(--cat-1)" />
+      </motion.div>
+      <motion.div {...rise(reduce, 2)}>
+        <FleetGroupBox node={f.node} locale={locale} projectSlug={pipeline.projectSlug} />
+      </motion.div>
+      <motion.div {...rise(reduce, 3)} className="flex justify-center">
+        <VerticalEdge label={pick(f.scrapeLabel, locale)} phase={0} reduce={reduce} color="var(--cat-6)" />
+      </motion.div>
+      <motion.div {...rise(reduce, 4)}>
+        <FleetPlane stages={f.observe} edges={f.observeEdges} locale={locale} reduce={reduce} projectSlug={pipeline.projectSlug} />
+      </motion.div>
+      {pipeline.returnNote && <ReturnLane note={pipeline.returnNote} locale={locale} />}
+    </div>
+  );
+}
+
 /** 변형 디스패치 */
 function PipelineRow(props: RowProps) {
   if (props.pipeline.variant === "orchestration") return <OrchestrationRow {...props} />;
   if (props.pipeline.variant === "stack") return <StackRow {...props} />;
+  if (props.pipeline.variant === "fleet") return <FleetRow {...props} />;
   return <SpineRow {...props} />;
 }
 

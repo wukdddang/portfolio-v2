@@ -44,8 +44,8 @@ export interface Pipeline {
   projectSlug: string;
   title: L;
   icon: string;
-  /** 다이어그램 변형 — 미지정: 가로 스파인 / orchestration: 이벤트 버스 보드 / stack: 세로 디바이스 스택 */
-  variant?: "orchestration" | "stack";
+  /** 다이어그램 변형 — 미지정: 가로 스파인 / orchestration: 이벤트 버스 보드 / stack: 세로 디바이스 스택 / fleet: 제어→Fleet묶음→관측 2-플레인 */
+  variant?: "orchestration" | "stack" | "fleet";
   /** 컴팩트(작은 카드) 렌더 — 사이드 프로젝트(him)용. 미지정 시 일반 크기 */
   compact?: boolean;
   /** 좌→우(stack은 위→아래) 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
@@ -57,6 +57,16 @@ export interface Pipeline {
     runLabel: L;
     workflow: { icon: string; label: L; sublabel: L };
     busLabel: L;
+  };
+  /** fleet 변형 — 제어 플레인(위) → Fleet 그룹 박스(가운데 묶음) → 관측 플레인(아래) */
+  fleet?: {
+    control: PipelineStage[];
+    controlEdges: L[];
+    pushLabel: L;
+    node: { icon: string; label: L; sublabel: L; chips: L[] };
+    scrapeLabel: L;
+    observe: PipelineStage[];
+    observeEdges: L[];
   };
   /** stack 변형 — 본체(데이터 파이프라인) 디바이스 하단 캡션. 잠금화면·앱 기기와 높이·라벨 대칭용 */
   deviceCaption?: L;
@@ -305,112 +315,99 @@ export const pipelines: Pipeline[] = [
     },
   },
 
-  // ── 동천 플릿 인프라 운영 — Ansible·모니터링·Semaphore (가로 스파인) ────────
+  // ── InSAR 인프라 운영 — Ansible·모니터링·Semaphore (2-플레인 fleet) ────────
   {
     id: "infra",
     projectSlug: "fleet-infra-ops",
     icon: "🛠",
-    title: { ko: "동천 서버 플릿 인프라 운영", en: "Dongcheon Fleet — Infra Ops" },
+    variant: "fleet",
+    title: { ko: "InSAR 인프라 운영", en: "InSAR Infrastructure Ops" },
     note: {
       ko: "운영자가 Semaphore(Ansible 웹 UI)에서 버튼으로 플레이북을 돌리면, .173 제어 허브의 Ansible이 이기종 3노드 플릿을 구성(SSH+become·인터넷 없는 노드엔 LAN 코드 push)하고, Prometheus가 각 노드 exporter를 scrape해 Grafana·Alertmanager로 시각화·알림합니다. 디스크 고갈은 자동정리 동작 전에 사전 알림으로 돌아옵니다.",
       en: "An operator runs a playbook as a button in Semaphore (Ansible web UI); Ansible on the .173 control hub configures the heterogeneous 3-node fleet (SSH+become, LAN code push for the offline node), and Prometheus scrapes each node's exporter for Grafana/Alertmanager to visualize and alert. Disk exhaustion comes back as a pre-alert before the auto-eviction fires.",
     },
-    stages: [
-      {
-        kind: "endpoint",
-        tone: "actor",
-        icon: "👤",
-        label: { ko: "운영자", en: "Operator" },
-        sublabel: { ko: "버튼 · 런북", en: "Button · runbook" },
-      },
-      {
-        kind: "layer",
-        cat: 2,
-        icon: "🎛",
-        label: { ko: "Semaphore", en: "Semaphore" },
-        sublabel: { ko: "Ansible 웹 UI · .173:3001", en: "Ansible web UI · .173:3001" },
-        desc: {
-          ko: "플레이북을 버튼으로 실행 + 누가·언제·뭘 돌렸는지 이력",
-          en: "Run playbooks as buttons + who/when/what history",
+    stages: [],
+    edges: [],
+    fleet: {
+      control: [
+        {
+          kind: "endpoint",
+          tone: "actor",
+          icon: "👤",
+          label: { ko: "운영자", en: "Operator" },
+          sublabel: { ko: "버튼 · 런북", en: "Button · runbook" },
         },
-        tags: [
-          { ko: "버튼 실행", en: "Button run" },
-          { ko: "이력·스케줄", en: "History · schedule" },
-          { ko: "Key Store", en: "Key Store" },
-        ],
-      },
-      {
-        kind: "layer",
-        cat: 1,
-        icon: "🔧",
-        label: { ko: "Ansible 제어", en: "Ansible control" },
-        sublabel: { ko: ".173 허브 · roles·playbook", en: ".173 hub · roles & playbooks" },
-        desc: {
-          ko: "이기종·무권한·오프라인 노드 관리 + 인터넷 없는 노드엔 LAN 코드 push",
-          en: "Heterogeneous/unprivileged/offline nodes + LAN code push to the offline node",
+        {
+          kind: "layer",
+          cat: 2,
+          icon: "🎛",
+          label: { ko: "Semaphore", en: "Semaphore" },
+          sublabel: { ko: "Ansible 웹 UI · .173:3001", en: "Ansible web UI · .173:3001" },
+          tags: [
+            { ko: "버튼 실행", en: "Button run" },
+            { ko: "이력·스케줄", en: "History · schedule" },
+          ],
         },
-        tags: [
-          { ko: "SSH + become", en: "SSH + become" },
-          { ko: "sync_code (LAN)", en: "sync_code (LAN)" },
-          { ko: "fstab 표준화", en: "fstab standardization" },
-        ],
-      },
-      {
-        kind: "layer",
-        cat: 3,
+        {
+          kind: "layer",
+          cat: 1,
+          icon: "🔧",
+          label: { ko: "Ansible 제어", en: "Ansible control" },
+          sublabel: { ko: ".173 허브 · roles·playbook", en: ".173 hub · roles & playbooks" },
+          tags: [
+            { ko: "SSH + become", en: "SSH + become" },
+            { ko: "sync_code (LAN)", en: "sync_code (LAN)" },
+          ],
+        },
+      ],
+      controlEdges: [
+        { ko: "버튼 실행", en: "button run" },
+        { ko: "플레이북", en: "playbook" },
+      ],
+      pushLabel: { ko: "배포·구성 (push)", en: "deploy/configure (push)" },
+      node: {
         icon: "🖥",
-        label: { ko: "동천 Fleet", en: "Dongcheon fleet" },
-        sublabel: { ko: "컴퓨트 3노드 + 스토리지 4종", en: "3 compute + 4 storage" },
-        desc: {
-          ko: ".173/.174/.17 + NAS/RAID — /mnt/nas249 NFS로 무중단 표준화",
-          en: ".173/.174/.17 + NAS/RAID — standardized to /mnt/nas249 NFS, zero downtime",
+        label: { ko: "서버 클러스터", en: "Server cluster" },
+        sublabel: {
+          ko: "이기종 Linux · /mnt/nas249 NFS 무중단 표준화",
+          en: "Heterogeneous Linux · /mnt/nas249 NFS standardized (zero-downtime)",
         },
-        tags: [
-          { ko: "Linux 다중노드", en: "Multi-node Linux" },
-          { ko: "NFS 표준화", en: "NFS standardized" },
-          { ko: "GPU 워커", en: "GPU workers" },
+        chips: [
+          { ko: ".173 제어 허브", en: ".173 control hub" },
+          { ko: ".174 GPU 워커", en: ".174 GPU worker" },
+          { ko: ".17 NFS·오프라인", en: ".17 NFS · offline" },
+          { ko: "스토리지 4종", en: "4 storage systems" },
         ],
       },
-      {
-        kind: "layer",
-        cat: 6,
-        icon: "📡",
-        label: { ko: "Prometheus", en: "Prometheus" },
-        sublabel: { ko: "수집 · pull scrape", en: "Collection · pull scrape" },
-        desc: {
-          ko: "node·windows·snmp exporter를 scrape — 환경별 분기 배포",
-          en: "Scrapes node·windows·snmp exporters — deploy branched per environment",
+      scrapeLabel: { ko: "metrics · scrape :9100 (pull)", en: "metrics · scrape :9100 (pull)" },
+      observe: [
+        {
+          kind: "layer",
+          cat: 6,
+          icon: "📡",
+          label: { ko: "Prometheus", en: "Prometheus" },
+          sublabel: { ko: "수집 · node·snmp·windows exporter", en: "Collect · node·snmp·windows exporter" },
+          tags: [
+            { ko: "node_exporter ×3", en: "node_exporter ×3" },
+            { ko: "snmp (QNAP)", en: "snmp (QNAP)" },
+          ],
         },
-        tags: [
-          { ko: "node_exporter ×3", en: "node_exporter ×3" },
-          { ko: "windows_exporter", en: "windows_exporter" },
-          { ko: "snmp (QNAP)", en: "snmp (QNAP)" },
-        ],
-      },
-      {
-        kind: "layer",
-        cat: 5,
-        icon: "📊",
-        label: { ko: "Grafana", en: "Grafana" },
-        sublabel: { ko: "Alertmanager · 대시보드·알림", en: "Alertmanager · dashboards & alerts" },
-        desc: {
-          ko: "디스크 고갈을 자동정리 동작 전에 사전 알림 (이메일)",
-          en: "Pre-alerts disk exhaustion before the auto-eviction fires (email)",
+        {
+          kind: "layer",
+          cat: 5,
+          icon: "📊",
+          label: { ko: "Grafana", en: "Grafana" },
+          sublabel: { ko: "Alertmanager · 대시보드·알림", en: "Alertmanager · dashboards & alerts" },
+          tags: [
+            { ko: "디스크 알림 룰", en: "Disk alert rules" },
+            { ko: "Gmail SMTP", en: "Gmail SMTP" },
+          ],
         },
-        tags: [
-          { ko: "Grafana", en: "Grafana" },
-          { ko: "디스크 알림 룰", en: "Disk alert rules" },
-          { ko: "Gmail SMTP", en: "Gmail SMTP" },
-        ],
-      },
-    ],
-    edges: [
-      { label: { ko: "버튼 실행", en: "button run" } },
-      { label: { ko: "플레이북", en: "playbook" } },
-      { label: { ko: "노드 구성", en: "configure" } },
-      { label: { ko: "scrape :9100", en: "scrape :9100" } },
-      { label: { ko: "대시보드·알림", en: "dashboard · alert" } },
-    ],
+      ],
+      observeEdges: [
+        { ko: "대시보드·알림", en: "dashboard · alert" },
+      ],
+    },
     returnNote: {
       ko: "디스크풀 알림은 역방향(점선)으로 운영자에게 — 자동정리 동작 전에 사전 차단합니다 (disk-full 런북).",
       en: "Disk-full alerts flow back (dashed) to the operator — caught before the auto-eviction fires (disk-full runbook).",

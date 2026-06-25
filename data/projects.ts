@@ -1029,8 +1029,8 @@ export const projects: Project[] = [
     slug: "fleet-infra-ops",
     icon: "🛠",
     title: {
-      ko: "동천 서버 플릿 인프라 운영",
-      en: "Dongcheon Server Fleet — Infra Ops",
+      ko: "InSAR 인프라 운영",
+      en: "InSAR Infrastructure Ops",
     },
     subtitle: {
       ko: "Ansible 플릿 관리 + Prometheus 모니터링 + Semaphore + NAS 표준화 (K8s 전환 준비)",
@@ -1103,8 +1103,8 @@ export const projects: Project[] = [
       },
     ],
     honestyNote: {
-      ko: "동천 InSAR 처리 서버 플릿(실 운영)을 대상으로 한 인프라 운영이자, 인프라 운영직 전환(K8s 포함) 준비를 겸합니다. 별도 위키(infra-ops-wiki)에 런북·회고로 박제 중입니다.",
-      en: "Infra operations on the live Dongcheon InSAR processing fleet, doubling as preparation for an infra-ops (incl. K8s) career move. Documented as runbooks and retrospectives in a separate wiki (infra-ops-wiki).",
+      ko: "InSAR 처리 서버 플릿(실 운영)을 대상으로 한 인프라 운영이자, 인프라 운영직 전환(K8s 포함) 준비를 겸합니다. 별도 위키(infra-ops-wiki)에 런북·회고로 박제 중입니다.",
+      en: "Infra operations on the live InSAR processing fleet, doubling as preparation for an infra-ops (incl. K8s) career move. Documented as runbooks and retrospectives in a separate wiki (infra-ops-wiki).",
     },
   },
   {
