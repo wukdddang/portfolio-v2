@@ -1026,6 +1026,88 @@ const lumirSarPlatform: Project = {
 export const projects: Project[] = [
   lumirSarPlatform,
   {
+    slug: "fleet-infra-ops",
+    icon: "🛠",
+    title: {
+      ko: "동천 서버 플릿 인프라 운영",
+      en: "Dongcheon Server Fleet — Infra Ops",
+    },
+    subtitle: {
+      ko: "Ansible 플릿 관리 + Prometheus 모니터링 + Semaphore + NAS 표준화 (K8s 전환 준비)",
+      en: "Ansible fleet management + Prometheus monitoring + Semaphore + NAS standardization (K8s-transition prep)",
+    },
+    badge: { ko: "인프라 운영 · K8s 전환 준비", en: "Infra ops · K8s-transition prep" },
+    metrics: [
+      { label: { ko: "계측", en: "Instrumented" }, value: { ko: "exporter 5종", en: "5 exporters" } },
+      { label: { ko: "디스크 고갈", en: "Disk exhaustion" }, value: { ko: "사전 알림", en: "Pre-alert" } },
+      { label: { ko: "마운트 표준화", en: "Mount standardization" }, value: { ko: "무중단 NFS", en: "Zero-downtime NFS" } },
+      { label: { ko: "플레이북 실행", en: "Playbook runs" }, value: { ko: "Semaphore 버튼", en: "Semaphore button" } },
+    ],
+    problem: {
+      ko: "InSAR 처리 플릿(컴퓨트 3노드 + 스토리지 4종)을 수동 SSH로 관리하다 보니 노드마다 마운트·설정이 비대칭이었고, 디스크 고갈이 사후에야 드러났습니다. 운영을 표준화·자동화·관측 가능하게 만들고, 나아가 K8s 전환의 발판이 필요했습니다.",
+      en: "The InSAR processing fleet (3 compute nodes + 4 storage systems) was managed by hand over SSH, so mounts and config drifted asymmetrically across nodes and disk exhaustion only surfaced after the fact. It needed to be standardized, automated, and observable — and to become a stepping stone toward a K8s transition.",
+    },
+    system: {
+      ko: "“새 공부용 프로젝트가 아니라 실제 운영을 옮긴다”는 원칙으로 운영 중 플릿을 그대로 계측·자동화했습니다. (1) **Ansible 제어**(.173 허브) — 이기종·무권한·오프라인 노드까지 roles·playbook으로 관리하고, 인터넷 없는 노드엔 제어노드에서 LAN으로 코드를 push. (2) **모니터링 스택** — Prometheus·Grafana·Alertmanager + 5종 exporter(node·windows·snmp)를 무중단 구축, 디스크 고갈을 자동정리 동작 *전*에 사전 알림. (3) **Semaphore**(Ansible 웹 UI)로 플레이북을 버튼·이력으로 실행. (4) **NAS 마운트 표준화** — 경로 변경 전 코드 의존성을 전수 조사해 영향 범위를 증명한 뒤 무중단(additive)으로 /mnt/nas249 NFS 통일.",
+      en: "Following a 'move real operations, not a toy project' principle, I instrumented and automated the live fleet in place. (1) **Ansible control** (.173 hub) — manages heterogeneous, unprivileged, and offline nodes via roles/playbooks, pushing code over LAN to the node with no internet. (2) **Monitoring stack** — Prometheus·Grafana·Alertmanager + 5 exporters (node·windows·snmp) stood up with zero downtime, alerting on disk exhaustion *before* the auto-eviction fires. (3) **Semaphore** (Ansible web UI) runs playbooks as buttons with history. (4) **NAS mount standardization** — audited every code reference before changing paths to prove the blast radius, then unified to /mnt/nas249 NFS additively (zero downtime).",
+    },
+    impact: {
+      ko: "디스크 고갈을 evictor 동작 전 사전 알림으로 차단(🔴 .64 98.9% 발화 → 두 메일함 수신 검증)하고, 노드별 마운트 비대칭(/mnt/nas·/mnt/web·/mnt/test249)을 /mnt/nas249 NFS로 무중단 통일했으며, Semaphore에서 ping·node_exporter 배포를 버튼으로 실행·검증했습니다. 단일 허브(.173) SPOF를 인지하고 다음 단계로 K8s/가상화 분산을 준비 중입니다.",
+      en: "Caught disk exhaustion before the evictor fired (a 🔴 98.9% alert on .64 verified across two inboxes), unified per-node mount asymmetry (/mnt/nas · /mnt/web · /mnt/test249) onto /mnt/nas249 NFS with zero downtime, and ran/verified ping and node_exporter deploys as Semaphore buttons. Aware of the single-hub (.173) SPOF, I'm preparing the next step — distributing it via K8s/virtualization.",
+    },
+    keywords: [
+      { ko: "Ansible 플릿 관리", en: "Ansible fleet mgmt" },
+      { ko: "Prometheus · Grafana", en: "Prometheus · Grafana" },
+      { ko: "Alertmanager", en: "Alertmanager" },
+      { ko: "node·snmp·windows exporter", en: "node·snmp·windows exporters" },
+      { ko: "Semaphore (Ansible UI)", en: "Semaphore (Ansible UI)" },
+      { ko: "NFS 마운트 표준화", en: "NFS mount standardization" },
+      { ko: "이기종 배포 분기", en: "Heterogeneous deploy" },
+      { ko: "LAN 코드 sync", en: "LAN code sync" },
+      { ko: "무중단 적용", en: "Zero-downtime rollout" },
+      { ko: "K8s 전환 준비", en: "K8s-transition prep" },
+    ],
+    trackVisibility: "both",
+    areas: [
+      {
+        icon: "🔧",
+        label: { ko: "Ansible 제어", en: "Ansible control" },
+        description: {
+          ko: "이기종·무권한·오프라인 플릿을 roles·playbook으로 관리 + 인터넷 없는 노드 LAN 코드 push",
+          en: "Heterogeneous/unprivileged/offline fleet via roles & playbooks + LAN code push to the offline node",
+        },
+      },
+      {
+        icon: "📈",
+        label: { ko: "모니터링", en: "Monitoring" },
+        description: {
+          ko: "Prometheus·Grafana·Alertmanager + 5종 exporter, 디스크 고갈 사전 알림 (무중단 구축)",
+          en: "Prometheus·Grafana·Alertmanager + 5 exporters; pre-alert on disk exhaustion (zero-downtime buildout)",
+        },
+      },
+      {
+        icon: "🎛",
+        label: { ko: "Semaphore", en: "Semaphore" },
+        description: {
+          ko: "Ansible 웹 UI — 플레이북을 버튼·이력·스케줄로 실행 (.173 컨테이너)",
+          en: "Ansible web UI — playbooks as buttons with history & schedules (.173 container)",
+        },
+      },
+      {
+        icon: "💾",
+        label: { ko: "스토리지 표준화", en: "Storage standardization" },
+        description: {
+          ko: "NAS 마운트 비대칭을 코드 의존성 전수조사 후 무중단 NFS 통일 (fstab 영구화)",
+          en: "Unified NAS mount asymmetry to NFS after a full code-dependency audit, zero-downtime (fstab-persisted)",
+        },
+      },
+    ],
+    honestyNote: {
+      ko: "동천 InSAR 처리 서버 플릿(실 운영)을 대상으로 한 인프라 운영이자, 인프라 운영직 전환(K8s 포함) 준비를 겸합니다. 별도 위키(infra-ops-wiki)에 런북·회고로 박제 중입니다.",
+      en: "Infra operations on the live Dongcheon InSAR processing fleet, doubling as preparation for an infra-ops (incl. K8s) career move. Documented as runbooks and retrospectives in a separate wiki (infra-ops-wiki).",
+    },
+  },
+  {
     slug: "sdpe",
     cardImage: {
       src: "/projects/sdpe/dashboard.png",
