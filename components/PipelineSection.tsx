@@ -1092,87 +1092,11 @@ function FleetRow({ pipeline, locale, reduce }: RowProps) {
   );
 }
 
-/**
- * container 변형(비교안 B) — 'InSAR 인프라' 박스 안에 관리·서버·관측이 모두 들어있고,
- * 운영자가 밖에서 조작. 흐름보다 "구성요소 한눈에"를 강조하는 정적 구성도형.
- */
-function ContainerRow({ pipeline, locale, reduce }: RowProps) {
-  const c = pipeline.container!;
-  const slug = pipeline.projectSlug;
-  const subGroup = (labelL: L, stages: PipelineStage[]) => (
-    <div>
-      <div className="mb-2 break-keep font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">
-        {pick(labelL, locale)}
-      </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {stages.map((s, i) => (
-          <StageCard key={i} stage={s} label={pick(s.label, locale)} icon={s.icon} locale={locale} projectSlug={slug} compact />
-        ))}
-      </div>
-    </div>
-  );
-  return (
-    <div>
-      <RowHeader pipeline={pipeline} locale={locale} />
-      <motion.div {...rise(reduce, 0)} className="flex justify-center">
-        <StagePill stage={c.operator} locale={locale} compact />
-      </motion.div>
-      <motion.div {...rise(reduce, 1)} className="flex justify-center">
-        <VerticalEdge label={pick(c.inLabel, locale)} phase={0} reduce={reduce} color="var(--accent)" />
-      </motion.div>
-      <motion.div
-        {...rise(reduce, 2)}
-        className="mx-auto w-full max-w-2xl rounded-2xl border-2 border-[var(--accent)]/35 p-4 md:p-5"
-        style={{ backgroundColor: "color-mix(in oklch, var(--accent) 4%, var(--card))" }}
-      >
-        <div className="mb-4 flex items-center gap-2">
-          <span className="text-lg leading-none">🛠</span>
-          <span className="break-keep text-[15px] font-semibold">{pick(c.boxLabel, locale)}</span>
-        </div>
-        <div className="flex flex-col gap-4">
-          {subGroup({ ko: "관리", en: "Manage" }, c.manage)}
-          <div>
-            <div className="mb-2 break-keep font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">
-              {pick({ ko: "서버", en: "Servers" }, locale)}
-            </div>
-            <div
-              className="rounded-xl border px-4 py-3"
-              style={{
-                borderColor: "color-mix(in oklch, var(--cat-3) 40%, var(--border))",
-                backgroundColor: "color-mix(in oklch, var(--cat-3) 6%, var(--card))",
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-base leading-none">{c.servers.icon}</span>
-                <span className="break-keep text-sm font-semibold">{pick(c.servers.label, locale)}</span>
-              </div>
-              <div className="mt-1 break-keep font-mono text-[10px] text-[var(--muted)]">{pick(c.servers.sublabel, locale)}</div>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {c.servers.chips.map((ch, i) => (
-                  <span
-                    key={i}
-                    className="break-keep rounded-md border border-[var(--border)] bg-[var(--card)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--muted)]"
-                  >
-                    {pick(ch, locale)}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-          {subGroup({ ko: "관측", en: "Observe" }, c.observe)}
-        </div>
-      </motion.div>
-      {pipeline.returnNote && <ReturnLane note={pipeline.returnNote} locale={locale} />}
-    </div>
-  );
-}
-
 /** 변형 디스패치 */
 function PipelineRow(props: RowProps) {
   if (props.pipeline.variant === "orchestration") return <OrchestrationRow {...props} />;
   if (props.pipeline.variant === "stack") return <StackRow {...props} />;
   if (props.pipeline.variant === "fleet") return <FleetRow {...props} />;
-  if (props.pipeline.variant === "container") return <ContainerRow {...props} />;
   return <SpineRow {...props} />;
 }
 
