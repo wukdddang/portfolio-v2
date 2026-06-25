@@ -45,7 +45,7 @@ export interface Pipeline {
   title: L;
   icon: string;
   /** 다이어그램 변형 — 미지정: 가로 스파인 / orchestration: 이벤트 버스 보드 / stack: 세로 디바이스 스택 / fleet: 제어→Fleet묶음→관측 2-플레인 */
-  variant?: "orchestration" | "stack" | "fleet";
+  variant?: "orchestration" | "stack" | "fleet" | "container";
   /** 컴팩트(작은 카드) 렌더 — 사이드 프로젝트(him)용. 미지정 시 일반 크기 */
   compact?: boolean;
   /** 좌→우(stack은 위→아래) 데이터 여정. stages[i] → stages[i+1] 사이가 edges[i]. */
@@ -67,6 +67,15 @@ export interface Pipeline {
     scrapeLabel: L;
     observe: PipelineStage[];
     observeEdges: L[];
+  };
+  /** container 변형(비교안 B) — 'InSAR 인프라' 박스 안에 관리·서버·관측이 모두 들어있고 운영자가 밖에서 조작 */
+  container?: {
+    operator: PipelineStage;
+    inLabel: L;
+    boxLabel: L;
+    manage: PipelineStage[];
+    servers: { icon: string; label: L; sublabel: L; chips: L[] };
+    observe: PipelineStage[];
   };
   /** stack 변형 — 본체(데이터 파이프라인) 디바이스 하단 캡션. 잠금화면·앱 기기와 높이·라벨 대칭용 */
   deviceCaption?: L;
@@ -321,7 +330,7 @@ export const pipelines: Pipeline[] = [
     projectSlug: "fleet-infra-ops",
     icon: "🛠",
     variant: "fleet",
-    title: { ko: "InSAR 인프라 운영", en: "InSAR Infrastructure Ops" },
+    title: { ko: "InSAR 인프라 운영 (A · 흐름형)", en: "InSAR Infra Ops (A · flow)" },
     note: {
       ko: "운영자가 Semaphore(Ansible 웹 UI)에서 버튼으로 플레이북을 돌리면, .173 제어 허브의 Ansible이 이기종 3노드 플릿을 구성(SSH+become·인터넷 없는 노드엔 LAN 코드 push)하고, Prometheus가 각 노드 exporter를 scrape해 Grafana·Alertmanager로 시각화·알림합니다. 디스크 고갈은 자동정리 동작 전에 사전 알림으로 돌아옵니다.",
       en: "An operator runs a playbook as a button in Semaphore (Ansible web UI); Ansible on the .173 control hub configures the heterogeneous 3-node fleet (SSH+become, LAN code push for the offline node), and Prometheus scrapes each node's exporter for Grafana/Alertmanager to visualize and alert. Disk exhaustion comes back as a pre-alert before the auto-eviction fires.",
@@ -367,7 +376,7 @@ export const pipelines: Pipeline[] = [
       pushLabel: { ko: "배포·구성 (push)", en: "deploy/configure (push)" },
       node: {
         icon: "🖥",
-        label: { ko: "InSAR 인프라", en: "InSAR infra" },
+        label: { ko: "서버 클러스터", en: "Server cluster" },
         sublabel: {
           ko: "이기종 Linux · /mnt/nas249 NFS 무중단 표준화",
           en: "Heterogeneous Linux · /mnt/nas249 NFS standardized (zero-downtime)",
@@ -411,6 +420,79 @@ export const pipelines: Pipeline[] = [
     returnNote: {
       ko: "디스크풀 알림은 역방향(점선)으로 운영자에게 — 자동정리 동작 전에 사전 차단합니다 (disk-full 런북).",
       en: "Disk-full alerts flow back (dashed) to the operator — caught before the auto-eviction fires (disk-full runbook).",
+    },
+  },
+
+  // ── [비교안 B] InSAR 인프라 — 포함형(박스 안에 관리·서버·관측) ────────────
+  {
+    id: "infra-b",
+    projectSlug: "fleet-infra-ops",
+    icon: "🛠",
+    variant: "container",
+    title: { ko: "InSAR 인프라 운영 (B · 포함형)", en: "InSAR Infra Ops (B · container)" },
+    note: {
+      ko: "[비교안 B] 'InSAR 인프라' 박스 안에 관리(Semaphore·Ansible)·서버·관측(Prometheus·Grafana)이 모두 들어있고, 운영자가 밖에서 조작합니다. 구성요소를 한눈에 보여주는 구성도형.",
+      en: "[Option B] Management (Semaphore·Ansible), servers, and observability (Prometheus·Grafana) all live inside one 'InSAR infra' box; the operator drives it from outside — a component-map style.",
+    },
+    stages: [],
+    edges: [],
+    container: {
+      operator: {
+        kind: "endpoint",
+        tone: "actor",
+        icon: "👤",
+        label: { ko: "운영자", en: "Operator" },
+        sublabel: { ko: "버튼 · 런북", en: "Button · runbook" },
+      },
+      inLabel: { ko: "조작 (Semaphore 버튼)", en: "operate (Semaphore)" },
+      boxLabel: { ko: "InSAR 인프라", en: "InSAR infra" },
+      manage: [
+        {
+          kind: "layer",
+          cat: 2,
+          icon: "🎛",
+          label: { ko: "Semaphore", en: "Semaphore" },
+          sublabel: { ko: "Ansible 웹 UI · 버튼·이력", en: "Ansible web UI · buttons·history" },
+        },
+        {
+          kind: "layer",
+          cat: 1,
+          icon: "🔧",
+          label: { ko: "Ansible", en: "Ansible" },
+          sublabel: { ko: "roles·playbook · SSH+become", en: "roles·playbooks · SSH+become" },
+        },
+      ],
+      servers: {
+        icon: "🖥",
+        label: { ko: "서버 클러스터", en: "Server cluster" },
+        sublabel: { ko: "이기종 Linux · /mnt/nas249 NFS 표준화", en: "Heterogeneous Linux · /mnt/nas249 NFS" },
+        chips: [
+          { ko: ".173 제어 허브", en: ".173 control hub" },
+          { ko: ".174 GPU 워커", en: ".174 GPU worker" },
+          { ko: ".17 NFS·오프라인", en: ".17 NFS · offline" },
+          { ko: "스토리지 4종", en: "4 storage" },
+        ],
+      },
+      observe: [
+        {
+          kind: "layer",
+          cat: 6,
+          icon: "📡",
+          label: { ko: "Prometheus", en: "Prometheus" },
+          sublabel: { ko: "node·snmp·windows exporter scrape", en: "scrapes node·snmp·windows exporters" },
+        },
+        {
+          kind: "layer",
+          cat: 5,
+          icon: "📊",
+          label: { ko: "Grafana", en: "Grafana" },
+          sublabel: { ko: "Alertmanager · 대시보드·알림", en: "Alertmanager · dashboards·alerts" },
+        },
+      ],
+    },
+    returnNote: {
+      ko: "디스크 고갈은 자동정리 동작 전에 운영자에게 사전 알림 (점선 환류).",
+      en: "Disk exhaustion is pre-alerted to the operator before auto-eviction (dashed feedback).",
     },
   },
 
