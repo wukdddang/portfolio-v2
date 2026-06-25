@@ -391,8 +391,8 @@ export const pipelines: Pipeline[] = [
         kind: "layer",
         cat: 5,
         icon: "📊",
-        label: { ko: "Grafana · Alertmanager", en: "Grafana · Alertmanager" },
-        sublabel: { ko: "대시보드 + SMTP 알림", en: "Dashboards + SMTP alerts" },
+        label: { ko: "Grafana", en: "Grafana" },
+        sublabel: { ko: "Alertmanager · 대시보드·알림", en: "Alertmanager · dashboards & alerts" },
         desc: {
           ko: "디스크 고갈을 자동정리 동작 전에 사전 알림 (이메일)",
           en: "Pre-alerts disk exhaustion before the auto-eviction fires (email)",
